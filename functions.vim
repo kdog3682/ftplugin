@@ -15934,26 +15934,6 @@ function! ToInteger(x)
     return IsNumber(a:x) ? a:x : strlen(a:x)
 endfunction
 
-function! ToLines(x)
-    if Not(a:x)
-        return []
-    elseif IsIndexes(a:x)
-        return GetLines(a:x)
-    elseif IsArray(a:x)
-        let store = []
-        for item in a:x
-            let items = split(item, "\n")
-            if len(items) == 0
-                call add(store, '')
-            else
-                call extend(store, items)
-            endif
-        endfor
-        return store
-    else
-        return split(a:x, "\n")
-    endif
-endfunction
 
 function! ToOpeningTag(word, ...)
     let attrs = a:0 >= 1 ? a:1 : ''
@@ -16705,9 +16685,6 @@ function! GetD(ref, key)
     return get(a:ref, a:key, a:ref.DEFAULT)
 endfunction
 
-function! ActivityInfo()
-    call WriteNotes('a')
-endfunction
 
 function! WriteNotes(s, ...)
     let s = IsArray(a:s) ? join(a:s, "\n") : a:s
@@ -18047,30 +18024,6 @@ function! PythonVarsHandler(s)
 endfunction
 
 
-function! PySnippetTemplater2(match, parts, line)
-    let match = a:match[1]
-    let parts = a:parts
-    let line = a:line
-
-    if (match == 'c')
-        return '$c'
-    elseif (match == 'B')
-        let B = "{\n    $c\n}"
-        return B
-    elseif Test(match, '^\d+')
-        if match == '0'
-            return line
-        elseif match - 1 < len(parts)
-            return parts[match - 1]
-        else
-            return ''
-        endif
-    elseif match =~ '^{'
-        let match = match[1:-2]
-        let match = Sub(match, '\$(\d+)', {s -> function('Quotify')(function('PySnippetTemplater')(s, parts, line))})
-        return eval(match)
-    endif
-endfunction
 
 function! PySnippeteer(parts, lineSliced, snippet, lineStart, spaces)
     let parts = a:parts
@@ -18588,9 +18541,6 @@ function! SelfAppend2(...)
     call append('.', lines)
 endfunction
 
-function! Sleep(n)
-    call execute "sleep " . a:n
-endfunction
 
 function! SetShortcuts()
     inoremap wp <esc>:call HtmlSnippet()<cr>a

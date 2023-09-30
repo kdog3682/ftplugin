@@ -382,4 +382,5 @@ inoremap <buffer> qe <esc>o<backspace>
 inoremap <buffer> qw <ESC>A<CR><space><space><space><space>
 nnoremap <buffer> qw A<CR><space><space><space><space>
 inoremap <buffer> qr <RIGHT>
-inoreab <buffer> aa [['a', 'b'], ['c', 'd']]<C-R>=Eatchar('\s')<CR>
+inoreab <buffer> aabcd [['a', 'b'], ['c', 'd']]<C-R>=Eatchar('\s')<CR>
+inoreab <buffer>la console.log(arguments)<C-R>=Eatchar('\s')<CR>

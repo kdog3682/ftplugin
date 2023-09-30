@@ -38,3 +38,7 @@ inoremap <buffer> <expr> 3 col('.') == 1 ? '# ' : 3
 inoremap <buffer> ` <esc> :call Node1()<CR>
 
 
+inoreab <buffer>ind index<C-R>=Eatchar('\s')<CR>
+inoreab <buffer>= <space>=<C-R>=Eatchar('\s')<CR>
+inoremap <buffer> <expr> = SmartEqual()
+inoremap <buffer> <expr> = SmartEqual()

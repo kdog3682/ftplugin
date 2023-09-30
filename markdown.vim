@@ -26,3 +26,10 @@ inoremap <buffer> qe <esc>o<backspace>
 inoremap <buffer> qw <ESC>A<CR><space><space><space><space>
 nnoremap <buffer> qw A<CR><space><space><space><space>
 nnoremap ` :call MoveCursorByDateStamp()<CR>
+
+inoremap <buffer> <expr> <CR> MarkdownSmartEnter()
+inoremap <buffer> <expr> q[ MarkdownEnterList()
+inoremap <buffer> <expr> q] MarkdownExitList()
+inoremap <buffer> <expr> <TAB> MarkdownTab()
+set completefunc=MarkdownCompleteFunc
+
