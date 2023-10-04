@@ -1,3 +1,14 @@
+
+setlocal cindent
+nunmap <buffer> []
+nunmap <buffer> [[
+nunmap <buffer> ["
+
+nunmap <buffer> ][
+nunmap <buffer> ]]
+nunmap <buffer> ]"
+
+
 inoreab <buffer> sj s = """<CR><CR>"""<UP><LEFT><C-R>=Eatchar('\s')<CR>
 inoremap <buffer> = =
 inoreab <buffer> forkv for k,v in $1.items():<CR>    <C-R>=Eatchar('\s')<CR>
@@ -41,4 +52,7 @@ inoremap <buffer> ` <esc> :call Node1()<CR>
 inoreab <buffer>ind index<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>= <space>=<C-R>=Eatchar('\s')<CR>
 inoremap <buffer> <expr> = SmartEqual()
-inoremap <buffer> <expr> = SmartEqual()
+inoreab <buffer>get get()<C-R>=Eatchar('\s')<CR>
+inoreab <buffer>get get()<LEFT><C-R>=Eatchar('\s')<CR>
+
+inoremap <buffer> <Tab> <C-R>=CleverTab()<CR>

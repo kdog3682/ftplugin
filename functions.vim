@@ -1810,7 +1810,6 @@ function! InfrontAndBehindOfCursor()
     let cursor = GetCursor()
     let a = trim(line[cursor - 2])
     let b = trim(line[cursor])
-    "cwdb
     return [a,b]
 endfunction
 
@@ -4388,8 +4387,6 @@ endfunction
 
 function! CurrentChar()
     return CurrentLine()[col('.') - 1]
-    "let regex = '\%' . col('.') . 'c.'
-    "return char2nr(matchstr(getline('.'), regex))
 endfunction
 
 function! SpecialEnter()
@@ -9969,6 +9966,9 @@ function! FunctionGetter(s)
     if IsFunction(a:s)
         return a:s
     elseif Exists(a:s)
+        if Test(a:s, 'v:val')
+            throw 'no vval allowed'
+        endif
         return function(a:s)
     endif
 endfunction
@@ -17991,11 +17991,6 @@ function! SplitOnceReverse(s)
     return [join(items[:-2], ' '), items[-1]]
 endfunction
 
-function! Depluralize(s)
-"Replace(a:s, 's$', '')
-    return Test(a:s, '^s') ? a:s[:-2] : a:s
-endfunction
-
 function! ZoopMethod2(s, mode)
     let [a,b] = SplitOnceReverse(a:s)
 
@@ -19155,4 +19150,5 @@ function! GetExtension(...)
     endif
     return e
 endfunction
+
 

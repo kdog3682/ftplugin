@@ -1761,7 +1761,6 @@ nnoremap lh <UP><CR>:call LogIt('lh')<CR>
 nnoremap S :call Python(CurrentFile())<CR>
 nnoremap 4 /^\(const\\|var\\|def\\|class\\|async function\\|function\) \$\?_\?
 nnoremap <leader>j :wa<CR>:call BasePY('')<LEFT><LEFT>
-noremap le :call append('.', JSPY('log'))<CR><DOWN>A<LEFT>
 nnoremap rl :call ReadLast()<CR>
 nnoremap rb :w<CR>:call Python('base.py')<CR>
 nnoremap <leader>w :call WriteNotes3('')<LEFT><LEFT>
@@ -2496,12 +2495,6 @@ set splitright
 set statusline=%F
 set viminfo='1000,f1
 set tabstop=2
-vnoremap 0 <esc>:w<cr>:e utils.js<cr>
-vnoremap 7 <esc>:w<cr>:e q.txt<cr>
-vnoremap 8 <esc>:w<cr>:e asdf<cr>
-vnoremap 8 <esc>:w<cr>:e utils.js<cr>
-vnoremap 8 <esc>:w<cr>:e utils.js<cr>
-vnoremap 9 <esc>:w<cr>:e utils.py<cr>
 vnoremap <s-c> y<s-o><esc>P
 vnoremap <s-f> dggP
 vnoremap B ^/}\zs\(\n\|,\)<cr>oV

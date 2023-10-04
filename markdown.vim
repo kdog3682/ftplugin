@@ -1,35 +1,30 @@
-inoreab <buffer> hi from "/home/kdog3682/.vim/ftplugin/markdown.vim"
+
+setlocal completefunc=MarkdownCompleteFunc
+setlocal nosmartindent
+setlocal noautoindent
+
+nnoremap <buffer> ` :call MoveCursorByDateStamp()<CR>
+
+" cnoreab <buffer>td todo<C-R>=Eatchar('s')<CR><CR>
+" cnoremap <buffer> <expr> td "todo\<CR>"
+
 inoreab <buffer> <expr> ds strftime('%m-%d-%Y')
-inoremap <buffer> ;l --------------------------------
-inoreab <buffer> lb --------------------------------
-
-inoremap <buffer> <silent> <expr> 2 TextTwo()
-inoremap <buffer> <silent> <expr> 3 TextThree()
-inoremap <buffer> <silent> [ []<LEFT><C-R>=Eatchar('\s')<CR>
-inoreab <buffer> <silent> ar --> 
-
-inoremap <expr> = col('.') == 1 ? '+ ' : getline('.')[col('.') - 2]  == ' ' ? '= ':' = '
-inoremap <expr> 3 col('.') == 1 ? '# ' : 3
-
-
-
-inoremap <buffer> <silent> <expr> \ TextBackSlash(0)
-nnoremap <buffer> \ :call TextBackSlash(1)<CR>a
-inoremap <buffer> td ``<LEFT><C-R>=Eatchar('\s')<CR>
-nnoremap <buffer> qw A<CR><space><space><space>
-nnoremap <buffer> qe A<CR><esc><<I
-inoremap <buffer> qw <CR><TAB> 
-inoremap <buffer> qe <CR><esc><<A
-
-nnoremap <buffer> qe A<CR><esc><<I
-inoremap <buffer> qe <esc>o<backspace>
-inoremap <buffer> qw <ESC>A<CR><space><space><space><space>
-nnoremap <buffer> qw A<CR><space><space><space><space>
-nnoremap ` :call MoveCursorByDateStamp()<CR>
+inoreab <buffer> td ``<LEFT><C-R>=Eatchar('\s')<CR>
 
 inoremap <buffer> <expr> <CR> MarkdownSmartEnter()
 inoremap <buffer> <expr> q[ MarkdownEnterList()
 inoremap <buffer> <expr> q] MarkdownExitList()
+inoremap <buffer> <expr> - MarkdownDash()
 inoremap <buffer> <expr> <TAB> MarkdownTab()
-set completefunc=MarkdownCompleteFunc
+inoremap <buffer> <expr> qw MarkdownEnter()
+inoremap <buffer> <expr> qe MarkdownExit()
 
+
+let s:mode = 'todo'
+function! MarkdownAnythingHandler(key)
+    let key = a:key
+    let s:mode = key
+endfunction
+
+nnoremap <buffer> : :call MarkdownAnythingHandler('')<LEFT>
+nnoremap <buffer> <expr> MarkdownModeSearch(s:mode)<CR>
