@@ -47,11 +47,18 @@ nnoremap <buffer> wf :call JPCreateFunctionBlockNormal()<cr>
 inoremap <buffer> <expr> qq QSlashWordFind(GetJavascript())
 inoreab <buffer> <expr> lx JavascriptLambdaExpression()
 inoreab <buffer> ls (s)<space>=>
-inoreab <buffer> <expr> r SmartReturn()
+inoreab <buffer> <silent> <expr> r SmartReturn()
 inoremap <buffer> <silent> <Tab> <C-R>=CleverTab()<CR>
 
 inoreab <buffer>ndy throw<space>"not<space>done<space>yet"<C-R>=Eatchar('\s')<CR>
-inoreab <buffer>-- ---------------------------------------<C-R>=Eatchar('\s')<CR>
+inoreab <silent> <buffer>-- ---------------------------------------<C-R>=Eatchar('\s')<CR>
 
-" setlocal completefunc=JavascriptComplete
+setlocal completefunc=JavascriptComplete
 
+inoreab <buffer>is =
+inoreab <buffer>ae addExtension()<LEFT><C-R>=Eatchar('\s')<CR>
+inoreab <buffer> <expr> echo JavascriptEcho()<LEFT>
+inoreab <buffer> <expr> echo JavascriptEcho()<LEFT>
+inoreab <buffer> <expr> echo JavascriptEcho()<LEFT>
+inoreab <buffer> <expr> echo JavascriptEcho()<LEFT>
+inoreab <buffer> <expr> echo JavascriptEcho()
