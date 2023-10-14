@@ -1,4 +1,3 @@
-
 let g:activeShuntFile = 0
 
 function! Pb2snippet()
@@ -6184,7 +6183,6 @@ function! Unique(arr)
         endif
     endfor
     return seen
-
 endfunction
 
 function! FindAllRegexes()
@@ -6265,11 +6263,6 @@ function! MoveBlockUp()
     call AppendBlock(lines)
 endfunction
 
-function! AppendBlock(lines)
-    call add(a:lines, '')
-    call add(a:lines, '')
-    call append('.', a:lines)
-endfunction
 
 function! Absdir(dir)
     let glob = globpath(a:dir, '*')
@@ -8329,18 +8322,6 @@ function! DeleteBlockAndArchive()
     call ShuntAway(GetCodeIndexes())
 endfunction
 
-function! DeleteBlock(...)
-    let [a,b] = a:0 >= 1 ? a:1 : GetCodeIndexes()
-    let lines = GetLines([a,b])
-    if get(g:setdict, 'db') == 1
-        call AppendFile('deprecated_code.txt', lines)
-    else
-        call ToPasteBuffer(ToString(lines))
-    endif
-
-    call deletebufline('%', a, b)
-    return lines
-endfunction
 
 function! SafeGuard(x)
     let x = a:x
@@ -8608,18 +8589,12 @@ function! WriteDitto()
     let parts = split(CurrentLine())
     let items = ''
     if Test(upline, '<' . parts[0] . '>')
-        ec 'hiiii'
         let items = DittoCopy(upline, parts[1:], parts[0])
-        ec items
-        
     else
         let items = DittoCopy(upline, parts)
     endif
 
     call AppendBlock2(items)
-    return 
-    call AppendBlock2(items)
-    call AppendBlock2(booooo)
 endfunction
 
 function! DittoCopy(upline, parts, ...)

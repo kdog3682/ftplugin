@@ -1586,7 +1586,6 @@ nnoremap zt G?\/\/<CR>o<CR>
 nnoremap zb G?^  *\S<CR>o
 nnoremap zi :call AddIabItem()<cr>
 nnoremap 1 :w<CR>:call RunPythonOrNode()<CR>
-nnoremap . /\/\/ *1234<LEFT><LEFT><LEFT><LEFT>
 nnoremap <silent> <localleader>s :call GetSet2('SpanifyRunner', CurrentWord())<CR>
 nnoremap <leader>. :call LeaderManager('')<left><left>
 nnoremap <leader>l :call MorningLog('')<left><left>
@@ -1740,7 +1739,6 @@ nnoremap 6 :call GoToScratchpad()<CR>
 nnoremap <leader>a :call ActivityInfo()<CR>
 nnoremap gb ?^function<CR>
 nnoremap ar :call AddRequireItemToTAndU()<CR>
-nnoremap ; :call AnythingHandler('')<LEFT><LEFT>
 nnoremap q" Is = "<ESC>A"
 nnoremap lr <UP><CR>:call LogIt('lr')<CR>
 nnoremap gp :call GoP()<CR>
@@ -2804,4 +2802,3 @@ let g:lastworddict = {
 "nnoremap <leader>f :call ReadFunctionFromFile('')<LEFT><LEFT>
 "nnoremap <leader>f :call JspyConnector('ff ')<LEFT><LEFT>
 "nnoremap <leader>fj :call JspyConnector('ff js text=')<LEFT><LEFT>
-autocmd! bufwritepost ~/.vimrc source %

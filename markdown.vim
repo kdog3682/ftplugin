@@ -8,7 +8,7 @@ nnoremap <buffer> ` :call MoveCursorByDateStamp()<CR>
 " cnoreab <buffer>td todo<C-R>=Eatchar('s')<CR><CR>
 " cnoremap <buffer> <expr> td "todo\<CR>"
 
-inoreab <buffer> <expr> ds strftime('%m-%d-%Y')
+inoreab <buffer> <expr> ds '# ' . strftime('%m-%d-%Y')
 inoreab <buffer> td ``<LEFT><C-R>=Eatchar('\s')<CR>
 
 inoremap <buffer> <expr> <CR> MarkdownSmartEnter()
@@ -26,5 +26,6 @@ function! MarkdownAnythingHandler(key)
     let s:mode = key
 endfunction
 
-nnoremap <buffer> : :call MarkdownAnythingHandler('')<LEFT>
+" nnoremap <buffer> : :call MarkdownAnythingHandler('')<LEFT><LEFT>
 nnoremap <buffer> <expr> MarkdownModeSearch(s:mode)<CR>
+inoreab  <buffer> td ``<left><c-r>=Eatchar('\s')<cr><C-R>=Eatchar('\s')<CR>

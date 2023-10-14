@@ -1,13 +1,13 @@
+" call SilentUnmap('[]')
+" call SilentUnmap('[[')
+" call SilentUnmap('["')
 
-setlocal cindent
-nunmap <buffer> []
-nunmap <buffer> [[
-nunmap <buffer> ["
+" call SilentUnmap('][')
+" call SilentUnmap(']]')
+" call SilentUnmap(']"')
+" call SilentUnmap('[m')
 
-nunmap <buffer> ][
-nunmap <buffer> ]]
-nunmap <buffer> ]"
-
+call UnmapPython()
 
 inoreab <buffer> sj s = """<CR><CR>"""<UP><LEFT><C-R>=Eatchar('\s')<CR>
 inoremap <buffer> = =

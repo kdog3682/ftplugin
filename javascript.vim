@@ -62,3 +62,12 @@ inoreab <buffer> <expr> echo JavascriptEcho()<LEFT>
 inoreab <buffer> <expr> echo JavascriptEcho()<LEFT>
 inoreab <buffer> <expr> echo JavascriptEcho()<LEFT>
 inoreab <buffer> <expr> echo JavascriptEcho()
+inoreab <buffer>lxi (x,i)<space>=>
+inoremap <silent> <buffer> <expr> qe QEvaluateManager()
+nnoremap <silent> <buffer> <expr> <leader>d SearchDateExpr()
+
+cnoremap <silent> <buffer> <expr> gm CnoremapExpressionHandler('gm', '/', "\<ESC>\<ESC>?\\v^---\<CR>/\\v^func\<CR>zz")
+inoreab <buffer>tlc toLowerCase()<LEFT><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>ci configItems<C-R>=Eatchar('\s')<CR>
+
+
