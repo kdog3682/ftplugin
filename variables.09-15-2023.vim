@@ -1168,7 +1168,6 @@ let g:listTocFiles = []
 let g:execRef["stf"] = "SaveTocFiles"
 let g:execRef["mtf"] = "MarkTocFile"
 let g:filedict["st"] = "/home/kdog3682/2023/saved.txt"
-let g:ldrdict['w'] = function('Whereami2')
 let g:filedict["ecm"] = "/home/kdog3682/2023/ec-main.js"
 let g:filedict["ech"] = "/home/kdog3682/2023/ec-handle.js"
 let g:filedict["bc"] = "/home/kdog3682/2023/baseComponents.js"

@@ -578,7 +578,6 @@ inoreab <buffer>nuna nunmap <lt>buffer><C-R>=Eatchar('\s')<CR>
 inoreab <buffer>ob call<space>OpenBuffer3()<LEFT><C-R>=Eatchar('\s')<CR>
 inoreab <buffer>pae call<space>PrintAndExecute()<LEFT><C-R>=Eatchar('\s')<CR>
 inoreab <buffer>pf printf('')<LEFT><LEFT><C-R>=Eatchar('\s')<CR>
-inoreab <buffer>r return
 inoreab <buffer>rs return<space>string()<LEFT><C-R>=Eatchar('\s')<CR>
 inoreab <buffer>sam SearchAndMatch2023()<LEFT><C-R>=Eatchar('\s')<CR>
 inoreab <buffer>sbe <silent><space><buffer><space><expr><C-R>=Eatchar('\s')<CR>
