@@ -1,4 +1,4 @@
-let g:debug = 0
+wet g:debug = 0
 " let g:debug = 1
 let g:functionPrefixRE = '^((async )?function[!*]?|class|def) '
 let g:OPPOSITES = { '{': '}', 'visible': 'hidden', 'hidden': 'visible', '[': ']', '(': ')', '^': '$', '}': '{', ']': '[', '>': '<', '<': '>', '>=': '<=', '<=': '>=', '=': '=', '1': '0', '0': '1', ')': '(' }
@@ -441,9 +441,9 @@ function! AnythingHandler(s)
     " let [a,b] = SplitOnce(s)
     let [a,b] = SplitOnceDontTrim(s)
 
-    if &filetype == 'netrw' && ExplorerHandler(s)
-        return 
-    endif
+    " if &filetype == 'netrw' && ExplorerHandler(s)
+        " return
+    " endif
 
     if IsNumber(s)
         return Cursor(s)
@@ -6023,39 +6023,6 @@ function! ChooseFromList(items)
 end
 endfunction
 "let list = [1,2,3,4,5]
-function! Node2()
-
-    call Shell('node', CurrentFile() . ' ' . 'clip')
-    return 
-    let files = [ "hammy.js", "cm.js", ]
-    if Includes(tail, files)
-        return RunServerFile(tail)
-    endif
-
-    if !empty(get(g:globalState, 'cleanerMode'))
-        let f = FilePrompt()
-        let lines = DeleteBlock()
-        call AppendFile(f, lines)
-        return 
-    endif
-
-    let tail = Tail()
-    if tail == 'appscript.js'
-        call BasePY('gac')
-    elseif tail == 'worksheet-components.js'
-        call VisualAction('vt')
-    elseif tail == 'vimrc'
-        ec 'uh no @ node2'
-    elseif Test(tail, 'vob.js$')
-        ec 'running vob puppet test'
-        let s = GetLastWord(getline('$'))
-        call RunServerFile('vob', s)
-    else
-        ec 'running vob puppet test'
-        call RunServerFile('vob', 'default')
-        "call PuppetRunner()
-    endif
-endfunction
 "function! GetLastWord(s)
     "return Match(a:s, '[a-z0-9]+\ze *$')
 "endfunction
@@ -7386,12 +7353,12 @@ endfunction
 function! AddPydictItem(s, mode)
     let s = a:s
     let mode = a:mode
+    let mode=2
     let ref = mode == 2 ? g:wpsnippets2 : g:wpsnippets
     let key = mode == 2 ? 'wpsnippets2' : 'wpsnippets'
     let lang = mode == 2 ? Tail() : Lang()
     let [a, b] = IsArray(s) ? s : SplitOnce(trim(s))
-    call AppendAndExecuteDict(key, lang, a, b)
-
+    call DictSetter(key, lang, a, b)
 endfunction
 let g:wpsnippets["js"]["nestobj"] = "{a:1, b:2, c:{d:{e: [{g: 1}]}}}"
 
@@ -7552,7 +7519,6 @@ function! Node3()
     let key = g:server_html_super_commands[g:server_html_index]
     call Node(g:serverfile, key)
 endfunction
-nnoremap 3 :wa<CR>:call Node3()<CR>
 let g:server_html_super_commands = ['string-screenshot', 't1-screenshot', 't1-print', 't2-print', 'final-print']
 let g:filedict["qt"] = "/home/kdog3682/2023/quiz.txt"
 " 03-31-2023
@@ -7575,40 +7541,9 @@ endfunction
 let g:execRef["pbg"] = "PasteBufferGroupToFile"
 " 03-31-2023
 let g:filedict["hc"] = "/home/kdog3682/2023/hammyComponents.js"
-function! A8(...) abort
-    let orig = CurrentFile()
-    let name = GetBindingName()
-    let [a,b] = GetCodeIndexes()
-    let lines = GetLines([a, b])
-
-    let file = a:0 >= 1 ? a:1 : ''
-    let topComment = TopComment(lines)
-    let topFile = AddExtension2(topComment, 'js')
-    let stay = 0
-    if IsFile(topFile)
-        if Tail(file) == Tail()
-            return 
-        endif
-        let file = topFile
-        let stay = 1
-    endif
-
-    call DeleteBlock([a,b])
-    let file = AddImport(name, file)
-    call insert(lines, '', 0)
-    call OpenBuffer4(file)
-    call AddExport(name)
-    call append('$', lines)
-    if stay
-        call Cursor(line('$') - 1, 100)
-        startinsert 
-    else
-        call OpenBuffer4(orig)
-    endif
-endfunction
 nnoremap a7 :call A8('next.js')<CR>
-nnoremap a8 :call A8('utils.js')<CR>
-nnoremap a9 :call A8(FileGetter2(''))<LEFT><LEFT><LEFT>
+nnoremap a8 :wa<cr>:call A8('utils.js')<CR>
+nnoremap a9 :wa<cr>:call A8(FileGetter2(''))<LEFT><LEFT><LEFT>
 nnoremap a0 :call A0()<CR>
 
 function! GetOrDefine(key)
@@ -9362,32 +9297,6 @@ function! EscapeString(s)
     let s = Sub(s, "\n", '\\n')
     return s
     
-endfunction
-function! SmartDedent2(s) abort
-    let s = a:s
-    if IsArray(s)
-        let f = 'Replace(v:val, "^" . spaces, "")'
-        let spaces = GetSpaces(s[0])
-        let t = map(s, f)
-        return t
-    endif
-    let spaces = GetSpaces(s)
-    let f = 'Replace(v:val, "^" . spaces, "")'
-    let s = join(map(ToLines(s), f), "\n")
-    return s
-endfunction
-function! SnippetConverter(s)
-    let s = a:s
-    let s = SmartDedent2(s)
-    let s = Sub(s, '\d+-\d+-\d+', '${DateStamp()}')
-    let s = Sub(s, '\d{8,}', "${strftime('%s')}")
-    if Test(s, "\n") && !Test(s, '\s$')
-        if !Test(s, '\$c')
-            let s .= "$c"
-            let s .= "\n"
-        endif
-    endif
-    return s
 endfunction
 function! VisualMakePyDict(state) abort
     let state = a:state
@@ -12017,7 +11926,7 @@ function! GetBufferGroup()
      return group
 endfunction
 function! EstablishLinkedBufferGroup()
-    return EstablishLinkedBufferGroupRunner(getBufferGroup())
+    return EstablishLinkedBufferGroupRunner(GetBufferGroup())
 endfunction
 function! EstablishLinkedBufferGroupRunner(group)
     let group = a:group

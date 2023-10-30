@@ -10,16 +10,34 @@ nnoremap <buffer> 6 :call CssNormalKey('6')<CR>
 nnoremap <buffer> 7 :call CssNormalKey('7')<CR>
 nnoremap <buffer> 8 :call CssNormalKey('8')<CR>
 nnoremap <buffer> 9 :call CssNormalKey('9')<CR>
+" increment g:s by the number
+
+nnoremap <buffer> <BS>    :call CssNormalKey('bs')<CR>
+" delete g:s by 1 char
 
 nnoremap <buffer> <CR>    :call CssNormalEnter()<CR>
-nnoremap <buffer> <TAB>   :call CssNormalTab()<CR>
-nnoremap <buffer> <SPACE> :call CssNormalSpace()<CR>
-nnoremap <buffer> <BS>    :call CssNormalBackspace()<CR>
+" submit the g:s string to affect current line
 
-nnoremap <buffer> <SPACE> :call CssNormalSpace()<CR>
-nnoremap <buffer> <BS>    :call CssNormalBackspace()<CR>
+inoremap <buffer> <expr> qw   BaseBlockEnterExpr()
+inoremap <buffer> <expr> qe   BaseBlockExitExpr()
+" standard block navigation
 
-inoremap <buffer> <expr> qw   CssBlockEnter()
-inoremap <buffer> <expr> qe   CssBlockExit()
-inoremap <buffer> <expr> wf   CssWriteBlock()
+nnoremap <buffer> wf   :call CssWriteBlock()<CR>
+inoremap <buffer> wf   <esc>:call CssWriteBlock()<CR>
+
 inoremap <buffer> <expr> <CR> CssEnter()
+" has some editing utilities for the line
+" add semi colons
+
+" setlocal completefunc=CssDotCompletion
+inoremap <silent> <buffer> . <C-R>=CssDotCompletionExpr()<CR>
+" dot completion
+
+" nnoremap <buffer> <TAB>   :call CssNormalTab()<CR>
+" nnoremap <buffer> \       :call CssNormalBackslash()<CR>
+" not active
+
+nnoremap <buffer> <SPACE> :call CssOmniIncrement()<CR>
+" if has px | % ... increment the unit
+" if is selector ... increment the pseudo
+

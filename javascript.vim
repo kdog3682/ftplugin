@@ -40,7 +40,7 @@ inoremap <buffer> <expr> = SmartEqual()
 inoremap <buffer> <expr> [ SmartNine('[')
 inoremap <buffer> qp (<c-o>A)<LEFT>
 inoremap <buffer> qw <right>
-inoremap <buffer> w, <esc>:call PySnippet4()<cr>a
+inoremap <buffer> w, <esc>:call PySnippet4()<cr>
 inoremap <buffer> <expr> wf JPCreateFunctionBlockAsExpression()
 inoremap <buffer> <expr> { SmartNine('{')
 nnoremap <buffer> wf :call JPCreateFunctionBlockNormal()<cr>
@@ -48,12 +48,10 @@ inoremap <buffer> <expr> qq QSlashWordFind(GetJavascript())
 inoreab <buffer> <expr> lx JavascriptLambdaExpression()
 inoreab <buffer> ls (s)<space>=>
 inoreab <buffer> <silent> <expr> r SmartReturn()
-inoremap <buffer> <silent> <Tab> <C-R>=CleverTab()<CR>
 
 inoreab <buffer>ndy throw<space>"not<space>done<space>yet"<C-R>=Eatchar('\s')<CR>
 inoreab <silent> <buffer>-- ---------------------------------------<C-R>=Eatchar('\s')<CR>
 
-setlocal completefunc=JavascriptComplete
 
 inoreab <buffer>is =
 inoreab <buffer>ae addExtension()<LEFT><C-R>=Eatchar('\s')<CR>
@@ -70,4 +68,45 @@ cnoremap <silent> <buffer> <expr> gm CnoremapExpressionHandler('gm', '/', "\<ESC
 inoreab <buffer>tlc toLowerCase()<LEFT><C-R>=Eatchar('\s')<CR>
 inoreab <buffer>ci configItems<C-R>=Eatchar('\s')<CR>
 
+inoreab <buffer>lt .log(files);<space>throw<space>'';<LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>lt console.log();<space>throw<space>'';<LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><C-R>=Eatchar('\s')<CR>
 
+
+inoremap <silent> <buffer> qw <ESC>:call NormalQW()<CR>
+nnoremap <silent> <buffer> qw :call NormalQW()<CR>
+inoremap <silent> <buffer> qe <ESC>:call NormalQE()<CR>
+nnoremap <silent> <buffer> qe :call NormalQE()<CR>
+" nnoremap <silent> <buffer> qu :call NormalQU()<CR>
+" inoremap <silent> <buffer> qu <ESC>:call NormalQU()<CR>
+nnoremap <silent><buffer> 3 #
+inoremap <silent><buffer> 4 $
+inoremap <silent><buffer> $ 4
+inoreab <buffer>var. variables.<C-R>=Eatchar('\s')<CR>
+inoreab <buffer>inc includes<C-R>=Eatchar('\s')<CR>
+inoreab <buffer>nd new<space>Date()<LEFT><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>fi findIndex<C-R>=Eatchar('\s')<CR>
+inoreab <buffer>uni unique()<LEFT><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>pi /*<space>prettier-ignore<space>*/<C-R>=Eatchar('\s')<CR>
+inoreab <buffer> <expr> ls JSLambdaExpr()
+inoreab <buffer>bc /*<space><space>*/<left><left><left><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>ide identity<C-R>=Eatchar('\s')<CR>
+inoreab <silent> <buffer> <expr> tl TLExpr('tl', 1)
+inoreab <buffer>44 ${}<left><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>$$ ${}<left><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>a2 tr<C-R>=Eatchar('\s')<CR>
+inoreab <buffer>a2 assertion2()<LEFT><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>$$ ${}<left><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>af Array.from()<LEFT><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>ten throw<space>new<space>Error()<LEFT><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>[[ {}<<left>><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>[[ {}<left><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>[[ {}<C-R>=Eatchar('\s')<CR>
+inoreab <buffer>[[ {}<left><C-R>=Eatchar('\s')<CR>
+
+
+
+" inoremap <buffer> <silent> <Tab> <C-R>=CleverTab()<CR>
+" setlocal completefunc=JavascriptComplete
+" inoremap <silent> <buffer> <expr> <Tab> QQQ()
+inoremap <silent> <buffer> <expr> <Tab> QQQ()
+" inoremap <buffer> <expr> <space> SpaceCompletion()

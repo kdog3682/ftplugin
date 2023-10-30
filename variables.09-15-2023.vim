@@ -1495,9 +1495,7 @@ nnoremap R :call SnippetRegistrar()<CR>
 nnoremap R <c-r>
 nnoremap U :call NBackslash('u')<CR>
 nnoremap X :call GoLastTouchedFile()<CR>
-nnoremap [ <UP><UP><UP><up><UP><UP><UP><UP>
 nnoremap \ :call OpenBuffer3(NBackslash(''))<LEFT><LEFT><LEFT>
-nnoremap ] <DOWN><DOWN><DOWN><DOWN><DOWN><DOWN><DOWN><DOWN>
 nnoremap a0 :call A0()<CR>
 nnoremap a7 :call A8('next.js')<CR>
 nnoremap a8 :call A8('utils.js')<CR>
@@ -1642,3 +1640,5 @@ noremap <leader>b ?\<\><left><LEFT>
 nunmap q
 set history=20
 
+nnoremap <silent> [ <UP><UP><UP><up><UP><UP><UP><UP>
+nnoremap <silent> ] <DOWN><DOWN><DOWN><DOWN><DOWN><DOWN><DOWN><DOWN>

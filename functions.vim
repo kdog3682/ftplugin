@@ -19116,7 +19116,7 @@ function! SetFtBufferShortcuts()
 endfunction
 function! GetExtension(...)
     let e = a:0 >= 1 ? Match(a:1, '\.\zs\w+$') : Match(expand('%:t'), '\.\zs\w+$')
-
+    """ linkedBookmarkId: 1697719401 .vimrc """
     if !Exists(e) && Test(a:1, '^(js|py|vim|html)$')
         let e = a:1 
     endif
@@ -19125,5 +19125,3 @@ function! GetExtension(...)
     endif
     return e
 endfunction
-
-

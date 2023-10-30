@@ -70,9 +70,10 @@ let g:node1dict2 = {
     \'lezer-J2P.js': {'file': 'lezer-prettier.js', 'args': ''},
     \'lezer-P2V.js': {'file': 'lezer-prettier.js', 'args': ''},
     \'lezer-P2J.js': {'file': 'lezer-prettier.js', 'args': ''},
-    \'lezer-common.js': {'file': 'lezer-prettier.js', 'args': ''},
+    \'lezzer-common.js': {'file': 'lezer-prettier.js', 'args': ''},
     \'lezer-run.js': {'file': 'lezer-prettier.js', 'args': ''},
     \'lezer-create.js': {'file': 'lezer-prettier.js', 'args': ''},
+    \'lezer-common.js': {'file': 'lezer-main.js', 'args': ''},
 \}
 
 let g:execRef["m"] = ":messages"
@@ -99,8 +100,6 @@ let g:filedict["lcl"] = "/home/kdog3682/2023/lezer-CodeLibrary.js"
 let g:filedict["lm"] = "/home/kdog3682/2023/lezer-main.js"
 let g:filedict["lp"] = "/home/kdog3682/2023/lezer-prettier.js"
 let g:execRef["eod"] = "EndOfDay"
-let g:linkedImportFileRef = {}
-let g:linkedImportFileRef['examples.js'] = 'runExampleFile.js'
 let g:wpsnippets["vim"]["fore"] = "for i in range(len($1))\n    ec i\n    $c\nendfor"
 let g:wpsnippets["vim"]["ifempty"] = "if empty($c)\n    return \nendif"
 let g:wpsnippets2 = {}
@@ -165,7 +164,6 @@ let g:filedict["eod"] = "/home/kdog3682/PYTHON/endOfDay.py"
 let g:gfgfdict['pys'] = ['/home/kdog3682/.vimrc', 'PySnippet', 0]
 let g:gfgfdict['sn'] = ['/home/kdog3682/.vimrc', 'SmartNine', 0]
 let g:gfgfdict['se'] = ['/home/kdog3682/.vimrc', 'SmartEqual', 0]
-let g:wpsnippets["vim"]["jspy"] = "let g:jspyref3['vim']['$1'] = '$2'\nlet g:jspyref3['python']['$1'] = '$3'\nlet g:jspyref3['javascript']['$1'] = '$4'"
 let g:wpsnippets["vim"]["va"] = "let g:visualactiondict['$1'] = {'fn': '$2'}"
 let g:jspyref3['javascript']['identifierRE'] = '(^ *\w+ +)\zs[\{\[]?\w+.{-}\ze *\='
 let g:jspyref3['vim']['identifierRE'] = '(^ *\w+ +)\zs\[?\w+.{-}\ze *\='
@@ -190,9 +188,9 @@ let g:jspyref3["javascript"]["functionBlockTemplate"] = "function %s(%s)" . " {\
 let g:jspyref3["python"]["functionBlockTemplate"] = "def %s(%s)" . " :\<CR>"
 let g:jspyref3["python"]["methodBlockTemplate"] = "def %s(self, %s)" . " :\<CR>"
 let g:jspyref3["javascript"]["methodBlockTemplate"] = "%s(%s)" . " {\<CR>}\<C-O>O"
+let g:jspyref3['javascript']['objectBlockTemplate'] = "%s(%s) {\n\t$c\n},\n"
 let g:jspyref3['vim']['objectBlockTemplate'] = 'x'
 let g:jspyref3['python']['objectBlockTemplate'] = 'x'
-let g:jspyref3['javascript']['objectBlockTemplate'] = "%s(%s) {\n\t$c\n},\n"
 let g:wpsnippets["js"]["run"] = "\nfunction runner(${Depluralize($1)}, i) {\n    $c\n}\n\nconst results = $1.map(runner)\nreturn results\n"
 let g:wpsnippets["vim"]["fore"] = "for i in range(len($1))\n    let ${Depluralize($1)} = $1[i]\n    $c\nendfor"
 let g:functionParamRef = {'runner': ['s'], 'inner': ['s']}
@@ -281,7 +279,7 @@ let g:memory["implicitParams"] = {}
 let g:memory["implicitParams"]["'.'"] = "s"
 let g:keyboard = {"esc":"\<esc>","tab":"\<tab>","enter":"\<CR>","space":"\<space>","bs":"\<bs>","del":"\<del>","up":"\<up>","down":"\<down>","left":"\<left>","right":"\<right>","home":"\<home>","end":"\<end>","pageup":"\<pageup>","pagedown":"\<pagedown>","f1":"\<f1>","f2":"\<f2>","f3":"\<f3>","f4":"\<f4>","f5":"\<f5>","f6":"\<f6>","f7":"\<f7>","f8":"\<f8>","f9":"\<f9>","f10":"\<f10>","f11":"\<f11>","f12":"\<f12>","insert":"\<insert>","ca":"\<c-a>","cb":"\<c-b>","cc":"\<c-c>","cd":"\<c-d>","ce":"\<c-e>","cf":"\<c-f>","cg":"\<c-g>","ch":"\<c-h>","ci":"\<c-i>","cj":"\<c-j>","ck":"\<c-k>","cl":"\<c-l>","cm":"\<c-m>","cn":"\<c-n>","co":"\<c-o>","cp":"\<c-p>","cq":"\<c-q>","cr":"\<c-r>","cs":"\<c-s>","ct":"\<c-t>","cu":"\<c-u>","cv":"\<c-v>","cw":"\<c-w>","cx":"\<c-x>","cy":"\<c-y>","cz":"\<c-z>"}
 let g:keyboard.jsb = " {\<CR>}\<C-O>O"
-let g:keyboard.jslambda = " {\\<CR>})\\<C-O>O"
+let g:keyboard.jslambda = " {\<CR>})\<C-O>O"
 let g:keyboard.jslambdareduce = " {\<CR>}, {})\<C-O>O"
 let g:keyboard['BS'] = "\<BS>"
 let g:keyboard['ENTER'] = "\<CR>"
@@ -329,7 +327,11 @@ let g:gfgfdict['gfl'] = ['/home/kdog3682/.vimrc', 'GotoVimFunction', 0]
 let g:wpsnippets["vim"]["forkv"] = "for [k,v] in items($1::upbinding)\n    $c\nendfor"
 let g:jspyref3['javascript']['blockPairs'] = { '^ *(for|while|if|else|do|function)>': '}', '[ *$': ']', '\{ *$': '}', }
 let g:jspyref3['python']['blockPairs'] = { '[ *$': ']', '\{ *$': '}', }
-let g:jspyref3['vim']['blockPairs'] =  { '[ *$': '\]', '\{ *$': '\}', '^ *for': 'endfor', '^ *(if|elseif)>': '(else|end)if', }
+
+
+
+
+let g:jspyref3['vim']['blockPairs'] =  { '[ *$': '\]', '\{ *$': '\}', '^ *for': 'endfor', '^ *(if|elseif)>': '(else|end)if', '^ *try': '^ *endtry'}
 let g:execRef["bc"] = "BrowserController"
 
 let g:GI4Ref = {
@@ -370,8 +372,8 @@ let g:vimFunctionAliases = {
 	\'lineNumber': 'GetLineNumber',
 	\'date': 'DateStamp',
 	\'datestamp': 'DateStamp',
-	\'time': 'TimeStamp',
-	\'timestamp': 'TimeStamp',
+	\'time': 'Timestamp',
+	\'timestamp': 'Timestamp',
 	\'binding': 'GetBindingName',
 	\'upbinding': 'GetUpbinding',
 	\'var': 'GetClosestVar',
@@ -502,7 +504,6 @@ let g:execRef["ticket"] = "Ticket"
 let g:execRef["gl"] = "GrabLineViaGSearch"
 let g:wpsnippets["vim"]["fori"] = "for i in range($1)\n    $c\nendfor"
 let g:execRef["nwp"] = "NormalWPSnippet"
-let g:jspyref3['vim']['echoInputTemplate'] = "call BlueInput('%s: ' . string(%s))"
 let g:wpsnippets2["vimrc"]["va"] = "function! ${Capitalize($2)}(state)\n    let state = a:state\n    $c\nendfunction\nlet g:visualactiondict['$1'] = {'fn': '${Capitalize($2)}'}"
 
 let g:jspyref3['vim']['equalDict']['s'] = "getline('.')\<CR>"
@@ -530,7 +531,7 @@ inoreab <buffer>  semi ;<C-R>=Eatchar('\s')<CR>
 inoreab <buffer> <expr> ee VimEEBlock()
 inoreab <buffer> <expr> ms SmartMatch()
 inoreab <buffer> <expr> r SmartReturn()
-inoreab <buffer> <expr> tl ThrowLog()
+" " inoreab <buffer> <expr> tl ThrowLog()
 inoreab <buffer> <expr> ts TSExpr()
 inoreab <buffer> fli FindLineIndex('')<LEFT><LEFT><C-R>=Eatchar('\s')<CR>
 inoreab <buffer> jp Jspy3('')<LEFT><LEFT><C-R>=Eatchar('\s')<CR>
@@ -551,7 +552,6 @@ inoreab <buffer>ef elseif<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>endf endfunction<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>exclam !<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>exn execute<space>"normal!<space>"<LEFT><C-R>=Eatchar('\s')<CR>
-inoreab <buffer>exn execute<space>NormalExpr()<LEFT><C-R>=Eatchar('\s')<CR>
 inoreab <buffer>ft &filetype<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>fu function<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>gcw GetCurrentWord4()<LEFT><C-R>=Eatchar('\s')<CR>
@@ -589,6 +589,7 @@ inoreab <buffer>sub substitute()<LEFT><C-R>=Eatchar('\s')<CR>
 inoreab <buffer>te "test:
 inoreab <buffer>vv v:val<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>ww (\w+)<C-R>=Eatchar('\s')<CR>
+
 inoreab <expr> ds Comment(strftime('%m-%d-%Y'))
 inoreab <silent> <buffer> <expr> echo VimscriptEcho()
 inoreab <silent> <expr> gbm SetGlobalBookmark()
@@ -598,26 +599,23 @@ inoremap <buffer> <expr> ' SmartQuote()
 inoremap <buffer> <expr> 9 SmartNine('(')
 inoremap <buffer> <expr> = SmartEqual()
 inoremap <buffer> <expr> = SmartEqual()
-inoremap <buffer> <expr> [ SmartNine('[')
 inoremap <buffer> <expr> `u TildaMovement()
 inoremap <buffer> <expr> q/ QSlashWordFind()
 inoremap <buffer> <expr> qe QEvaluateManager()
 inoremap <buffer> <expr> qq QSlashWordFind()
 inoremap <buffer> <expr> qt TestingSearchInsideOfExprViaQT()
 inoremap <buffer> <expr> qx Qx()
-inoremap <buffer> <expr> { JavascriptSmartBracket()
+" inoremap <buffer> <expr> { JavascriptSmartBracket()
 inoremap <buffer> qp (<C-O>A)<LEFT>
-inoremap <buffer> qw <RIGHT>
-inoremap <buffer> wq <LEFT>
 inoremap <buffer>kq ""<LEFT>
 inoremap <expr> qge Qge()
 inoremap <expr> qgp Qgp()
 inoremap <expr> qgs Qgs()
 inoremap <silent> <buffer> <Tab> <C-R>=CleverTab()<CR>
 inoremap <silent> <buffer> <expr> fw FwSnippeteer()
-inoremap <silent> w, <esc>:call PySnippet4()<cr>a
-inoremap <silent> wp <esc>:call Snippeteer()<cr>a
-inoremap <silent> zd <esc>:call NormalHandler('WriteDitto')<CR>A
+inoremap <silent> w, <esc>:call PySnippet4()<cr>
+inoremap <silent> wp <esc>:call Snippeteer()<cr>
+inoremap <silent> zd <esc>:call DittoInsert()<cr>
 inoremap wf <esc>:call VimCreateFunctionBlock()<cr>
 nnoremap 0 :call Node0()<CR>
 nnoremap 1 :w<CR>:call Node1()<cr>
@@ -630,11 +628,7 @@ nnoremap ; :call AnythingHandler2('')<LEFT><LEFT>
 nnoremap <buffer> 2 :update<CR>:call FunctionCallerViaEvalTheLine()<CR>
 nnoremap <buffer> 3 :update<CR>:call ExecuteFunctionCaller2()<CR>A
 nnoremap <buffer> <leader>/ :call VimFunctionSearch('')<left><left>
-nnoremap <buffer> er :call EchoReturn()<CR>
 nnoremap <buffer> qt :w<CR>:call QTNormalRunner()<CR>
-nnoremap <buffer> qw <RIGHT>i
-nnoremap <buffer>` :call CommandTilda()<CR>
-nnoremap <c-c> :call CopyController()<CR>
 nnoremap <c-c> :call Sayhi()<CR>
 nnoremap <c-r> :call ModeReset()<CR>
 nnoremap <c-s> :w<CR>:call SaveBackup0104()<CR>
@@ -656,7 +650,6 @@ nnoremap <silent> <buffer> <expr> <leader>d SearchDateExpr()
 nnoremap <silent> <buffer>` :call TildaFunctionSearch()<CR>
 nnoremap <silent><buffer> 2 :call setline('.', g:keyboard.tab)<CR>A
 nnoremap <silent><buffer> 3 #
-nnoremap <silent><buffer> 4 *
 nnoremap <silent><buffer> 5 ?\v(Inner)@!(<[A-Z]\w{4,}>\|\.@<![A-Z]\w{4,}\()\C<cr>zz
 nnoremap <silent><buffer> 5 ?\v\.@<!\w+\(<cr>zz
 nnoremap <silent><buffer> 6 /\v(Inner)@!<[A-Z]\w{4,}>\|\.@<![A-Z]\w{4,}\(\C<cr>zz
@@ -672,8 +665,8 @@ nnoremap ehb :call OpenBuffer3("/home/kdog3682/2023/pl-htmlBuilder.js")<CR>
 nnoremap ei :call EchoTemplate('ei')<CR>
 nnoremap el :call EchoTemplate('el')<CR>
 nnoremap er :call EchoTemplate('er')<CR>
-nnoremap es I<C-O>D
 nnoremap et :call EchoTemplate('et')<CR>
+nnoremap es I<C-O>D
 nnoremap ex :call OpenExampleJS()<CR>
 nnoremap gf :call GoFile()<CR>
 nnoremap gof :call BrowseAndGoFunction()<CR>
@@ -686,7 +679,10 @@ nnoremap ze :call ZEqual()<CR>
 set cmdheight=1
 set expandtab      " Use spaces instead of tabs
 set history=1000
+set history=20
 set shiftwidth=4   " Number of spaces for auto-indenting
 set tabstop=4      " Number of spaces a tab counts for
 set viminfo='50
-setlocal completefunc=VimComplete
+
+nnoremap <silent> [ <UP><UP><UP><up><UP><UP><UP><UP>
+nnoremap <silent> ] <DOWN><DOWN><DOWN><DOWN><DOWN><DOWN><DOWN><DOWN>
