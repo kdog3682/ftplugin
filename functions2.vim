@@ -802,7 +802,7 @@ function! FileGetter2(s) abort
     elseif key == 'cwf'
         return g:currentWorkFile
     elseif key == 'san'
-        return g:activeNodeFile
+        return g:activeJavascriptFile
 
     elseif key == 'glf1'
         return GetSecondMostRecentFile("/mnt/chromeos/MyFiles/Downloads")
@@ -2349,7 +2349,7 @@ function! OnVimStartup() abort
     try 
         call Cursor('$')
         return 
-        call OpenBuffer3(g:activeNodeFile)
+        call OpenBuffer3(g:activeJavascriptFile)
         return 
         call append('.', DateLine())
    catch 
@@ -3986,9 +3986,6 @@ function! IndexGetter2(index)
         return index
     endif
 endfunction
-function! RemoveStartingComments(s)
-    return Replace(a:s, '^[''"/#]+', '')
-endfunction
 nnoremap el :call EvalLastLine()<CR>
 
 function! ShuntAwayFrom()
@@ -5375,23 +5372,6 @@ function! NoHead(s)
     return Test(a:s, '^\w+\.\w+$')
 endfunction
 
-function! AddWordToJavascriptImports()
-    let file = Tail()
-    if file == 'utils.js'
-        let index = FindLineIndex('^export \{', '0', 1, 1000)
-        if index < 5
-            ec 'error'
-            return 
-        endif
-        let word = GetBindingName()
-        call append(index + 1, '    ' . word . ',') 
-    else
-        let word = GetCurrentWord2()
-        let word = Match(word, '[a-z]\w+')
-        let file = 'utils.js'
-        call AddImport(word, file)
-    endif
-endfunction
 nnoremap av :call AddWordToJavascriptImports()<CR>
 
 let g:jsdir = "/home/kdog3682/2023/"
@@ -5700,20 +5680,6 @@ let g:filedict["te"] = "/home/kdog3682/2023/textEdit.js"
 let g:filedict["sk"] = "/home/kdog3682/2023/splitKatex.js"
 let g:filedict["ss"] = "/home/kdog3682/2023/scratchpad.js"
 
-function! Whereami2()
-    let regex = '^(const|(async )?function[!*]?|class|def|var) \zs\w+'
-    let file = CurrentFile()
-    if file == g:juneJson
-        let r = '"file":'
-        return ExecuteRegex2(r, 1)
-    endif
-    let value = SprawlMatch(regex)
-    if Exists(value)
-        let g:currentLocation = value
-        ec 'LOCATION: ' . value
-        return value
-    endif
-endfunction
 "constants.vim
 let g:filedict["mg"] = "/home/kdog3682/2023/mathgen.js"
 let g:pydict['clip'] = 'import { clip, appendVariable } from "./node-utils.js"'
@@ -6242,15 +6208,16 @@ function! RescapeHander(s) abort
      \ ">": "\\>",
      \ "$": "\\$",
      \ "\\": "\\\\",
+     \ "*": "\\*",
       \"=": "\\=",
      \ ".": "\\.",
      \ ")": "\\)",
-     \ "}": "\\}",
      \ "{": "\\{",
      \ "[": "\\[",
-     \ "]": "\\]",
      \ "(": "\\(",
+     \ "]": "\\]",
     \}
+     " \ "}": "\\}",
     let k = a:s[0]
     if has_key(dict, k)
         return dict[k]
@@ -10383,17 +10350,17 @@ function! EvalMode()
 endfunction
 let g:execRef["emo"] = "let g:globalState['mode'] = 'EvalMode'"
 let g:filedict["plhb"] = "/home/kdog3682/2023/pl-htmlBuilder.js"
-nnoremap 3 :wa<CR>:call RunJavascriptFile(g:activeNodeFile)<CR>
+nnoremap 3 :wa<CR>:call RunJavascriptFile(g:activeJavascriptFile)<CR>
 let g:filedict["cnt"] = "/home/kdog3682/2023/code-notes.txt"
 
 
 function! SetTempActiveNodeFile(...)
-    let fileName = a:0 >= 1 ? a:1 : 'g:activeNodeFile'
+    let fileName = a:0 >= 1 ? a:1 : 'g:activeJavascriptFile'
     if Test(fileName, '^g\d$')
-        let fileName = 'g:activeNodeFile' . fileName[1]
+        let fileName = 'g:activeJavascriptFile' . fileName[1]
     endif
     let s = printf('let %s = "%s"', fileName, CurrentFile())
-    ec 'sann:temporarily setting activeNodeFile'
+    ec 'sann:temporarily setting activeJavascriptFile'
     ec s
     execute s
 endfunction
@@ -10404,9 +10371,9 @@ function! SetActiveShuntFile()
     ec 'setting active shunt file: '  . current
 endfunction
 function! SetActiveNodeFile(...)
-    let fileName = a:0 >= 1 ? a:1 : 'g:activeNodeFile'
+    let fileName = a:0 >= 1 ? a:1 : 'g:activeJavascriptFile'
     if Test(fileName, '^g\d$')
-        let fileName = 'g:activeNodeFile' . fileName[1]
+        let fileName = 'g:activeJavascriptFile' . fileName[1]
     endif
     let current = CurrentFile()
     let s = printf('let %s = "%s"', fileName, current)
@@ -10415,8 +10382,8 @@ function! SetActiveNodeFile(...)
 endfunction
 let g:execRef["san"] = "SetActiveNodeFile"
 let g:execRef["sann"] = "SetTempActiveNodeFile"
-nnoremap ean :call OpenBuffer3(g:activeNodeFile)<CR>G
-let g:activeNodeFile = "/home/kdog3682/2023/createVue.js"
+nnoremap ean :call OpenBuffer3(g:activeJavascriptFile)<CR>G
+let g:activeJavascriptFile = "/home/kdog3682/2023/createVue.js"
 function! SmartOpen2(f)
 
     let f = a:f
@@ -10452,8 +10419,8 @@ function! FilePicker3()
 endfunction
 let g:filedict["ist"] = "/home/kdog3682/MARKDOWN/Ivy and Sandy Teach Hammy Decimals.md"
 nnoremap <f3> :w<CR>:call RunGFile()<CR>
-let g:activeNodeFile = "/home/kdog3682/2023/pl-htmlBuilder.js"
-nnoremap ga :call OpenBuffer3(g:activeNodeFile)<cr>
+let g:activeJavascriptFile = "/home/kdog3682/2023/pl-htmlBuilder.js"
+nnoremap ga :call OpenBuffer3(g:activeJavascriptFile)<cr>
 let g:execRef["en"] = "Explore /home/kdog3682/2023/node_modules/"
 
 
@@ -10505,9 +10472,9 @@ let g:wpsnippets["js"]["propz"] = "props: {\n    value: { default: $c },\n},"
 function! Sdf()
     ec TimestampString()
 endfunction
-let g:activeNodeFile = "/home/kdog3682/2023/css-utils.js"
+let g:activeJavascriptFile = "/home/kdog3682/2023/css-utils.js"
 let g:filedict["ex"] = "/home/kdog3682/2023/examples.js"
-let g:activeNodeFile = "/home/kdog3682/2023/examples.js"
+let g:activeJavascriptFile = "/home/kdog3682/2023/examples.js"
 let g:activeNodeFile1 = ''
 let g:activeNodeFile2 = ''
 let g:activeNodeFile3 = ''
@@ -10545,9 +10512,9 @@ function! GitReset()
     let s = systemlist('git rm --cached -r; git status')
     call Clip(s)
 endfunction
-let g:activeNodeFile = "/home/kdog3682/2023/juneComponents.js"
-let g:activeNodeFile = "/home/kdog3682/2023/juneComponents.js"
-let g:activeNodeFile = "/home/kdog3682/2023/pl-svgBuilder.js"
+let g:activeJavascriptFile = "/home/kdog3682/2023/juneComponents.js"
+let g:activeJavascriptFile = "/home/kdog3682/2023/juneComponents.js"
+let g:activeJavascriptFile = "/home/kdog3682/2023/pl-svgBuilder.js"
 
 function! CopyFile2(a, b)
    let a = a:a
@@ -10569,20 +10536,20 @@ function! GetFileFromLineOld()
 endfunction
 let g:execRef["bu2"] = "BackupFileFromLine"
 let g:filedict["backup"] = "/home/kdog3682/2023/backup.js"
-let g:activeNodeFile = "/home/kdog3682/2023/pl-svgBuilder.js"
+let g:activeJavascriptFile = "/home/kdog3682/2023/pl-svgBuilder.js"
 function! FindallWords(s)
     let s = a:s
     return FindallStrings(s, '[a-zA-Z]\w+')
 endfunction
 let g:filedict["lez"] = "/home/kdog3682/2023/Lezer.js"
 let g:activeNodeFile3 = "/home/kdog3682/2023/pl-htmlBuilder.js"
-let g:activeNodeFile = "/home/kdog3682/2023/pl-htmlBuilder.js"
+let g:activeJavascriptFile = "/home/kdog3682/2023/pl-htmlBuilder.js"
 "let g:execRef['ff'] = "call GoFileGoFunction('$arg')"
 let g:execRef["ff"] = "ffstring"
 let g:execRef["ff"] = "FindFiles"
 let g:execRef["ask"] = "ask_reddit"
 let g:activeNodeFile4 = "/home/kdog3682/2023/pl-create.js"
-let g:activeNodeFile = "/home/kdog3682/2023/setupComponent.js"
+let g:activeJavascriptFile = "/home/kdog3682/2023/setupComponent.js"
 let g:wpsnippets["js"]["tth"] = "console.log(typeof this); throw '';"
 let g:wpsnippets["js"]["tth"] = "console.log(typeof this); throw ''; /* tth */"
 
@@ -10637,7 +10604,7 @@ let g:filedict["gdata"] = "/home/kdog3682/2023/git-data2.json"
 "nunmap C
 let g:wpsnippets["js"]["obj"] = "{\n\n},"
 let g:wpsnippets["js"]["obj"] = "{\n    $c\n},"
-let g:activeNodeFile = "/home/kdog3682/2023/cm.js"
+let g:activeJavascriptFile = "/home/kdog3682/2023/cm.js"
 let g:activeNodeFile1 = "/home/kdog3682/2023/cm-utils.js"
 let g:filedict["esm"] = "/home/kdog3682/2023/cm.esm.js"
 let g:filedict["gd"] = "/home/kdog3682/2023/git-data3.json"
@@ -10842,10 +10809,10 @@ function! Iunmap(s)
     ec items
 endfunction
 let g:execRef["iunmap"] = "Iunmap"
-let g:activeNodeFile = "/home/kdog3682/2023/pl-htmlBuilder.js"
-let g:activeNodeFile = "/home/kdog3682/2023/cm-components.js"
+let g:activeJavascriptFile = "/home/kdog3682/2023/pl-htmlBuilder.js"
+let g:activeJavascriptFile = "/home/kdog3682/2023/cm-components.js"
 let g:secondActiveFile = '/home/kdog3682/2023/pl-htmlBuilder.js'
-let g:activeNodeFile = '/home/kdog3682/2023/pl-htmlBuilder.js'
+let g:activeJavascriptFile = '/home/kdog3682/2023/pl-htmlBuilder.js'
 "call appendbufline('a.js', 3, 'fo')
 "end of line
 "end of line
@@ -10942,7 +10909,7 @@ endfunction
 nnoremap ghb :call OpenBuffer3('/home/kdog3682/2023/pl-htmlBuilder.js')<cr>
 
   inoreab tk console.log([]); throw '';<LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><C-R>=Eatchar('\s')<CR>
-let g:activeNodeFile = "/home/kdog3682/2023/cm-components.js"
+let g:activeJavascriptFile = "/home/kdog3682/2023/cm-components.js"
 
 
 let g:execRef["one"] = "OneifyTheFile"
@@ -11663,10 +11630,10 @@ let g:filedict["mc"] = "/home/kdog3682/2023/mathComponents.js"
 let g:wpsnippets["js"]["template"] = "template: `\n    $c\n`,"
 nnoremap est :call OpenBuffer3("/home/kdog3682/RESOURCES/saved.txt")<CR>G
 nnoremap emv :call OpenBuffer3("/home/kdog3682/2023/my-files.json")<CR>G
-let g:activeNodeFile = "/home/kdog3682/2023/pl-htmlBuilder.js"
+let g:activeJavascriptFile = "/home/kdog3682/2023/pl-htmlBuilder.js"
 let g:filedict["csb"] = "/home/kdog3682/2023/CSSParserBuilder.js"
 let g:activeNodeFile6= '/home/kdog3682/2023/baseComponents.js'
-let g:activeNodeFile = "/home/kdog3682/2023/pl-htmlBuilder.js"
+let g:activeJavascriptFile = "/home/kdog3682/2023/pl-htmlBuilder.js"
 let g:filedict["xs"] = "/home/kdog3682/2023/xmlString.js"
 let g:execRef["asf"] = "AppendShuntFile"
 let g:execRef["ssf"] = "SetActiveShuntFile"
@@ -11725,10 +11692,10 @@ function! GetMostRecent(files)
     endfor
     return mostRecentFile
 endfunction
-let g:activeNodeFile = "/home/kdog3682/2023/baseComponents.js"
-let g:activeNodeFile = "/home/kdog3682/2023/pl-htmlBuilder.js"
-let g:activeNodeFile = "/home/kdog3682/2023/pl-comprehensiveMarkdown.js"
-let g:activeNodeFile = "/home/kdog3682/2023/baseComponents.js"
+let g:activeJavascriptFile = "/home/kdog3682/2023/baseComponents.js"
+let g:activeJavascriptFile = "/home/kdog3682/2023/pl-htmlBuilder.js"
+let g:activeJavascriptFile = "/home/kdog3682/2023/pl-comprehensiveMarkdown.js"
+let g:activeJavascriptFile = "/home/kdog3682/2023/baseComponents.js"
 let g:filedict["vc"] = "/home/kdog3682/2023/pl-comprehensiveMarkdown.js"
 
 let g:dirdict3 = {"root": "/home/kdog3682/", "drive": "/mnt/chromeos/GoogleDrive/MyDrive/", "drivedir": "/mnt/chromeos/GoogleDrive/MyDrive/", "jsondrive": "/mnt/chromeos/GoogleDrive/MyDrive/JSONS/", "math": "/home/kdog3682/MATH/", "home": "/home/kdog3682/", "clips": "/home/kdog3682/CLIPS", "js": "/home/kdog3682/CWF/public/", "html": "/home/kdog3682/CWF/public/", "py": "/home/kdog3682/PYTHON/", "pdf": "/home/kdog3682/PDFS/", "txt": "/home/kdog3682/2023/TEXTS/", "json": "/home/kdog3682/JSONS/", "jpg": "/home/kdog3682/PICS/", "jpeg": "/home/kdog3682/PICS/", "png": "/home/kdog3682/PICS/", "svg": "/home/kdog3682/PICS/", "log": "/home/kdog3682/LOGS/", "dl": "/mnt/chromeos/MyFiles/Downloads/", "dldir": "/mnt/chromeos/MyFiles/Downloads/", "trash": "/home/kdog3682/TRASH/", "trashdir": "/home/kdog3682/TRASH/", "fonts": "/home/kdog3682/2023/fonts/", "fontdir": "/home/kdog3682/2023/fonts/", "budir": "/mnt/chromeos/GoogleDrive/MyDrive/BACKUP/", "current": "/home/kdog3682/2023/", "dir2023": "/home/kdog3682/2023/", "jchdir": "/home/kdog3682/CWF/jch/", "pubdir": "/home/kdog3682/CWF/public/", "cwf": "/home/kdog3682/CWF", "cwd": "/home/kdog3682/CWD"}
@@ -11902,23 +11869,6 @@ function! ToggleLinkedBufferGroup()
     return OpenBuffer3(GetNextLinkedBuffer())
 endfunction
 
-function! GetNextLinkedBuffer() abort
-    let file = CurrentFile()
-    let tail = Tail(file)
-    if has_key(g:node1dict2, tail)
-        let f = get(g:node1dict2[tail], 'file')
-        if Exists(f)
-            return f 
-        endif
-    endif
-    if has_key(g:linkedBufferGroups, file)
-        let group = ToArray2(g:linkedBufferGroups[file])
-        let nextFile = ModularIncrement2(group, file)
-        return nextFile
-    else
-        throw 'no linked buffer group for: ' . Tail(file)
-    endif
-endfunction
 function! GetBufferGroup()
      let buffers = GetActiveBuffers()
      let s = 'Abspath(v:val)'
@@ -11930,7 +11880,7 @@ function! EstablishLinkedBufferGroup()
 endfunction
 function! EstablishLinkedBufferGroupRunner(group)
     let group = a:group
-     let template = 'let g:linkedBufferGroups["%s"] = "%s"'
+     let template = 'let g:linkedBufferGroups["%s"] = %s'
 
      if len(group) == 0
          try
@@ -12676,9 +12626,9 @@ endfunction
 let g:execRef["rpac"] = "RegisterPacItemFromCurrentLine"
 nnoremap ed3 :call OpenBuffer3("/home/kdog3682/2023/pl-d3Builder.js")<CR>
 nnoremap eft :call OpenBuffer3("/home/kdog3682/2023/files.txt")<CR>
-let g:activeNodeFile = "/home/kdog3682/2023/pl-d3Builder.js"
+let g:activeJavascriptFile = "/home/kdog3682/2023/pl-d3Builder.js"
 nnoremap gs :call OpenBuffer3(g:secondActiveFile)<cr>
-nnoremap gs :call OpenBuffer3(g:activeNodeFile)<cr>
+nnoremap gs :call OpenBuffer3(g:activeJavascriptFile)<cr>
 let g:filedict["gb"] = "/home/kdog3682/2023/getBlocks.js"
 function! AddImportNext()
     let word = GetCurrentWordOrBinding()
@@ -12741,7 +12691,7 @@ let g:linkedBufferGroups["/home/kdog3682/PYTHON/next.py"] = ['/home/kdog3682/PYT
 let g:linkedBufferGroups["/home/kdog3682/PYTHON/run.py"] = ['/home/kdog3682/PYTHON/next.py', '/home/kdog3682/PYTHON/run.py']
 
 let g:filedict["pac"] = "/home/kdog3682/PYTHON/pac.txt"
-let g:activeNodeFile = "/home/kdog3682/2023/pl-htmlBuilder.js"
+let g:activeJavascriptFile = "/home/kdog3682/2023/pl-htmlBuilder.js"
 let g:filedict["d3"] = "/home/kdog3682/2023/pl-d3Builder.js"
 
 function! DuplicateCallWithString()
@@ -12820,7 +12770,7 @@ endfunction
 nnoremap zrn :call Zrn()<CR>
 let g:filedict["gh"] = "/home/kdog3682/2023/graph-helpers.js"
 let g:filedict["tur2"] = "/home/kdog3682/2023/turtle2.js"
-let g:activeNodeFile = "/home/kdog3682/2023/turtle2.js"
+let g:activeJavascriptFile = "/home/kdog3682/2023/turtle2.js"
 let g:filedict["pld3"] = "/home/kdog3682/2023/pl-d3Builder.js"
 let g:wpsnippets["js"]["igc"] = "import { getColor } from \"./getColor.js\""
 function! SaveTemp()
@@ -12841,7 +12791,7 @@ endfunction
 let g:execRef["cwf"] = "CurrentlyWorkingIn"
 let g:currentWorkFile = "math.txt"
 let g:filedict["hb"] = "/home/kdog3682/2023/pl-htmlBuilder.js"
-let g:activeNodeFile = "/home/kdog3682/2023/pl-htmlBuilder.js"
+let g:activeJavascriptFile = "/home/kdog3682/2023/pl-htmlBuilder.js"
 let g:filedict["tt"] = g:temptextfile
 function! GetQuote(s)
     let s = a:s
@@ -12970,7 +12920,7 @@ nnoremap <f4> :w<CR>:call RunServerFile('html')<CR>
 nnoremap <f6> :w<CR>:call RunServerFile('empty')<CR>
 nnoremap <f8> :w<CR>:call RunServerFile('runWindowString')<CR>
 nnoremap <f9> :w<CR>:call RunServerFile('runLocalHost')<CR>
-let g:activeNodeFile = "/home/kdog3682/2023/pl-htmlBuilder.js"
+let g:activeJavascriptFile = "/home/kdog3682/2023/pl-htmlBuilder.js"
 let g:wpsnippets["js"]["ps"] = "problem: $c\nsolution: "
 
 
@@ -13020,23 +12970,13 @@ let g:pmr2['vite'] = 'serveVite.js serve baseComponents.html'
 let g:pmr2['vite-build'] = 'serveVite.js build baseComponents.html'
 let g:pmr2['vite-serve'] = 'serveVite.js serve baseComponents.html'
 let g:pmr2['vs'] = 'serveVite.js serve baseComponents.html'
+
 let g:pmr2['ami'] = 'codeOrganizer2.js ami cf'
 let g:pmr2['amid'] = 'codeOrganizer2.js amid cf'
 let g:pmr2['print'] = 'serveFile.js print baseComponents.html'
 let g:pmr2['html'] = 'serveFile.js html baseComponents.html'
 let g:pmr2['ss'] = 'serveFile.js screenshot baseComponents.html'
 
-function! PackageManager2(key, ...)
-    let key = a:key
-    let args = split(g:pmr2[key], ' ')
-    let args = GetPackageManagerArgs(args)
-    let argFile = a:0 >= 1 ? a:1 : 0
-    if Exists(argFile)
-        call remove(args, len(args) - 1)
-        call add(args, argFile)
-    endif
-    call Node(args)
-endfunction
 
 function! GetPackageManagerArgs(...)
     let s:args = Flat(a:000)

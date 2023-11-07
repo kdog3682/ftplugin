@@ -1525,10 +1525,10 @@ nnoremap ebc :call OpenBuffer3("/home/kdog3682/2023/base-components.js")<CR>
 nnoremap ed3 :call OpenBuffer3("/home/kdog3682/2023/pl-d3Builder.js")<CR>
 nnoremap eft :call OpenBuffer3("/home/kdog3682/2023/files.txt")<CR>
 nnoremap eft :call OpenBuffer3('/home/kdog3682/2023/files.txt')<CR>G
-nnoremap eft :call OpenBuffer3(g:ftfile)<CR>
+" nnoremap eft :call OpenBuffer3(g:ftfile)<CR>
 nnoremap ega :call OpenBuffer3("/home/kdog3682/2023/googleAppConnector.js")<CR>
 nnoremap egi :call OpenBuffer3("/home/kdog3682/2023/.gitignore")<CR>
-nnoremap ehf :call OpenBuffer3(g:helpmdfile)<cr>g
+" nnoremap ehf :call OpenBuffer3(g:helpmdfile)<cr>g
 nnoremap eii :call OpenBuffer3("/home/kdog3682/2023/index.html")<CR>
 nnoremap ein :call OpenBuffer3("/home/kdog3682/2023/index.html")<CR>
 nnoremap el :call EvalLastLine()<CR>
@@ -1540,16 +1540,16 @@ nnoremap emr :call OpenBuffer3("/home/kdog3682/2023/math-review.txt")<CR>
 nnoremap emu :call OpenBuffer3("/home/kdog3682/2023/ma.js")<CR>
 nnoremap emu :call OpenBuffer3("/home/kdog3682/2023/math-utils.js")<CR>
 nnoremap emv :call OpenBuffer3("/home/kdog3682/2023/my-files.json")<CR>G
-nnoremap eng :call OpenBuffer3("/home/kdog3682/PYTHON/githubscript.py")<CR>G
-nnoremap enn :call OpenBuffer3("/home/kdog3682/2023/notes.txt")<CR>
-nnoremap enp :call OpenBuffer3('/home/kdog3682/PYTHON/next.py')<CR>G
-nnoremap enu :call OpenBuffer3("/home/kdog3682/2023/node-utils.js")<CR>
-nnoremap env :call OpenBuffer3("/home/kdog3682/PYTHON/env.py")<CR>G
-nnoremap enx :call OpenBuffer3("/home/kdog3682/2023/next.js")<CR>
-nnoremap epa :call OpenBuffer3("/home/kdog3682/PYTHON/pac.txt")<CR>
-nnoremap epj :call OpenBuffer3("/home/kdog3682/2023/package.json")<CR>
-nnoremap eps :call OpenBuffer3("/home/kdog3682/2023/Puppeteer.js")<CR>
-nnoremap eps :call OpenBuffer3("/home/kdog3682/2023/Puppeteer.js")<CR>
+" nnoremap eng :call OpenBuffer3("/home/kdog3682/PYTHON/githubscript.py")<CR>G
+" nnoremap enn :call OpenBuffer3("/home/kdog3682/2023/notes.txt")<CR>
+" nnoremap enp :call OpenBuffer3('/home/kdog3682/PYTHON/next.py')<CR>G
+" nnoremap enu :call OpenBuffer3("/home/kdog3682/2023/node-utils.js")<CR>
+" nnoremap env :call OpenBuffer3("/home/kdog3682/PYTHON/env.py")<CR>G
+" nnoremap enx :call OpenBuffer3("/home/kdog3682/2023/next.js")<CR>
+" nnoremap epa :call OpenBuffer3("/home/kdog3682/PYTHON/pac.txt")<CR>
+" nnoremap epj :call OpenBuffer3("/home/kdog3682/2023/package.json")<CR>
+" nnoremap eps :call OpenBuffer3("/home/kdog3682/2023/Puppeteer.js")<CR>
+" nnoremap eps :call OpenBuffer3("/home/kdog3682/2023/Puppeteer.js")<CR>
 nnoremap esj :call OpenBuffer3("/home/kdog3682/2023/server.js")<CR>
 nnoremap esk :call OpenBuffer3("/home/kdog3682/2023/splitKatex.js")<CR>
 nnoremap ess :call OpenBuffer3("/home/kdog3682/2023/TEXTS/scratchpad.txt")<CR>
@@ -1561,7 +1561,7 @@ nnoremap ete :call OpenBuffer3("/home/kdog3682/2023/textEdit.js")<CR>
 nnoremap ett :call OpenBuffer3(g:tempmdfile)<CR>:call append('.', DateStamp())<CR>GA<space>
 nnoremap eu :call OpenBuffer3("/home/kdog3682/2023/utils.js")<CR>
 nnoremap ewc :call OpenBuffer3("/home/kdog3682/2023/worksheet-components.js")<CR>
-nnoremap ex :call Fooga()<CR>
+" nnoremap ex :call Fooga()<CR>
 nnoremap g0 :call OpenBuffer3('logging.txt')<cr>
 nnoremap g1 :call OpenBuffer3(g:activeNodeFile1)<cr>
 nnoremap g2 :call OpenBuffer3(g:activeNodeFile2)<cr>

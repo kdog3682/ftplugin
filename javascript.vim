@@ -72,14 +72,14 @@ inoreab <buffer>lt .log(files);<space>throw<space>'';<LEFT><LEFT><LEFT><LEFT><LE
 inoreab <buffer>lt console.log();<space>throw<space>'';<LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><C-R>=Eatchar('\s')<CR>
 
 
-inoremap <silent> <buffer> qw <ESC>:call NormalQW()<CR>
-nnoremap <silent> <buffer> qw :call NormalQW()<CR>
-inoremap <silent> <buffer> qe <ESC>:call NormalQE()<CR>
-nnoremap <silent> <buffer> qe :call NormalQE()<CR>
+" inoremap <silent> <buffer> qw <ESC>:call NormalQW()<CR>
+" nnoremap <silent> <buffer> qw :call NormalQW()<CR>
+" inoremap <silent> <buffer> qe <ESC>:call NormalQE()<CR>
+" nnoremap <silent> <buffer> qe :call NormalQE()<CR>
 " nnoremap <silent> <buffer> qu :call NormalQU()<CR>
 " inoremap <silent> <buffer> qu <ESC>:call NormalQU()<CR>
 nnoremap <silent><buffer> 3 #
-inoremap <silent><buffer> 4 $
+" inoremap <silent><buffer> 4 $
 inoremap <silent><buffer> $ 4
 inoreab <buffer>var. variables.<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>inc includes<C-R>=Eatchar('\s')<CR>
@@ -106,7 +106,11 @@ inoreab <buffer>[[ {}<left><C-R>=Eatchar('\s')<CR>
 
 
 " inoremap <buffer> <silent> <Tab> <C-R>=CleverTab()<CR>
-" setlocal completefunc=JavascriptComplete
+setlocal completefunc=JavascriptComplete
+autocmd! CompleteDone  *.js call JSOnCompleteDone()
 " inoremap <silent> <buffer> <expr> <Tab> QQQ()
 inoremap <silent> <buffer> <expr> <Tab> QQQ()
 " inoremap <buffer> <expr> <space> SpaceCompletion()
+inoreab <buffer>rt return<space>true<C-R>=Eatchar('\s')<CR>
+
+inoreab <expr> <buffer>lg LogExpr()

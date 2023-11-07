@@ -1642,7 +1642,7 @@ nnoremap zt gg
 nnoremap zt gg
 nnoremap b /<C-R><C-W><CR>
 nnoremap <leader>j :update<CR>:call JspyConnector("")<LEFT><LEFT>
-nnoremap qt :call Tildaify()<CR>
+" nnoremap qt :call Tildaify()<CR>
 nnoremap ws :u<CR>
 nnoremap <leader>b :call BookmarkManager2('')<LEFT><LEFT>
 nnoremap <s-j> :@:1<CR>

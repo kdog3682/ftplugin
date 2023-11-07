@@ -18,26 +18,30 @@ nnoremap <buffer> <BS>    :call CssNormalKey('bs')<CR>
 nnoremap <buffer> <CR>    :call CssNormalEnter()<CR>
 " submit the g:s string to affect current line
 
-inoremap <buffer> <expr> qw   BaseBlockEnterExpr()
-inoremap <buffer> <expr> qe   BaseBlockExitExpr()
-" standard block navigation
+nnoremap <silent> <buffer> qw :call CssBlockDown()<CR>
+nnoremap <silent> <buffer> qe :call CssBlockUp()<CR>
+
+inoremap <silent> <buffer> qw <esc> :call CssBlockDown()<CR>
+inoremap <silent> <buffer> qe <esc> :call CssBlockUp()<CR>
 
 nnoremap <buffer> wf   :call CssWriteBlock()<CR>
 inoremap <buffer> wf   <esc>:call CssWriteBlock()<CR>
 
+inoremap <buffer> qu   <esc><UP>
 inoremap <buffer> <expr> <CR> CssEnter()
 " has some editing utilities for the line
 " add semi colons
 
 " setlocal completefunc=CssDotCompletion
-inoremap <silent> <buffer> . <C-R>=CssDotCompletionExpr()<CR>
+" inoremap <silent> <buffer> . <C-R>=CssDotCompletionExpr()<CR>
 " dot completion
+" i dont think it is necessary
 
-" nnoremap <buffer> <TAB>   :call CssNormalTab()<CR>
+nnoremap <buffer> <TAB>   :call GetSetFn('CssSecondaryIncrement')<CR>
 " nnoremap <buffer> \       :call CssNormalBackslash()<CR>
 " not active
 
 nnoremap <buffer> <SPACE> :call CssOmniIncrement()<CR>
 " if has px | % ... increment the unit
-" if is selector ... increment the pseudo
+" else if is selector ... increment the pseudo
 

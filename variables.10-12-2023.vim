@@ -351,8 +351,8 @@ let g:GI4Ref = {
 \}
 
 let g:jspyref3['vim']['commentPrefix'] = '"'
-let g:jspyref3['python']['commentPrefix'] = '//'
-let g:jspyref3['javascript']['commentPrefix'] = '#'
+let g:jspyref3['python']['commentPrefix'] = '#'
+let g:jspyref3['javascript']['commentPrefix'] = '//'
 let g:execRef["cq"] = "ToggleSingleOrDoubleQuotes"
 let g:execRef["mcw"] = "MarkCurrentWork"
 let g:execRef["resource"] = "ResourcePluginFile"
@@ -628,7 +628,7 @@ nnoremap ; :call AnythingHandler2('')<LEFT><LEFT>
 nnoremap <buffer> 2 :update<CR>:call FunctionCallerViaEvalTheLine()<CR>
 nnoremap <buffer> 3 :update<CR>:call ExecuteFunctionCaller2()<CR>A
 nnoremap <buffer> <leader>/ :call VimFunctionSearch('')<left><left>
-nnoremap <buffer> qt :w<CR>:call QTNormalRunner()<CR>
+" nnoremap <buffer> qt :w<CR>:call QTNormalRunner()<CR>
 nnoremap <c-c> :call Sayhi()<CR>
 nnoremap <c-r> :call ModeReset()<CR>
 nnoremap <c-s> :w<CR>:call SaveBackup0104()<CR>
@@ -659,20 +659,20 @@ nnoremap <tab> :call OpenBuffer3(NBackslash(''))<LEFT><LEFT><LEFT>
 nnoremap = :b#<CR>
 nnoremap X :call UpdateAndExecuteLine(1)<CR>
 nnoremap ` :call CommandTilda()<CR>
-nnoremap ec :call Echolocation()<CR>
+" nnoremap ec :call Echolocation()<CR>
 nnoremap ee :call OpenBuffer3("/home/kdog3682/2023/examples.js")<CR>
-nnoremap ehb :call OpenBuffer3("/home/kdog3682/2023/pl-htmlBuilder.js")<CR>
+" nnoremap ehb :call OpenBuffer3("/home/kdog3682/2023/pl-htmlBuilder.js")<CR>
 nnoremap ei :call EchoTemplate('ei')<CR>
 nnoremap el :call EchoTemplate('el')<CR>
 nnoremap er :call EchoTemplate('er')<CR>
 nnoremap et :call EchoTemplate('et')<CR>
 nnoremap es I<C-O>D
-nnoremap ex :call OpenExampleJS()<CR>
+" nnoremap ex :call OpenExampleJS()<CR>
 nnoremap gf :call GoFile()<CR>
 nnoremap gof :call BrowseAndGoFunction()<CR>
 nnoremap gx :call ChooseAndGoFunctionFromScreen()<CR>
 nnoremap mv :call Move()<CR>
-nnoremap qe o<bs>
+" nnoremap qe o<bs>
 nnoremap qp :call SilentPythonController('sayhi2023')<CR>
 nnoremap wf :call VimCreateFunctionBlockNormal()<cr>
 nnoremap ze :call ZEqual()<CR>
