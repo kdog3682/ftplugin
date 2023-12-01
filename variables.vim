@@ -1594,7 +1594,7 @@ nnoremap q :call LineSetter('ZInvivoFixJS')<CR>o
 nnoremap q :call SpecialEnter()<CR>
 nnoremap zs :call ShuntToFile(GetCodeIndexes())<CR>
 nnoremap c :call LineSetter('AddOrRemoveComment')<cr><down>
-nnoremap c :call ToggleComment999()<CR><DOWN>
+" nnoremap c :call ToggleComment999()<CR><DOWN>
 nnoremap ga :call GoToFunctionRightAbove()<cr>
 nnoremap zm z-
 nnoremap zw :call WrapIt()<CR>
@@ -1604,13 +1604,13 @@ nnoremap <f2> :call JsAnywhere()<cr>
 nnoremap <f2> :call InvivoJs()<cr>
 nnoremap zs :call ShuntBlock()<cr>
 nnoremap 7 :call GoToFileAndThenGoToFunction("")<LEFT><LEFT>
-nnoremap dsl :call DefineSnippetFromCurrentLine()<CR>
+" nnoremap dsl :call DefineSnippetFromCurrentLine()<CR>
 nnoremap dsw :call DefineSnippetFromFile()<CR>
-nnoremap dsw :call DefineSnippetFromWord()<CR>
+" nnoremap dsw :call DefineSnippetFromWord()<CR>
 nnoremap <F2> :call JSA()<CR>
 nnoremap gf :call GoFile()<CR>
 nnoremap <c-c> :call CommentOutConsole()<CR>
-nnoremap da da'
+" nnoremap da da'
 nnoremap zc :call ChangeDir()<CR>
 nnoremap ttb :call ToTempBuffer()<CR>
 nnoremap zm :call MoveFunction('')<LEFT><LEFT>

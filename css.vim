@@ -8,40 +8,35 @@ nnoremap <buffer> 4 :call CssNormalKey('4')<CR>
 nnoremap <buffer> 5 :call CssNormalKey('5')<CR>
 nnoremap <buffer> 6 :call CssNormalKey('6')<CR>
 nnoremap <buffer> 7 :call CssNormalKey('7')<CR>
-nnoremap <buffer> 8 :call CssNormalKey('8')<CR>
+" nnoremap <buffer> 8 :call CssNormalKey('8')<CR>
 nnoremap <buffer> 9 :call CssNormalKey('9')<CR>
-" increment g:s by the number
-
+nnoremap <buffer> <c-c> :call CssNormalKey('escape')<CR>
 nnoremap <buffer> <BS>    :call CssNormalKey('bs')<CR>
-" delete g:s by 1 char
-
 nnoremap <buffer> <CR>    :call CssNormalEnter()<CR>
-" submit the g:s string to affect current line
+inoremap <buffer> <expr> <CR> CssEnter()
 
 nnoremap <silent> <buffer> qw :call CssBlockDown()<CR>
 nnoremap <silent> <buffer> qe :call CssBlockUp()<CR>
-
 inoremap <silent> <buffer> qw <esc> :call CssBlockDown()<CR>
 inoremap <silent> <buffer> qe <esc> :call CssBlockUp()<CR>
+inoremap <buffer> qu   <esc><UP>
 
 nnoremap <buffer> wf   :call CssWriteBlock()<CR>
 inoremap <buffer> wf   <esc>:call CssWriteBlock()<CR>
 
-inoremap <buffer> qu   <esc><UP>
-inoremap <buffer> <expr> <CR> CssEnter()
-" has some editing utilities for the line
-" add semi colons
 
-" setlocal completefunc=CssDotCompletion
-" inoremap <silent> <buffer> . <C-R>=CssDotCompletionExpr()<CR>
-" dot completion
-" i dont think it is necessary
+nnoremap <buffer> <SPACE> :call CssOmniIncrement(1)<CR>
+nnoremap <buffer> \ :call CssOmniIncrement(-1)<CR>
 
-nnoremap <buffer> <TAB>   :call GetSetFn('CssSecondaryIncrement')<CR>
-" nnoremap <buffer> \       :call CssNormalBackslash()<CR>
-" not active
 
-nnoremap <buffer> <SPACE> :call CssOmniIncrement()<CR>
-" if has px | % ... increment the unit
-" else if is selector ... increment the pseudo
+nnoremap <buffer> <TAB>     :call CssSecondaryIncrementWrapper(1)<CR>
+nnoremap <buffer> <s-TAB>   :call CssSecondaryIncrementWrapper(-1)<CR>
+inoremap <silent> <buffer> <expr> <Tab> QQQ()
+inoreab <buffer>bc /*<space><space>*/<left><left><left><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>v var(--);<left><left><C-R>=Eatchar('\s')<CR>
+
+nnoremap <buffer> ds :call CommentAndSave()<CR>:w<CR>
+nnoremap c :call GetSetFn('s:toggle_comment')<CR>
+" nnoremap <silent> <leader>r :call CssLeaderR()<CR>
+nnoremap <silent> <expr> <leader>r CssLeaderRExpr()
 

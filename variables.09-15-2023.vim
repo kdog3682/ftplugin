@@ -730,7 +730,6 @@ let g:filedict["vob"] = "/home/kdog3682/2023/vob.worksheet.js"
 let g:filedict["ws2"] = "/home/kdog3682/2023/ws2.vob.js"
 let g:filedict["w2"] = "/home/kdog3682/2023/ws2.vob.js"
 let g:server_html_super_commands = ['string-screenshot', 't1-screenshot', 't1-print', 't2-print', 'final-print']
-let g:filedict["qt"] = "/home/kdog3682/2023/quiz.txt"
 let g:execRef["pbg"] = "PasteBufferGroupToFile"
 let g:filedict["hc"] = "/home/kdog3682/2023/hammyComponents.js"
 let g:sshfile = "/home/kdog3682/.ssh/known_hosts"
@@ -841,7 +840,6 @@ let g:filedict["notes"] = "/home/kdog3682/2023/notes.txt"
 let g:filedict["mst"] = "/home/kdog3682/2023/math.singletons.txt"
 let g:filedict["mt"] = "/home/kdog3682/2023/math.txt"
 let g:filedict["ns"] = "/home/kdog3682/2023/nerdSolver.js"
-let g:fnRE2 = '^(var|(async )?function[!*]?|def|class|const) \zs\w+|^\w+ \= \{ *$'
 let g:execRef["imo"] = "InoremapTestMode"
 let g:execRef["cmo"] = "CheckMode"
 let g:execRef["cpmo"] = "let g:globalState['mode'] = 'CopyMode'"
@@ -1482,7 +1480,6 @@ nnoremap <leader>x :call InsertAtInsertionPoint(GetCurrentWordOrBinding())<CR>
 nnoremap <leader>z :w<cr>:e /home/kdog3682/CWF/public/mc.js<cr>Go
 nnoremap <leader>z :w<cr>:e /home/kdog3682/CWF/public/mc.js<cr>Go
 nnoremap <silent> P :w<CR>:call PackageManager('nodePrettier')<CR>
-nnoremap <silent> db :call DBManager()<cr>
 nnoremap <silent> ebc :call OpenBuffer3("/home/kdog3682/2023/baseComponents.js")<CR>
 nnoremap <silent> le :call ToLearning()<CR>
 nnoremap <silent> lhf :call ListHighFrequencyFiles()<CR>
@@ -1520,11 +1517,11 @@ nnoremap du :call DeleteAndGo('/home/kdog3682/2023/utils.js')<CR>
 nnoremap dx :call DeleteAndGo()<CR>
 nnoremap dz :call DZ()<CR>
 nnoremap ean :call OpenBuffer3(g:activeNodeFile)<CR>G
-nnoremap eba :call OpenBuffer3("/home/kdog3682/2023/base.css")<CR>
-nnoremap ebc :call OpenBuffer3("/home/kdog3682/2023/base-components.js")<CR>
+" nnoremap eba :call OpenBuffer3("/home/kdog3682/2023/base.css")<CR>
+" nnoremap ebc :call OpenBuffer3("/home/kdog3682/2023/base-components.js")<CR>
 nnoremap ed3 :call OpenBuffer3("/home/kdog3682/2023/pl-d3Builder.js")<CR>
 nnoremap eft :call OpenBuffer3("/home/kdog3682/2023/files.txt")<CR>
-nnoremap eft :call OpenBuffer3('/home/kdog3682/2023/files.txt')<CR>G
+" nnoremap eft :call OpenBuffer3('/home/kdog3682/2023/files.txt')<CR>G
 " nnoremap eft :call OpenBuffer3(g:ftfile)<CR>
 nnoremap ega :call OpenBuffer3("/home/kdog3682/2023/googleAppConnector.js")<CR>
 nnoremap egi :call OpenBuffer3("/home/kdog3682/2023/.gitignore")<CR>
@@ -1560,7 +1557,7 @@ nnoremap etc :call OpenBuffer3('temp.css')<cr>
 nnoremap ete :call OpenBuffer3("/home/kdog3682/2023/textEdit.js")<CR>
 nnoremap ett :call OpenBuffer3(g:tempmdfile)<CR>:call append('.', DateStamp())<CR>GA<space>
 nnoremap eu :call OpenBuffer3("/home/kdog3682/2023/utils.js")<CR>
-nnoremap ewc :call OpenBuffer3("/home/kdog3682/2023/worksheet-components.js")<CR>
+" nnoremap ewc :call OpenBuffer3("/home/kdog3682/2023/worksheet-components.js")<CR>
 " nnoremap ex :call Fooga()<CR>
 nnoremap g0 :call OpenBuffer3('logging.txt')<cr>
 nnoremap g1 :call OpenBuffer3(g:activeNodeFile1)<cr>

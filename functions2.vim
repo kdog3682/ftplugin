@@ -5290,13 +5290,6 @@ let g:file2023dict["nuo"] = "/home/kdog3682/CWF/public/node-utils.js"
 let g:file2023dict["plj"] = "/home/kdog3682/2023/package-lock.json"
 
 
-function! BackupName()
-    let cwf = "/mnt/chromeos/GoogleDrive/MyDrive/BACKUP/"
-    let name = Replace(Tail(), '^\.', '')
-    let date = DateStamp()
-    let outpath = cwf . name . date
-    return outpath
-endfunction
 function! DeprecateFile()
     let outpath = BackupName()
     call writefile(getline(1,'$'), outpath)
@@ -5306,9 +5299,6 @@ function! DeprecateFile()
     normal ggVGd
 endfunction
 
-function! SaveBackup0104()
-    call CopyFile(CurrentFile(), BackupName())
-endfunction
 let g:execRef['git'] = 'call BasePY("gitPush $cf")'
 let g:filedict['ugit'] = "https://github.com/kdog3682/2023/blob/main/utils.js"
 let g:filedict['github'] = "https://github.com/kdog3682/2023/blob/main/"
@@ -9263,7 +9253,6 @@ function! EscapeString(s)
     let s = Sub(s, '"', '\\"')
     let s = Sub(s, "\n", '\\n')
     return s
-    
 endfunction
 function! VisualMakePyDict(state) abort
     let state = a:state

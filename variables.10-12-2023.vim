@@ -249,15 +249,6 @@ let g:execRef["er"] = "DefineER"
 let g:visualactiondict['mvo'] = {'fn': 'VMoveBlockOutwards'}"
 let g:visualactiondict['ind'] = {'fn': 'VIndentBlock'}"
 
-let g:apae_map_templates = {
-    \'ibe': "nnoremap <silent> <buffer> <expr> %s %s()<CR>",
-    \'nbe': "nnoremap <silent> <buffer> <expr> %s %s()<CR>",
-    \'nnoremap': "nnoremap <silent> <buffer>%s :call %s()<CR>",
-    \'imap': "nnoremap <silent> <buffer>%s %s()<CR>",
-    \'inoremap': "inoremap <silent> <buffer> <expr> %s %s()",
-    \'no': "nnoremap <buffer>%s :call %s()<CR>",
-    \'va': "let g:visualactiondict['%s'] = {'fn': '%s'}",
-\}
 
 let g:execRef["debug"] = "ToggleDebugMode"
 let g:keyboard['O'] = "O"
@@ -513,8 +504,8 @@ let g:jspyref3['javascript']['equalDict']['v'] = {'replaceWith': 'value'}
 let g:jspyref3['javascript']['equalDict']['suf'] = {'replaceWith': 'm', 'value': 'sort(unique(findall(r, s)))'}
 let g:jspyref3['vim']['equalDict']['scol'] = {'entries': {'s': "getline('.')", "pos": "col('.') - 1"}}
 let g:jspyref3['vim']['equalDict']['gsi'] = {'entries': {'s': "getline('.')", "index": "line('.')", 'spaces': "matchstr(s, '^ *')"}}
-let g:jspyref3['javascript']['equalDict']['keys'] = {'conditionalTemplate': 'Object.keys($upbinding)'}
-let g:jspyref3['javascript']['equalDict']['values'] = {'conditionalTemplate': 'Object.values($upbinding)'}
+" let g:jspyref3['javascript']['equalDict']['keys'] = {'conditionalTemplate': 'Object.keys($upbinding)'}
+" let g:jspyref3['javascript']['equalDict']['values'] = {'conditionalTemplate': 'Object.values($upbinding)'}
 let g:jspyref3['javascript']['equalDict']['ab'] = {'replaceWith': '[a,b]'}
 let g:jspyref3['vim']['equalDict']['ab'] = {'replaceWith': '[a,b]'}
 let g:jspyref3['javascript']['equalDict']['fa'] = {'replaceWith': 'm', 'value': 'findall(r, s)'}
@@ -590,7 +581,6 @@ inoreab <buffer>te "test:
 inoreab <buffer>vv v:val<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>ww (\w+)<C-R>=Eatchar('\s')<CR>
 
-inoreab <expr> ds Comment(strftime('%m-%d-%Y'))
 inoreab <silent> <buffer> <expr> echo VimscriptEcho()
 inoreab <silent> <expr> gbm SetGlobalBookmark()
 inoremap : ;
@@ -616,7 +606,6 @@ inoremap <silent> <buffer> <expr> fw FwSnippeteer()
 inoremap <silent> w, <esc>:call PySnippet4()<cr>
 inoremap <silent> wp <esc>:call Snippeteer()<cr>
 inoremap <silent> zd <esc>:call DittoInsert()<cr>
-inoremap wf <esc>:call VimCreateFunctionBlock()<cr>
 nnoremap 0 :call Node0()<CR>
 nnoremap 1 :w<CR>:call Node1()<cr>
 nnoremap 3 #
@@ -628,7 +617,6 @@ nnoremap ; :call AnythingHandler2('')<LEFT><LEFT>
 nnoremap <buffer> 2 :update<CR>:call FunctionCallerViaEvalTheLine()<CR>
 nnoremap <buffer> 3 :update<CR>:call ExecuteFunctionCaller2()<CR>A
 nnoremap <buffer> <leader>/ :call VimFunctionSearch('')<left><left>
-" nnoremap <buffer> qt :w<CR>:call QTNormalRunner()<CR>
 nnoremap <c-c> :call Sayhi()<CR>
 nnoremap <c-r> :call ModeReset()<CR>
 nnoremap <c-s> :w<CR>:call SaveBackup0104()<CR>
@@ -674,7 +662,6 @@ nnoremap gx :call ChooseAndGoFunctionFromScreen()<CR>
 nnoremap mv :call Move()<CR>
 " nnoremap qe o<bs>
 nnoremap qp :call SilentPythonController('sayhi2023')<CR>
-nnoremap wf :call VimCreateFunctionBlockNormal()<cr>
 nnoremap ze :call ZEqual()<CR>
 set cmdheight=1
 set expandtab      " Use spaces instead of tabs

@@ -1,4 +1,0 @@
-
-function! Fo()
-    
-endfunction

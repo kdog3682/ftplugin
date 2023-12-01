@@ -39,7 +39,7 @@ inoremap <buffer> <expr> 9 SmartNine('(')
 inoremap <buffer> <expr> = SmartEqual()
 inoremap <buffer> <expr> [ SmartNine('[')
 inoremap <buffer> qp (<c-o>A)<LEFT>
-inoremap <buffer> qw <right>
+" inoremap <buffer> qw <right>
 inoremap <buffer> w, <esc>:call PySnippet4()<cr>
 inoremap <buffer> <expr> wf JPCreateFunctionBlockAsExpression()
 inoremap <buffer> <expr> { SmartNine('{')
@@ -53,18 +53,13 @@ inoreab <buffer>ndy throw<space>"not<space>done<space>yet"<C-R>=Eatchar('\s')<CR
 inoreab <silent> <buffer>-- ---------------------------------------<C-R>=Eatchar('\s')<CR>
 
 
-inoreab <buffer>is =
 inoreab <buffer>ae addExtension()<LEFT><C-R>=Eatchar('\s')<CR>
-inoreab <buffer> <expr> echo JavascriptEcho()<LEFT>
-inoreab <buffer> <expr> echo JavascriptEcho()<LEFT>
-inoreab <buffer> <expr> echo JavascriptEcho()<LEFT>
-inoreab <buffer> <expr> echo JavascriptEcho()<LEFT>
 inoreab <buffer> <expr> echo JavascriptEcho()
 inoreab <buffer>lxi (x,i)<space>=>
-inoremap <silent> <buffer> <expr> qe QEvaluateManager()
+" inoremap <silent> <buffer> <expr> qe QEvaluateManager()
 nnoremap <silent> <buffer> <expr> <leader>d SearchDateExpr()
 
-cnoremap <silent> <buffer> <expr> gm CnoremapExpressionHandler('gm', '/', "\<ESC>\<ESC>?\\v^---\<CR>/\\v^func\<CR>zz")
+" cnoremap <silent> <buffer> <expr> gm CnoremapExpressionHandler('gm', '/', "\<ESC>\<ESC>?\\v^---\<CR>/\\v^func\<CR>zz")
 inoreab <buffer>tlc toLowerCase()<LEFT><C-R>=Eatchar('\s')<CR>
 inoreab <buffer>ci configItems<C-R>=Eatchar('\s')<CR>
 
@@ -114,3 +109,9 @@ inoremap <silent> <buffer> <expr> <Tab> QQQ()
 inoreab <buffer>rt return<space>true<C-R>=Eatchar('\s')<CR>
 
 inoreab <expr> <buffer>lg LogExpr()
+inoreab <buffer>66 [^]+?<C-R>=Eatchar('\s')<CR>
+inoreab <buffer>88 \/\*<space><space>\*\/<left><left><left><left><left><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>brow browserChalk()<C-R>=Eatchar('\s')<CR>
+inoreab <buffer> lkv ([k,v]) =>
+inoreab <buffer>na node.assign()<LEFT><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>lb console.browser()<LEFT><C-R>=Eatchar('\s')<CR>
