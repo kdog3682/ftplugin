@@ -25,7 +25,7 @@ inoremap <buffer> <expr> 8 MDPumExpr(8)
 " inoremap <buffer> <expr> - MDPumExpr('-')
 inoremap <buffer> <expr> <space> MDPumExpr('space')
 inoremap <buffer> <expr> 0 MDPumExpr('zero')
-inoremap <buffer> <expr> . MDPeriodExpr()
+" inoremap <buffer> <expr> . MDPeriodExpr()
 inoremap <buffer> <expr> , MDPunctuationExpr(',')
 inoremap <buffer> <expr> ! MDPunctuationExpr('!')
 

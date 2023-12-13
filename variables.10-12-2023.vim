@@ -522,7 +522,6 @@ inoreab <buffer>  semi ;<C-R>=Eatchar('\s')<CR>
 inoreab <buffer> <expr> ee VimEEBlock()
 inoreab <buffer> <expr> ms SmartMatch()
 inoreab <buffer> <expr> r SmartReturn()
-" " inoreab <buffer> <expr> tl ThrowLog()
 inoreab <buffer> <expr> ts TSExpr()
 inoreab <buffer> fli FindLineIndex('')<LEFT><LEFT><C-R>=Eatchar('\s')<CR>
 inoreab <buffer> jp Jspy3('')<LEFT><LEFT><C-R>=Eatchar('\s')<CR>

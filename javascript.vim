@@ -1,3 +1,4 @@
+source /home/kdog3682/.vim/ftplugin/javascript-data.vim
 inoreab  <buffer> 44 ${}<left><c-r>=Eatchar('\s')<cr><C-R>=Eatchar('\s')<CR>
 inoreab  <buffer> ar Array.from() <c-r>=Eatchar('\s')<cr><C-R>=Eatchar('\s')<CR>
 inoreab  <buffer> con continue<c-r>=Eatchar('\s')<cr><C-R>=Eatchar('\s')<CR>
@@ -44,7 +45,6 @@ inoremap <buffer> w, <esc>:call PySnippet4()<cr>
 inoremap <buffer> <expr> wf JPCreateFunctionBlockAsExpression()
 inoremap <buffer> <expr> { SmartNine('{')
 nnoremap <buffer> wf :call JPCreateFunctionBlockNormal()<cr>
-inoremap <buffer> <expr> qq QSlashWordFind(GetJavascript())
 inoreab <buffer> <expr> lx JavascriptLambdaExpression()
 inoreab <buffer> ls (s)<space>=>
 inoreab <buffer> <silent> <expr> r SmartReturn()
@@ -115,3 +115,19 @@ inoreab <buffer>brow browserChalk()<C-R>=Eatchar('\s')<CR>
 inoreab <buffer> lkv ([k,v]) =>
 inoreab <buffer>na node.assign()<LEFT><C-R>=Eatchar('\s')<CR>
 inoreab <buffer>lb console.browser()<LEFT><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>tau TAU<C-R>=Eatchar('\s')<CR>
+inoreab <buffer>re RegExp()<LEFT><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>r return
+
+inoreab <buffer> tdb `<c-o>o`,<c-o>O<space><space><space><space><C-R>=Eatchar('\s')<CR>
+
+inoremap <buffer> w] [<c-o>o],<c-o>O<space><space><space><space><C-R>=Eatchar('\s')<CR>
+
+inoreab <buffer>reg regex<C-R>=Eatchar('\s')<CR>
+
+nnoremap <buffer> tl :call NormalThrowLog()<cr> 
+inoreab <buffer>map smart_map()<LEFT><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>cb crayonbox.red()<LEFT><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>rr r<C-R>=Eatchar('\s')<CR>
+inoreab <buffer> <expr> dt GetTime()
+

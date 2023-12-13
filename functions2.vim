@@ -5783,36 +5783,6 @@ function! Tester(fileKey, fnKey)
     endtry
 endfunction
 
-function! SpecializedExportAction()
-    " Some files have special export actions
-    " 
-
-endfunction
-function! AddExport(...) abort
-    let name = a:0 >= 1 ? a:1 : GetBindingName()
-    if SpecializedExportAction()
-        return 
-    endif
-    try
-        let index = FindLineIndex('^export \{', 0, 1, 200)
-        if Test(getline(index), '\}')
-            let s:name = name
-            function! Inner(s)
-                let s = a:s
-                return Replace(s, '\{', '{ ' . s:name . ',')
-            endfunction
-            call GetSetFn('Inner', index)
-        else
-            call append(index + 1, '    ' . name . ',')
-        endif
-    catch
-        ec v:exception
-        ec 'no match'
-        return 
-        let lines = ['export {', '    ' . name . ',', '}']
-        call append(0, lines)
-    endtry
-endfunction
 let g:filedict['wsa']='https://script.google.com/home/projects/1udnFRvx5ObFrf-T36H4-Wnj3bjNDZkfqC1qwj4JUdLfu5sSJXYm4280J/edit'
 function! CurrentInfo()
     let name = ''
@@ -11866,31 +11836,6 @@ function! GetBufferGroup()
 endfunction
 function! EstablishLinkedBufferGroup()
     return EstablishLinkedBufferGroupRunner(GetBufferGroup())
-endfunction
-function! EstablishLinkedBufferGroupRunner(group)
-    let group = a:group
-     let template = 'let g:linkedBufferGroups["%s"] = %s'
-
-     if len(group) == 0
-         try
-             let other = FileGetter2(Prompt('choose file link'))
-             let cmd = printf(template, CurrentFile(), other)
-             return AppendAndExecute(cmd)
-         catch
-            ec 'a valid file was not chosen'
-            return 
-         endtry
-     elseif len(group) == 1
-         let cmd = printf(template, CurrentFile(), group[0])
-         return AppendAndExecute(cmd)
-     else
-         let lines = []
-         for name in group 
-             let s = printf(template, name, group)
-             call add(lines, s)
-         endfor
-         return AppendAndExecute(lines)
-     endif
 endfunction
 function! DumpJson(s)
     let s = a:s

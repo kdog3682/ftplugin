@@ -1529,14 +1529,14 @@ nnoremap egi :call OpenBuffer3("/home/kdog3682/2023/.gitignore")<CR>
 nnoremap eii :call OpenBuffer3("/home/kdog3682/2023/index.html")<CR>
 nnoremap ein :call OpenBuffer3("/home/kdog3682/2023/index.html")<CR>
 nnoremap el :call EvalLastLine()<CR>
-nnoremap em2 :call OpenBuffer3("/home/kdog3682/2023/math.txt")<CR>
-nnoremap eme :call OpenBuffer3("/home/kdog3682/2023/me.txt")<CR>
-nnoremap emg :call OpenBuffer3("/home/kdog3682/2023/mathgen.js")<CR>
-nnoremap emk :call EMark()<CR>
-nnoremap emr :call OpenBuffer3("/home/kdog3682/2023/math-review.txt")<CR>
-nnoremap emu :call OpenBuffer3("/home/kdog3682/2023/ma.js")<CR>
-nnoremap emu :call OpenBuffer3("/home/kdog3682/2023/math-utils.js")<CR>
-nnoremap emv :call OpenBuffer3("/home/kdog3682/2023/my-files.json")<CR>G
+" nnoremap em2 :call OpenBuffer3("/home/kdog3682/2023/math.txt")<CR>
+" nnoremap eme :call OpenBuffer3("/home/kdog3682/2023/me.txt")<CR>
+" nnoremap emg :call OpenBuffer3("/home/kdog3682/2023/mathgen.js")<CR>
+" nnoremap emk :call EMark()<CR>
+" nnoremap emr :call OpenBuffer3("/home/kdog3682/2023/math-review.txt")<CR>
+" nnoremap emu :call OpenBuffer3("/home/kdog3682/2023/ma.js")<CR>
+" nnoremap emu :call OpenBuffer3("/home/kdog3682/2023/math-utils.js")<CR>
+" nnoremap emv :call OpenBuffer3("/home/kdog3682/2023/my-files.json")<CR>G
 " nnoremap eng :call OpenBuffer3("/home/kdog3682/PYTHON/githubscript.py")<CR>G
 " nnoremap enn :call OpenBuffer3("/home/kdog3682/2023/notes.txt")<CR>
 " nnoremap enp :call OpenBuffer3('/home/kdog3682/PYTHON/next.py')<CR>G
@@ -1617,8 +1617,8 @@ nnoremap tc :wa<CR>:call BasePY(':incorporateCss')<CR>
 nnoremap td :call Td()<CR>
 nnoremap tf :call TouchFileToChangeLog()<CR>
 nnoremap ti :call Titleify()<CR>
-nnoremap tl :call LogIt('tl')<CR>
-nnoremap tl :call LogIt2('tl')<CR>
+" nnoremap tl :call LogIt('tl')<CR>
+" nnoremap tl :call LogIt2('tl')<CR>
 nnoremap tp :call TestPrint2()<CR>
 nnoremap ts :call CreateTestStringWithCurrentFunction()<CR>
 nnoremap tu :call OpenBuffer3('utils.js')<cr>Go<CR>
