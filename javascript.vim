@@ -131,3 +131,4 @@ inoreab <buffer>cb crayonbox.red()<LEFT><C-R>=Eatchar('\s')<CR>
 inoreab <buffer>rr r<C-R>=Eatchar('\s')<CR>
 inoreab <buffer> <expr> dt GetTime()
 
+inoremap ` <esc> :call Node1()
