@@ -1,6 +1,7 @@
 setlocal nosmartindent
 inoremap <silent> <buffer> <expr> <Tab> QQQ()
 inoremap <buffer> ' ""<LEFT>
+inoremap <buffer> " '
 inoremap <buffer> _ -
 
 inoremap <buffer> <expr> 2 SolExpr('@', 2)

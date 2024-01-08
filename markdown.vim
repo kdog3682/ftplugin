@@ -38,3 +38,6 @@ nnoremap <buffer> <c-n> Go<C-O>I<cr>#
 
 inoremap <buffer> <expr> 2 SolExpr('@', 2)
 inoremap <buffer> <expr> 3 SolExpr('# ', 3)
+
+
+nnoremap <buffer> qw :call MarkdownNormalQW()<CR>

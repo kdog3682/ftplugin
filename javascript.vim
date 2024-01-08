@@ -132,3 +132,7 @@ inoreab <buffer>rr r<C-R>=Eatchar('\s')<CR>
 inoreab <buffer> <expr> dt GetTime()
 
 inoremap ` <esc> :call Node1()
+
+" inoremap 3 #
+" inoremap # 3
+inoreab <buffer>br --------------------------------<C-R>=Eatchar('\s')<CR>

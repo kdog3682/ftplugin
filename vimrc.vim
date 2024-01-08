@@ -6,7 +6,7 @@ highlight MyCustomRedColor ctermfg=red guifg=red"
 highlight MyCustomGreenColor ctermfg=green guifg=green"
 """ localBookmarkId: 1697717268 """
 
-let g:fileRE = '\.?/[-+a-z0-9_ ./@]{-}\.%(\w*template|stylus|bash_aliases|bash_history|gitignore|dialogue|log|vimrc|vim|json|js|txt|py|pdf|md|css|html|grammar)\ze%(["'']| *$)|[a-z][-a-z+0-9_./@]+%(\w*template|log|dialogue|note|vimrc|vim|json|js|txt|py|pdf|md|css|html|grammar|stylus)\ze%( *$|["''])'
+let g:fileRE = '[~.]*/[-+a-z0-9_ ./@]{-}\.%(\w*template|typ|stylus|bash_aliases|bash_history|gitignore|dialogue|log|vimrc|vim|json|js|txt|py|pdf|md|css|html|grammar)\ze%(["'']| *$)|[a-z][-a-z+0-9_./@]+%(\w*template|log|dialogue|note|vimrc|vim|json|js|txt|py|pdf|md|css|html|grammar|stylus)\ze%( *$|["''])'
 let g:bookmarkfile = 'bookmarks.txt'
 let g:functionPrefixRE = '^((async )?function[!*]?|class|def) '
 let g:vim = 0
@@ -28,6 +28,16 @@ source /home/kdog3682/.vim/ftplugin/variables.10-12-2023.vim
 
 let g:execRef2 = {}
 function! UnmapVim2()
+    try
+        :silent! nunmap <buffer> [{
+    catch
+    endtry
+
+    try
+        :silent! nunmap <buffer> ]}
+    catch
+    endtry
+
     try
         :silent! nunmap <buffer> [[
     catch
@@ -688,9 +698,7 @@ function! Node1(...)
         let file = g:node1dict3[tail]
         let ShellFn = function(Jspy('shellFn', file))
         return ShellFn(file)
-        
     endif
-
 
     if Exists(ModeIsActive())
         return 
@@ -730,6 +738,8 @@ function! Node1(...)
         "else
             call FunctionCaller()
         "endif
+    elseif &filetype == 'typst' || &filetype == 'sql'
+        call s:typst(file)
     elseif lang == 'py'
         call Shell('python3', file)
     endif
@@ -886,7 +896,7 @@ endfunction
 
 function s:llvf(s)
     let s = a:s
-    return Test(s, '\C^[A-Z]\w*$')
+    return Test(s, '\C^(s:|[A-Z])\w*$')
 endfunction
 function EndOfDay()
     " call append('$', '" ' . TomorrowDate())
@@ -2414,7 +2424,11 @@ function Shuntdown3()
     call append('$', WrapLines(lines))
 endfunction
 function! Qge()
-    return s:encode(eval(input('eval: ')))
+    let a = input('eval: ')
+    if a == ''''
+        return '"'
+    endif
+    return s:encode(eval(a))
 endfunction
 
 
@@ -3801,6 +3815,14 @@ function! OpenGlobalBookmark(file)
 
 endfunction
 function! s:file_specific_go__app()
+    if Tail() == "toc.txt"
+        let file = trim(getline("."))
+        let dir_index = s:fli('^ *dir:', '.', -1, 100, 0)
+        let dir = s:match(getline(dir_index), "^ *dir: *(.+)")
+        let path = s:join_path(dir, file)
+        call OpenBuffer3(path)
+        return 1
+    endif
     let base = s:get_file_ref("file_specific_go_file_items")
     if empty(base)
         return 
@@ -3825,6 +3847,7 @@ function! GoFile()
 
     " 'vim.json'
     let items = [
+        \{'r': '^#import "(.{-}\.typ)"', 'type': 'typst_file'},
         \{'r': '^import \w+ from "\./(.{-})"', 'type': 'javascript_file'},
         \{'r': '^import (\w+)', 'type': 'python_file'},
         \{'r': '^from (\w+) import', 'type': 'python_file'},
@@ -3833,7 +3856,7 @@ function! GoFile()
         \{'r': '^%(\d+ +)?(/.+)$', 'type': 'file'},
         \{'r': lastSetRE, 'type': 'fileFirst'},
         \{'r': '^\{.+} *$', 'type': 'json'},
-        \{'r': 'https:.{-}\ze( *$|["''<>,])', 'type': 'url'},
+        \{'r': 'https:[^"''<>,]{5,}', 'type': 'url'},
         \{'r': 'linkedBookmarkId: (\d{10}) (\S{5,})', 'type': 'file'},
         \{'r': g:fileRE, 'type': 'file'},
         \{'r': gvarRE, 'type': 'gvar'},
@@ -3858,8 +3881,12 @@ function! GoFile()
         if s:empty(m)
             continue
         endif
+        " call input(string([item, m]))
 
-        if item.type == "javascript_file"
+        if item.type == "typst_file"
+            
+            return s:open(TypstResolve(m))
+        elseif item.type == "javascript_file"
             return s:open(m)
         elseif item.type == "python_file"
             return s:open(m . '.py')
@@ -3902,6 +3929,8 @@ function! GoFile()
         elseif item.type == "dir"
             call OpenDirectory3(m)
         elseif item.type == "url"
+            " ec m
+            " return
             call XdgOpen(m)
         elseif item.type == "function"
             try
@@ -5011,6 +5040,9 @@ function! AnythingHandler2(key)
     " call input('ref: ' . s:string(ref))
     if s:exists(ref) && has_key(ref, a)
         let fnKey = ref[a]
+        if s:t(fnKey, '\(')
+            return eval(fnKey)
+        endif
         return s:exists(b) ? function(fnKey)(b) : function(fnKey)()
     endif
 
@@ -5057,6 +5089,7 @@ function! AnythingHandler2(key)
     endif
 
     let fnKey = DictGetter2(g:jspyref3, &filetype, 'execFunctions', a)
+    " call input('fnKey: ' . s:string(fnKey))
     if s:exists(fnKey)
         if s:llvf(fnKey)
            return s:exists(b) ? function(fnKey)(b) : function(fnKey)()
@@ -5846,10 +5879,8 @@ function! BrowserController(...)
     let s = substitute(s, ' ', '+', 'g')
     call XdgOpen(s)
 endfunction
-function! VABlockToBrowser(state)
-    call writefile(state.lines, g:tempfile)
-    call XdgOpen(g:tempfile)
-endfunction
+
+let g:visualactiondict['btb'] = {'fn': 'VABlockToBrowser', 'i': 'window'}
 
 
 function! GI4(key, ...)
@@ -6428,14 +6459,63 @@ function! SilentUnmap(s)
     endtry
 endfunction
 function! UnmapPython()
-    silent! nunmap <buffer> ]m
-    silent! nunmap <buffer> ]M
-    silent! nunmap <buffer> [m
-    silent! nunmap <buffer> [M
-    silent! nunmap <buffer> []
-    silent! nunmap <buffer> [[
-    silent! nunmap <buffer> ]]
-    silent! nunmap <buffer> ][
+     try
+         nunmap <buffer> ]m
+     catch
+         let error = v:exception
+         ec error
+         
+     endtry
+     try
+         nunmap <buffer> ]M
+     catch
+         let error = v:exception
+         ec error
+         
+     endtry
+     try
+         nunmap <buffer> [m
+     catch
+         let error = v:exception
+         ec error
+         
+     endtry
+     try
+         nunmap <buffer> [M
+     catch
+         let error = v:exception
+         ec error
+         
+     endtry
+     try
+         nunmap <buffer> []
+     catch
+         let error = v:exception
+         ec error
+         
+     endtry
+     try
+         nunmap <buffer> [[
+     catch
+         let error = v:exception
+         ec error
+         
+     endtry
+     try
+         nunmap <buffer> ]]
+     catch
+         let error = v:exception
+         ec error
+         
+     endtry
+     try
+         nunmap <buffer> ][
+     catch
+         let error = v:exception
+         ec error
+         
+     endtry
+     ec "unmapping python"
 endfunction
 
 function! OpenBuffer4(file)
@@ -6451,6 +6531,10 @@ function! OpenBuffer4(file)
     let file = s:smartnpath(file)
     if IsCurrentFile(file)
         return 0
+    endif
+    if IsDir(file)
+        execute 'Explore ' . file
+        return 
     endif
     if !IsFile(file)
         if s:t(s:tail(file), '(^|\.)app\.')
@@ -10668,6 +10752,10 @@ function! s:n2char(x)
     let x = a:x
     return N2char(x)
 endfunction
+function! s:datestamp2()
+    return strftime('%Y-%m-%d')
+endfunction
+
 function! s:datestamp()
     return DateStamp()
 endfunction
@@ -11849,6 +11937,7 @@ function! s:create_section_from_snippet(s, ...)
     call s:scrolltobottom()
     call s:setblock(snippet)
 endfunction
+
 function! CreateExampleJsSection(...)
     let arg = a:0 >= 1 ? a:1 : ''
     let prefix = 'j'
@@ -11931,6 +12020,10 @@ function! s:npath(dir, file)
     let dir = get(g:dirdict, a:dir, a:dir)
     let file = a:file
     return s:pathjoin(dir, Tail(file))
+endfunction
+
+function! s:replace_current_line(r, rep)
+    call s:get_set_line({s -> s:sub(s, a:r, a:rep) })
 endfunction
 
 function! s:replace(s, r, rep)
@@ -12282,14 +12375,16 @@ function! RunActiveFile()
     call Node(g:activeJavascriptFile)
 endfunction
 function! Node3()
-    if has_key(g:tempcommands, '3')
-        return function(g:tempcommands['3'])()
+    if s:jspy_normal_runner()
+        return 
     endif
-    throw "not done yet"
 endfunction
 function! Node2()
     if exists('g:tempcommands') && has_key(g:tempcommands, '2')
         return function(g:tempcommands['2'])()
+    endif
+    if s:jspy_normal_runner("node2")
+        return 
     endif
     return s:node_or_python(bufname('#'))
     return s:node(bufname('#'))
@@ -12362,6 +12457,7 @@ function! WPSwitch(s)
 endfunction
 let g:wpsnippets2["global"]["list"] = "WPGList"
 let g:wpsnippets2["global"]["aa"] = "WPGAAList"
+let g:wpsnippets2["global"]["dict"] = "WPGDict"
 let g:vimCurrentTestFunction = "SmartEqual"
 
 function! Exi()
@@ -12715,6 +12811,12 @@ function! WPPrintTemplate(s, wrap, template, ...)
     let wrap = s:isarray(a:wrap) ? a:wrap : SplitSingles(a:wrap)
     let template = arg && a:0 >= 1 ? a:1 : a:template
     let items = s:sds(s)
+    let spaces = 4
+    if &filetype == 'typst'
+        let spaces = 2
+        let wrap = ['(', ')']
+    endif
+    let spaces = repeat(' ', spaces)
     " call BlueInput('i: ' . string(items))
     let k = s:count(template, '\%s')
     let n = (len(items) - 1) / k
@@ -12722,7 +12824,7 @@ function! WPPrintTemplate(s, wrap, template, ...)
     let lc = s:jspy('lineContinuationMarker')
     let newline = "\n"
     for i in range(n)
-        let t .= newline . '    ' . lc . template . ','
+        let t .= newline . spaces . lc . template . ','
     endfor
     let t .= newline . lc . wrap[1]
     return Printf(t, items)
@@ -12732,6 +12834,17 @@ let g:jspyref3['vim']['lineContinuationMarker'] = "\\"
 let g:jspyref3['python']['lineContinuationMarker'] = ""
 let g:jspyref3['javascript']['lineContinuationMarker'] = ""
 let g:execRef["eea"] = "ExtractExpressionToAboveLine"
+
+function! WPGDict(s)
+    " test: "a b c d e"
+    let t2 = '''%s'': %s'
+    let t1 = '''%s'': ''%s'''
+    let wrap = ['{', '}']
+    if &filetype == 'typst'
+        let t2 = '%s: ''%s'''
+    endif
+    return WPPrintTemplate(a:s, wrap, t2, t1)
+endfunction
 
 function! WPDict(s)
     " test: "a b c d e"
@@ -12881,6 +12994,7 @@ function! NormalCommandController2()
     if empty(cmd)
         return 
     endif
+    redraw!
     call function(cmd)()
 endfunction
 
@@ -14712,6 +14826,8 @@ function! JavascriptFileCompletion(s)
     return store
 endfunction
 " /usr/share/vim/vim82/ftplugin/
+" /usr/share/vim/vim82/ftplugin/javascript.vim
+let a = "/usr/share/vim/vim82/ftplugin/"
 function! SpaceCompletion()
     let [a,b] = s:ab()
     let last = s:match(a, '%(^|\s\zs)[a-z]+$')
@@ -15158,6 +15274,13 @@ function! s:smartnpath(file)
 
     elseif s:t(file, '^node_modules')
         return getcwd() . '/' . file
+    elseif s:t(file, '^\.')
+        let a = fnamemodify(expand('%'), ':h')
+        while s:t(file, '^\.\./')
+          let file = s:sub(file, '^../', '', '')
+          let a = s:sub(a, '[a-z0-9-]+/?$', '', '')
+        endwhile
+        return a . '/' . file
     endif
     if !Test(file, '^/')
         let e = GetExtension(file)
@@ -15343,7 +15466,6 @@ function! BufLoad(file) abort
         return 0
     endtry
 endfunction
-silent call UnmapVim2()
 
 let g:vimCurrentTestFunction = "NormalBaseBlockEnter"
 let g:vimCurrentTestFunction = "NormalBaseBlockExit"
@@ -16525,9 +16647,13 @@ let g:fileRef = {
     \"node1": {"runtimeFile": "stylus.js", "args": ['currentFile']},
     \"linked6": "stylus.js",
   \},
+  \"SectionExecutorApps.py": {
+    \"node1": {"runtimeFile": "SectionExecutor.py"},
+    \"linked6": "SectionExecutor.py",
+  \},
   \"examples.py": {
-    \"node1": {"runtimeFile": "runExampleFile.py", "args": ['lineNumber']},
-    \"linked6": "runExampleFile.py",
+    \"node1": {"runtimeFile": "SectionExecutor.py", "runtimeFileDEPRECATED": "runExampleFile.py", "args": ['lineNumber']},
+    \"linked6": "SectionExecutor.py",
   \},
   \"cssGeneratedClasses.template": {
     \"node1": {"run": "packageManager.js", "argFile": "/home/kdog3682/2024/cssGeneratedClasses.template", "fnKey": 'generateCssClassFile'},
@@ -16944,7 +17070,6 @@ endfunction
 function! NodeTerminalOrShell(file, ...)
     let file = a:file
     let shell = s:config.shell
-    call input('shell: ' . s:string(shell))
 
     let args = map(Flat(a:000), "ShellEscape(s:encode(v:val))")
     if s:ge(file) == 'py'
@@ -17075,6 +17200,9 @@ function GetWPTemplate(key)
     let value = s:sub(value, '\n', '\\n')
     return value
 endfunction
+
+
+
 let g:wpsnippets2["javascript"]["s"] = 'NamedJavascriptString'
 " NamedJavascriptString
 " let ${TimestampString($1)}
@@ -17132,7 +17260,10 @@ function! FileRefRunner(...)
         let s:node_file_state = ref
     endif
     if has_key(ref, 'runtimeFile')
-        let args = GetPackageManagerArgs(ref.args)
+        let args = []
+        if has_key(ref, 'args')
+            let args = GetPackageManagerArgs(ref.args)
+        endif
         return NodeTerminalOrShell(ref.runtimeFile, args)
     endif
     if !has_key(ref, 'argFile')
@@ -17293,7 +17424,7 @@ function! GetActiveBuffers(...)
   let f = 'buflisted(v:val)'
   let buffers = filter(range(1, bufnr('$')), f)
   let names = map(buffers, 'bufname(v:val)')
-  if a:0 >= 1
+  if a:0 >= 1 && s:exists(a:1)
       let f = 's:t(v:val, "\\." . a:1 . "$")'
       let names = filter(names, f)
   endif
@@ -18686,6 +18817,7 @@ function! s:move_file(a, b)
 endfunction
 let g:dirdict['2024'] = '/home/kdog3682/2024/'
 let g:dirdict['node'] = '/home/kdog3682/2023/node_modules'
+let g:dirdict['fonts'] = '/home/kdog3682/2023/fonts'
 let g:wpsnippets2["cssTemplate"] = {}
 let g:wpsnippets2["cssTemplate"]["def"] = "CssTemplateFunction"
 
@@ -18818,6 +18950,7 @@ let g:execRef2["jca"] = "LogConsoleAppendVariable"
 
 autocmd! bufwritepost ~/.vimrc source %
 autocmd! BufNewFile,BufRead *.dialogue set filetype=dialogue
+autocmd! BufNewFile,BufRead *.typ set filetype=typst
 autocmd! BufNewFile,BufRead *.cssTemplate set filetype=cssTemplate
 autocmd! BufNewFile,BufRead *.grammar set filetype=grammar
 autocmd! BufNewFile,BufRead *.markdown set filetype=markdown2
@@ -19126,11 +19259,11 @@ function! RegisterLanguage()
     let commentPrefix = s:prompt('commentPrefix?')
     call DictSetter('g:jspyref3', filetype, 'execFunctions', 'sayhi', s:templater2('Sayhi("$1")', filetype))
     call DictSetter('g:jspyref3', filetype, 'commentPrefix', commentPrefix)
-    call s:append_vim_file(s:templater2(autocmdTemplate, [e, filetype]))
+    call s:append_vim(s:templater2(autocmdTemplate, [e, filetype]))
     call s:set_filetype(filetype)
 endfunction
 let g:execRef2["rl"] = "RegisterLanguage"
-function! s:append_vim_file(s)
+function! s:append_vim(s)
 	return s:appendfile(s:vimrc_file, a:s)
 endfunction
 
@@ -19145,7 +19278,6 @@ let g:jspyref3["stylus"]["execFunctions"]["sayhi"] = "Sayhi(\"stylus\")"
 let g:jspyref3["stylus"]["commentPrefix"] = "//"
 let g:jspyref3["text"] = {}
 let g:jspyref3["text"]["commentPrefix"] = "#"
-autocmd! BufNewFile,BufRead *.stylus set filetype=stylus
 nnoremap en :call OpenBuffer4(g:activeNoteFile)<CR>
 
 
@@ -19446,7 +19578,7 @@ function! s:init_new_file_into_vim(file)
     " let isCode = s:prompt( code?')
     call DictSetter('g:jspyref3', filetype, 'commentPrefix', commentPrefix)
     let autocmdTemplate = "autocmd! BufNewFile,BufRead *.$1 set filetype=$2"
-    call s:append_vim_file(s:templater2(autocmdTemplate, [e, filetype]))
+    call s:append_vim(s:templater2(autocmdTemplate, [e, filetype]))
 endfunction
 
 let g:fileRef["codePlaygroundString.js"] = {"node111":{"fnKey":"runExampleFile","run":"packageManager.js","argFile":"examples.js"},"execRef":{"sayhi":"Sayhi(\"new file init -- still unset\")"},"linked6asd":"asdasdasd","linked6":"vuetify.js","node1":{"runtimeFile":"stylus.js","args":["currentFile"]}}
@@ -19478,14 +19610,35 @@ function! s:fli_match(r, start, dir, threshold, anti)
     return s:match(s, r)
 endfunction
 
+function! s:create_lang_base_functions_for_auto_completion()
+    let file = s:file_prompt()
+    let r = '\ndef \zs\w+'
+    let lang = s:get_file_type(file)
+    let name = printf('g:%s_base_functions')
+    let text = s:get_page_text(file)
+    let m = s:unique(s:findall(text, r))
+    let value = s:create_variable(name, m)
+    call append("$", value)
+endfunction
+
+function! s:create_variable(a, b)
+    let a = a:a
+    let b = s:stringify(a:b)
+    return printf("let %s = %s", a, b)
+endfunction
+function! s:stringify(s)
+    return s:isstring(a:s) ? s:doublequote(a:s) : s:encode(a:s)
+endfunction
+
 function! s:get_python_identifiers()
     let r = '\ndef \zs\w+'
     let text = s:get_page_text()
-    let m = s:unique(s:findall(text, r))
+    let m = s:unique(s:findall(text, r)) + g:python_base_functions
     return m
 endfunction
-function! s:get_page_text()
-    let t = s:joinlines(getline(1, '$'))
+function! s:get_page_text(...)
+    let lines = a:0 >= 1 ? readfile(a:1) : getline(1, '$')
+    let t = s:joinlines(lines)
     return t
 endfunction
 
@@ -19691,7 +19844,8 @@ function! s:create_note(s)
     " test: "c asdasd"
     let [a,b] = s:so(a:s)
     if empty(b)
-        return 
+        let b = a
+        let a = 'coding -'
     endif
 
     let aliases = {
@@ -19706,7 +19860,6 @@ function! s:create_note(s)
     let prefix = '# '
 
     let note = prefix . a . c . b
-    ec note
     return note
 endfunction
 let g:wpsnippets2["python"] = {}
@@ -19893,9 +20046,7 @@ function FSEF_function_notes_txt__group_files(...)
 endfunction
 let g:fileRef["function-notes.txt"]["execRef"] = {}
 let g:fileRef["function-notes.txt"]["execRef"]["group"] = "FSEF_function_notes_txt__group_files"
-function! s:get_buffers(s)
-    " test: "asd"
-    let s = a:s
+function! s:get_buffers()
     let r = '<(gitignore|package.json|vimrc|vim|git|txt|log)>'
     let buffers = GetActiveBuffers()
     return filter(buffers, '!s:t(v:val, r)')
@@ -19984,12 +20135,20 @@ nnoremap em :call OpenBuffer4("/home/kdog3682/2024/function-notes.txt")<cr>
 function FSEF_function_notes_txt__cr(...)
     let ref = {
         \'td': 'todo',
+        \'note': "type: note\ntext",
+        \'chatgpt': "type: chatgpt\ntext",
+        \'self': "type: self\ntext",
     \}
     let arg = a:0 >= 1 ? get(ref, a:1, a:1) : 'changelog'
     call s:create_section_from_snippet("datetime: $datetime\n$1: $c\n", arg)
 endfunction
 let g:fileRef["function-notes.txt"]["execRef"]["cr"] = "FSEF_function_notes_txt__cr"
+let g:fileRef["function-notes.txt"]["execRef"]["n"] = "FSEF_function_notes_txt__cr('note')"
+let g:fileRef["function-notes.txt"]["execRef"]["gpt"] = "FSEF_function_notes_txt__cr('chatgpt')"
+let g:fileRef["function-notes.txt"]["execRef"]["me"] = "FSEF_function_notes_txt__cr('self')"
 
+inoremap <buffer> " '
+" inoremap <buffer> ' "
 
 function! General_file_cr_controller(...)
     let template = ''
@@ -20326,10 +20485,17 @@ endfunction
 
 inoremap <buffer> w] [<cr>\]<c-o>O<space><space><space><space>
 
+function! s:app_see_maparg()
+    let expr = "wp"
+    let result = maparg(expr, '', 0, 1)
+    return result
+endfunction
 function! s:app_go_map_arg(s)
-    " test: ",g"
+    " test: "P"
     let expr = s:sub(a:s, ',', '<leader>')
     let result = maparg(expr, '', 0, 1)
+    " ec result
+    " return
     if empty(result)
         return 
     endif
@@ -21010,8 +21176,11 @@ let g:qq_ref = {
     \'fg': "FileGetter2(input(''))",
     \'x':  "s:get_dir(input(''))",
     \'c': "FarawayFunctionCompletion()",
+    \'cwf': "CurrentFile()",
     \'sc': "QQScreenCompletion()",
-    \'3': "fnamemodify(bufname('#'), ':p')",
+    \'38': "s:get_prev_buffer_name()",
+    \'39': "s:get_current_buffer_name()",
+    \'3': "s:get_prev_buffer_name()",
     \'j': "OpenBuffer3('/home/kdog3682/2023/node_modules/@lezer/javascript/src/javascript.grammar')",
     \'5': "GetComponents()",
 \}
@@ -21030,7 +21199,6 @@ let g:vim_eval_ref = {
 
 function! s:get_dir(x)
     let x = a:x
-    call input('x: ' . s:string(x))
 
     if s:is_file(x)
         return x
@@ -21096,11 +21264,15 @@ function! Foowoke()
     ec g:jspyref3["markdown"]["execFunctions"]
 endfunction
 " let g:jspyref3["markdown"]["execFunctions"]["cr"] = "CreateMarkdownSection"
+function! s:get_map_template(k)
+    return g:apae_map_templates[a:k]
+endfunction
 let g:apae_map_templates = {
     \'ibe': "nnoremap <silent> <buffer> <expr> %s %s()<CR>",
     \'nbe': "nnoremap <silent> <buffer> <expr> %s %s()<CR>",
     \'nnoremap': "nnoremap <silent> <buffer>%s :call %s()<CR>",
     \'nmap': "nnoremap %s :call %s()<CR>",
+    \'nfile': "nnoremap %s :call OpenBuffer4('%s')<CR>",
     \'nmap.buffer': "nnoremap <buffer> %s :call %s()<CR>",
     \'nmap.buffer.fn.arg': "nnoremap <buffer> %s :call %s('%s')<CR>",
     \'nmap.fn.arg': "nnoremap %s :call %s('%s')<CR>",
@@ -21118,10 +21290,14 @@ function! s:app_registrar()
         \"normal_function",
         \"insert_function",
         \"inoreab",
+        \'s:register_language_exec_function',
     \]
 
     ec 'choose a mode'
     let mode = s:choose(modes)
+    if s:t(mode, 's:')
+        return function(mode)()
+    endif
     let key = s:prompt('choose a key')
     let cmd = printf(g:apae_map_templates[mode], key, name)
     call s:append_and_execute(cmd)
@@ -21261,3 +21437,726 @@ endfunction
 let g:execRef2["agw"] = "s:app_go_wp_snippet"
 let g:wpsnippets2["vim"]["s"] = 'NamedJavascriptString'
 nnoremap <buffer>` :call CommandTilda()<CR>
+let g:wpsnippets2["javascript"]["niu"] = "throw 'not in use'"
+
+function! App_browse_old_files()
+    let files = v:oldfiles
+    let choice = s:fuzzy(files)
+    call s:open(choice)
+endfunction
+nnoremap <leader>1 :call App_browse_old_files()<CR>
+
+
+function! s:gpt_python_maybe_import_openpdf()
+  if search('openpdf()', 'nw')
+    return
+  endif
+  call append(line('$'), 'from utils import openpdf')
+  call append(line('$'), 'openpdf()')
+endfunction
+
+function! s:get_filetype_from_function_name(s)
+    let s = a:s
+    let  ref = {
+        \'python': 'python',
+        \'javascript': 'javascript',
+        \'vim': 'vim',
+        \'py': 'python',
+        \'js': 'javascript',
+    \}
+    let r = 'python|javascript|vim|py|js'
+    return ref[s:match(s, r)]
+endfunction
+function! s:register_language_exec_function()
+    let name = s:get_binding_name()
+    let shortkey = s:prompt('choose an abrev for: ' . name, s:abrev(name))
+    let lang = s:get_filetype_from_function_name(name)
+    let value = s:dict_setter('g:jspyref3', lang, 'execFunctions', shortkey, name)
+    call s:append_vim(value)
+endfunction
+let g:jspyref3["python"]["execFunctions"]["io"] = "s:gpt_python_maybe_import_openpdf"
+
+
+function! SmartDeleteQuotes()
+    " Save the current cursor position
+    let l:save_cursor = getpos(".")
+
+    " Check for double quotes
+    let l:double_quote = search('"', 'cnW')
+    call setpos('.', l:save_cursor)
+
+    " Check for single quotes
+    let l:single_quote = search("'", 'cnW')
+    call setpos('.', l:save_cursor)
+
+    " Determine which quote is closer to the cursor
+    if l:double_quote == 0 && l:single_quote == 0
+        echo "No quotes found"
+    elseif l:double_quote != 0 && (l:single_quote == 0 || l:double_quote < l:single_quote)
+        normal! di"
+    else
+        normal! di'
+    endif
+endfunction
+
+" Map the function to a key (for example, <leader>dq)
+nnoremap da :call SmartDeleteQuotes()<CR>
+
+function! GenerateOldFiles()
+    let files = v:oldfiles[0:8]
+    let file = s:choose(files)
+    call OpenBuffer4(file)
+    return 
+	call OpenBuffer4('/home/kdog3682/2024/old_files.txt')
+    %delete _
+    let lines = v:oldfiles[0:20]
+    call append('.', lines)
+endfunction
+nnoremap e\ :call GenerateOldFiles()<CR>
+
+" Function to save the current mapping of a key for a specific mode
+function! Fff()
+    " let a = maparg('n', a)
+    " ec SaveCurrentMapping('n', 3)
+endfunction
+
+function! SaveCurrentMapping(mode, key)
+    " Normalize key format
+    let l:key = a:key
+    let val = maparg(l:key, a:mode)
+    " call input('val: ' . s:string(val))
+    return val
+
+    " Check and save the mapping for the specified mode
+    if maparg(l:key, a:mode) != ''
+        return 
+    else
+        return ''
+    endif
+endfunction
+
+" Function to restore the original mapping
+function! RestoreOriginalMapping(mode, key, savedMapping)
+    let l:key = a:key
+    let buffer = '<buffer> '
+    if s:exists(a:savedMapping)
+        execute a:mode . 'noremap ' buffer . l:key . ' ' . a:savedMapping
+    else
+        execute a:mode . 'unmap ' . buffer . l:key
+    endif
+endfunction
+
+" Function to remap keys as specified and set up restoration trigger
+function! SetupRemapAndRestore(mappings)
+    let g:saved_mappings = {}
+    let buffer = '<buffer> '
+
+    for map in a:mappings
+        let l:mode = map.mode == 'i' ? 'i' : 'n'
+        let l:savedMapping = SaveCurrentMapping(l:mode, map.origKey)
+        let g:saved_mappings[l:mode . map.origKey] = l:savedMapping
+        let cmd = l:mode . 'noremap ' . buffer . map.origKey . ' ' . map.newCommand
+        ec cmd
+        execute cmd
+    endfor
+
+    nnoremap <buffer> <leader><Esc> :call RestoreAllMappings()<CR>
+endfunction
+
+" Function to restore all original mappings
+function! RestoreAllMappings()
+    ec 'restoring all mappings'
+    for [key, mapping] in items(g:saved_mappings)
+        let l:mode = key[0]
+        let l:origKey = key[1:]
+        call RestoreOriginalMapping(l:mode, l:origKey, mapping)
+    endfor
+
+    execute 'nunmap <buffer> <leader><Esc>'
+    unlet g:saved_mappings
+endfunction
+
+function! TemporaryMapController()
+    call SetupRemapAndRestore([
+        \ {'mode': 'i', 'origKey': '<left>', 'newCommand': '<Esc>:normal! b<CR>i'},
+        \ {'mode': 'i', 'origKey': '<right>', 'newCommand': '<Esc>:normal! w<CR>'},
+        \ {'mode': 'i', 'origKey': '<delete>', 'newCommand': '<Esc>:normal! b<CR>'},
+    \ ])
+    ec g:saved_mappings
+endfunction
+function! s:file_prompt()
+    let c = 0
+    while c < 10
+        let c += 1
+        let a = s:prompt("choose a file or file key")
+        if has_key(g:filedict, a)
+            return g:filedict[a]
+        elseif s:is_file(a)
+            return a
+        endif
+    endwhile
+endfunction
+let g:python_base_functions = ["get_global_value","chalk","blue","_blue_colon","blue_colon","confirm","map","is_defined","is_array","test","is_string","is_integer","is_number","match","get_extension","has","has_extension","write_json","append","write","npath","tail","identity","normalize_file","trim","join","is_primitive","to_string","append_json","is_array_dictionary","is_object_array","read_json","everyf","pretty_print","head","dir_from_file","red","throw","timestamp","clear","is_file","is_function","templater","prompt","to_array","exists","filter","split","run_tests","to_argument","testf","is_object","is_nested_array","is_today","datestamp","announce","flat","get_sentences","is_url","get_constructor_name","file_prompt","debug","copy_last_downloaded_file_into_active_dir","is_dir","get_dir","path","most_recent_file","is_jsonable","append_self","empty","get_error_name","choose","is_private","view","openpdf","clip","stringify"]
+let g:wpsnippets2["python"]["imp"] = "from utils import *"
+let g:gfgfdict['gf'] = ['/home/kdog3682/.vimrc', 'GoFile', 0]
+let g:wpsnippets2["python"]["doc"] = "\"\"\"\n    $c\n\"\"\""
+
+" let g:filedict['t
+function! s:typst(file)
+    let file = a:file
+    let out = '/home/kdog3682/2024/test.pdf'
+    let out = '/home/kdog3682/2023/test.pdf'
+    let template = 'typst compile %s %s --root /'
+    let e = system(printf(template, file, out))
+    if s:t(e, 'error')
+        call s:blue(e)
+    else
+        call s:blue('successful render!')
+        return 
+        call OpenBrowser(out)
+    endif
+endfunction
+
+
+let g:typistdir = '/home/kdog3682/GITHUB/typst/'
+let g:typistdir = '/home/kdog3682/GITHUB/typst-packages/'
+let g:typistdir = '/home/kdog3682/GITHUB/typst-packages/packages/preview/'
+silent call UnmapVim2()
+" silent call UnmapPython()
+
+function! UnmapVim3()
+    try
+        :silent! nunmap  [{
+    catch
+    endtry
+
+    try
+        :silent! nunmap  }]
+    catch
+    endtry
+
+    try
+        :silent! nunmap  [[
+    catch
+    endtry
+
+    try
+        :silent! nunmap  ]]
+    catch
+    endtry
+
+    try
+        :silent! nunmap  []
+    catch
+    endtry
+
+    try
+        :silent! nunmap  ][
+    catch
+    endtry
+
+    try
+        :silent! nunmap  ]"
+    catch
+    endtry
+
+    try
+        :silent! nunmap  ["
+    catch
+    endtry
+endfunction
+
+
+let g:loaded_python_provider = 0
+let g:loaded_sql_provider = 0
+let g:no_python_maps = 1
+let g:no_vim_maps = 1
+
+
+" execute '!sudo chmod +w /usr/share/vim/vim82/ftplugin/sql.vim'
+" /home/kdog3682/.vim/after/ftplugin/sql.vim
+" /home/kdog3682/.vim/after/ftplugin/python.vim
+" /home/kdog3682/.vim/after/ftplugin/typst.vim
+" /home/kdog3682/.vim/after/ftplugin/javascript.vim
+" /home/kdog3682/2024/quickstart/content/posts/first.md
+let g:dirdict["usr"] = "/usr/local/bin"
+let g:filedict["bashrc"] = '/home/kdog3682/.bashrc'
+let g:filedict["c2"] = "/home/kdog3682/2023/clip2.js"
+
+
+function! DeleteMatchingLines(pattern)
+    let ref = {
+        \'short': '^.{,9}$',
+        \'hist': '^[a-z]{1,3}( \S{1,9})?$',
+    \}
+    let pattern = ref[a:pattern]
+    execute 'g/\v' . pattern . '/d'
+endfunction
+
+let g:execRef2["dml"] = "DeleteMatchingLines"
+
+let g:execRef2["ech"] = "EnableCommentHighlighting"
+let g:filedict["gdoc"] = "/home/kdog3682/2024/abc.gdoc"
+let g:wpsnippets2["python"]["pp"] = "from pprint import pprint"
+
+function! FastCommandExplorer()
+    " let buffer_names = s:get_active_buffers('')
+    " return s:print(buffer_names)
+    let buffers = getbufinfo({})
+endfunction
+
+function! s:move_file(a, b)
+    let a = a:a
+    let b = a:b
+    let s = printf('!mv "%s" "%s"', a, b)
+    ec printf('moving file: %s to %s', a, b)
+    execute s
+endfunction
+
+function! s:app_rename_file_from_line()
+    "'asdfasdf.py'
+    let file = s:get_file_from_line()
+    let head = s:head(file)
+    let e = s:get_extension(file)
+    " let newName = s:prompt('new file name?')
+    let newName = 'temp'
+    let name = s:add_extension(newName, e)
+    let dest = s:join_path(head, name)
+    call s:move_file(file, dest)
+    call s:replace_current_line(file, dest)
+endfunction
+call add(g:normalCommands, "s:app_rename_file_from_line")
+function! s:get_set_line(fn)
+   let i = line('.')
+   let [spaces, line] = GetSpacesAndLine(i)
+   let value = function(a:fn)(line)
+   if s:exists(value)
+       call setline(i, spaces . value)
+   endif
+endfunction
+function! s:join_path(...)
+    return join(map(copy(a:000), "s:sub(v:val, '/$', '')"), '/')
+endfunction
+function! s:get_extension(file)
+    let file = a:file
+	return GetExtension(file)
+endfunction
+
+
+
+
+function! Foooooooooo()
+    call s:replace_current_line('aa', 'aa')
+endfunction
+
+function! WrapCurrentWordWithBackticks()
+    " Save the current cursor position
+    let l:save_cursor = getpos(".")
+
+    " Go to the start of the current word
+    normal! b
+
+    " Enter visual mode and select the word
+    normal! viw
+
+    " Yank (copy) the word, and then go back to the original position
+    normal! y
+    call setpos('.', l:save_cursor)
+
+    " Paste the yanked word with backticks
+    normal! "_diw
+    execute "normal! i`" . @0 . "`"
+endfunction
+
+" Map the function to a key combination, e.g., <Leader>w
+nnoremap q` :call WrapCurrentWordWithBackticks()<CR>
+
+let s:syntax_highlight_count = 0
+function! s:highlight_syntax(name, regex, color)
+    let name = a:name
+    let regex = a:regex
+    let color = a:color
+
+    let font = color == "bold" ? "cterm" : "ctermfg"
+    let cmd = printf('highlight %s %s=%s', name, font, color)
+    ec cmd
+    execute cmd
+    call matchadd(name, '\v' . regex)
+endfunction
+function! EnableLanguageHighlighting()
+    let regexes = s:jspy('syntax_highlighting_regexes')
+    let color_scheme = {
+        \'function': 'bold',
+        \'method': 'bold',
+        \'comment': 'blue',
+    \}
+    for [k,v] in items(color_scheme)
+        let regex = get(regexes, k)
+        if s:exists(regex)
+            let name = k
+            let color = v
+            call s:highlight_syntax(name, regex, color)
+        endif
+    endfor
+endfunction
+
+
+
+
+
+let g:jspyref3["python"]["syntax_highlighting_regexes"] = {
+  \"function": '^ *def\s+\w+:',
+  \"method": '^ *def\s+\(self.*',
+  \"class": '^class\s+.+',
+  \"comment": '^ *#.*',
+\}
+
+let g:jspyref3["javascript"]["syntax_highlighting_regexes"] = {
+  \"function": '^ *(async )?function\s+\w+.{-}\ze\{',
+  \"class": '^class\s+.{-}\ze\{',
+  \"comment": '^ *//.*',
+  \"method": '^ *(async )?\w+\(.{-}\{ *$',
+\}
+
+let g:jspyref3["typst"] = {}
+let g:jspyref3["typst"]["prefix"] = 'let '
+let g:jspyref3["typst"]["regexes"] = {
+  \"comment": '^ *//.*|^/\*.+',
+  \"hash": '^ *#\w.*',
+\}
+
+
+let g:filedict["toc"] = "/home/kdog3682/2024/toc.txt"
+
+
+function! s:string_line_getter(s)
+    return map(split(a:s, '\n'), "trim(v:val)")
+endfunction
+function! SwapInoremapKeys()
+
+    inoremap <buffer> $1 $2 
+    inoremap <buffer> $2 $1
+
+    let lines = s:string_line_getter(template)
+    return lines
+endfunction
+
+function! s:get_function_name_from_word_or_block()
+    
+    let cw = expand('<cword>')
+    let s = getline('.')
+    if !s:t(s, cw . '\(')
+        return s:get_binding_name()
+    endif
+
+    if s:t(s, 's:' . cw . '\(')
+        return 's:' . cw
+    endif
+    return cw
+endfunction
+
+function RegisterFunction()
+    let date = s:datestamp2()
+    let file = CurrentFile()
+    let fn = s:get_function_name_from_word_or_block()
+    let payload = {
+        \'date': date,
+        \'file': file,
+        \'function': fn,
+    \}
+    let str = s:string(payload)
+    call s:appendfile('functions.txt', str)
+
+endfunction
+
+autocmd! BufNewFile,BufRead *.stylus set filetype=stylus
+autocmd! BufNewFile,BufRead *.log set filetype=log
+
+function! s:get_prev_buffer_name()
+    return fnamemodify(bufname('#'), ':p')
+endfunction
+
+function! LogFileTypeFunction_InoreabExpr_33()
+    return s:datestamp2() . ' ' . s:get_prev_buffer_name()
+endfunction
+
+let g:execRef2["rf"] = "RegisterFunction"
+
+
+function! FTEF_Typst_CommentSlash()
+    if col('.') == 1
+        return '// '
+    endif
+    if len(trim(getline('.'))) == 0
+        return '// '
+    endif
+    return '/'
+endfunction
+let g:filedict["st"] = "/home/kdog3682/2024/snippets.typ"
+function! FTEF_Typst_WordWrap(a, b)
+    let a = a:a
+    let b = a:b
+    execute 'normal! bi' . a
+    execute 'normal! ea' . b
+    return 
+    let l:save_cursor = getpos(".")
+    normal! b
+    normal! viw
+    normal! y
+    call setpos('.', l:save_cursor)
+    normal! "_diw
+    execute "normal! i"  . a . @0 . b
+endfunction
+
+
+let maplocalleader = ","
+
+
+function! Foobarwf()
+    let f = sort(filter(s:get_function_names(), 'len(v:val)' > 3))
+    call s:writefile('temp.txt', f)
+endfunction
+
+function! FTEF_Typst_NumberOrSymbol(a, b)
+    let a = a:a
+    let b = a:b
+
+    let s = getline('.')
+    if pumvisible() 
+        let down = repeat(g:keyboard.down, a - 1)
+        return down . g:keyboard.enter
+    endif
+    let letter_before = s[col('.') - 2]
+    if letter_before == b[0]
+        return "\<BS>" . a
+    endif
+    if s:t(letter_before, '\d')
+        return a
+    endif
+    if s:t(trim(s), '^\$') && s:t(letter_before, '[a-z]')
+        " handle exponents
+        return '^' . a
+    endif
+    return b
+endfunction
+
+function! FTEF_Typst_SmartEqual()
+    let s = trim(getline('.'))
+    let [a, b, c, d, e] = ABCDECursor()
+    let prefix = 'let '
+
+    if s:t(s, '^ *\w+ *$')
+        return " = \<C-O>I" . prefix . "\<C-O>A"
+    elseif s:t(s, '^ *' . prefix . '\w+ *\= *$')
+        return "\<C-O>I " . g:keyboard.esc . 'v/ ' . g:keyboard.left . g:keyboard.enter . "d " . "\<C-O>A"
+    elseif s:t(b, '[?<>!=]')
+        return '= '
+    elseif s:t(a, '[?<>!=]') && b == ' '
+        return g:keyboard.bs . '= '
+    elseif s:t(s, '^(if|elif)')
+        return ' == '
+    elseif s:t(b, '[a-z]')
+        " start of line: needs to append prefix
+        return " = \<C-O>I" . prefix . "\<C-O>A"
+    else
+        return '='
+    endif
+endfunction
+
+let g:typstCompletionItems = [
+    \{ 'a': '^\s*$', 'value': "  "},
+    \{ 'a': '[a-z]+$', 'fn': 'GetCompletionWords'},
+\]
+let g:jspyref3["typst"]["qqqCompletionItems"] = g:typstCompletionItems
+let g:jspyref3["typst"]["localHighFrequencyWords"] = ['import abc', 'import def<left>']
+let g:jspyref3["typst"]["node2"] = '!clear; typst query % "<note>"'
+let g:jspyref3["typst"]["node2"] = 'TypstNoteQuery'
+let g:jspyref3["typst"]["node2"] = '!clear; typst query % "<note>"'
+function! VABlockToBrowser(state)
+    call writefile(a:state.lines, g:tempfile)
+    call XdgOpen(g:tempfile)
+endfunction
+
+function! ToggleWrap()
+    setlocal wrap
+    if exists('b:local_wrap')
+        if b:local_wrap
+            let b:local_wrap = 1
+        else
+            let b:local_wrap = 0
+        endif
+    else
+        let b:local_wrap = 1
+    endif
+    if b:local_wrap
+        setlocal wrap
+    else
+        setlocal nowrap
+    endif
+endfunction
+let g:execRef2["wrap"] = "ToggleWrap"
+
+function! TodaysWork()
+    let buffers = s:get_buffers()
+    let items = [s:datestamp2()] + buffers + [s:hr(70)]
+    call s:appendfile('todays_work.txt', items)
+endfunction
+let g:execRef2["tdw"] = "TodaysWork"
+
+
+function! FTEF_Typst_Dash()
+    let letter_before = getline('.')[col('.') - 2]
+    if s:t(letter_before, '\d')
+        return ' - '
+    endif
+    if letter_before == '-'
+        return "\<BS>_"
+    endif
+    return '-'
+endfunction
+
+function! FTEF_Typst_MathMode(key)
+    "test: a
+    let key = a:key
+    let text = getline('.')
+    let c = col('.')
+    let s = trim(text)
+    let a = s[0]
+    let b = s[-1]
+    let is_math_mode = s[0] == '$'
+    if !is_math_mode
+        return key
+    endif
+    let ref = {
+        \'p': '+ ',
+    \}
+    let ch = ref[key]
+    let space_before = text[c - 2] == ' '
+    if space_before
+        return ch 
+    endif
+    return ' ' . ch
+    
+endfunction
+function! TypstNoteQuery()
+    let text = join(s:getlines('w'), '')
+    if !s:t(text, '\<note\>')
+        execute 'normal! A<note>'
+    endif
+    w
+    execute '!clear; typst query % "<note>"'
+endfunction
+let g:filedict["tdw"] = "/home/kdog3682/2024/todays_work.txt"
+function! s:jspy_normal_runner(s)
+    let ref = s:jspy2024(a:s)
+    if s:llvf(ref)
+        call function(ref)()
+        return 1
+    endif
+    if s:exists(ref)
+        execute ref
+        return 1
+    endif
+    return 0
+endfunction
+function! s:get_current_buffer_name()
+    return fnamemodify(bufname('%'), ':p')
+endfunction
+
+
+
+function! TypstNormalQW()
+    let s = s:getlinestate(1)
+    call s:touch(s.index + 1, s:getindent(s.index) + 2, -1)
+endfunction
+function! TypstNormalQE()
+    let s = s:getlinestate(1)
+    call s:touch(s.index, s:getindent(s.index) - 2)
+endfunction
+
+function! FTEF_Typst_SmartQuote()
+    let double_quote = '"'
+    let single_quote = ''''
+    let [a, b, c, d, e] = ABCDECursor()
+    " return s:print([a, b, c, d, e])
+    if b == double_quote && c == double_quote
+        return g:keyboard.right . g:keyboard.bs . g:keyboard.bs . single_quote
+    endif
+    return double_quote . double_quote . g:keyboard.left
+endfunction
+let g:jspyref3["typst"]["commentPrefix"] = "//"
+let g:jspyref3["typst"]["functionBlockTemplate"] = "#let $1(${Paramify($2)}) = {\n  $c\n}"
+function! TypstResolve(m)
+    let m = a:m
+    let a = fnamemodify(expand('%'), ':h')
+    while s:t(m, '^\.\./')
+      let m = s:sub(file, '^../', '', '')
+      let a = s:sub(a, '[a-z0-9-]+/?$', '', '')
+    endwhile
+    return a . '/' . m
+endfunction
+function! TypstMove()
+    let up = s:fli('^ *#?let.{-}\{ *$', '.', -1, 100, 0, 1)
+    let spaces = s:match(getline(up), '^ *')
+    if IsArray(spaces)
+        let spaces = ''
+    endif
+    " call input('spaces: ' . s:string(spaces))
+    " call s:assert(spaces, 's:is_string')
+    let down = s:fli('^' . spaces . '\}', '.', 1, 100, 0, 1)
+    let i = [up, down]
+    let lines = s:getlines(i)
+    let lines = map(lines, "s:replace(v:val, '^' . spaces, '')")
+    let lines[0] = s:replace(lines[0], '^#?', '#')
+    call add(lines, '')
+    call s:append_file('util.typ', lines)
+endfunction
+function! s:join(s)
+    let s = a:s
+    return join(s, "\n")
+endfunction
+function! s:append_file(a, b)
+    let a = a:a
+    let b = a:b
+    call s:appendfile(a, b)
+endfunction
+function! Seeee(k)
+    "test: k
+    let k = a:k
+    let val = get(g:visualactiondict, k) 
+    return s:print(val)
+endfunction
+function! TypstShuntController()
+    let lines = getline('.')
+    call s:append_file('util.typ', lines)
+endfunction
+let g:wpsnippets2["typst"] = {}
+let g:wpsnippets2["typst"]["obj"] = "MakeTypstObject"
+
+function! MakeTypstObject(s)
+    let chs = SplitSingles(a:s)
+endfunction
+
+iab nob nnoremap <buffer>
+let g:filedict["ut"] = "/home/kdog3682/2024/util.typ"
+
+set iskeyword+=_
+
+function! TypstWatch(file)
+    "test: /home/kdog3682/2024/foo.typ
+    let file = a:file
+    let out = '/home/kdog3682/2024/test.pdf'
+    let out = '/home/kdog3682/2023/test.pdf'
+    let template = 'typst watch %s %s --root /'
+    call system(template)
+endfunction
+let g:linkedBufferGroups["fs-watch.js"] = "fs-watch.html"
+let g:linkedBufferGroups["fs-watch.html"] = "fs-watch.js"
+
+function! s:register_normal_openbuffer_file()
+    let t = s:get_map_template("nfile")
+    let t = printf(t, s:prompt("key"), s:get_current_buffer_name())
+    call s:append_and_execute(t)
+endfunction
+call add(g:normalCommands, "s:register_normal_openbuffer_file")
+nnoremap ea :call OpenBuffer4('/home/kdog3682/2024/abc.gdoc')<CR>

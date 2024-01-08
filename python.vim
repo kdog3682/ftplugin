@@ -1,4 +1,3 @@
-call UnmapPython()
 
 inoremap <silent> <buffer> <expr> = PythonSmartEqual()
 " inoremap <silent> <buffer> <expr> <cr> PythonSmartEnter()
@@ -39,3 +38,5 @@ inoreab <buffer>aobj {a:"1"}<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>none None()<LEFT><C-R>=Eatchar('\s')<CR>
 inoreab <buffer>gcn get_constructor_name<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>istaw Is<space>there<space>a<space>way<C-R>=Eatchar('\s')<CR>
+" call UnmapPython()
+inoreab  <buffer> td ``<left><c-r>=Eatchar('\s')<cr><C-R>=Eatchar('\s')<CR>
