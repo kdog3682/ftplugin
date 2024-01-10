@@ -5,8 +5,8 @@ setlocal nosmartindent
 inoremap <buffer> wf <ESC>:call PythonFunctionBlock()<CR>
 nnoremap <buffer> wf :call PythonNormalFunctionBlock()<CR>
 inoremap q9 (<C-O>o)<c-o>O<space><space>
-inoremap q[ [<C-O>o]<c-o>O<space><space>
-inoremap q] <space>{<C-O>o}<c-o>O<space><space>
+inoremap q] [<C-O>o]<c-o>O<space><space>
+inoremap q[ <space>{<C-O>o}<c-o>O<space><space>
 inoremap q3 #{<C-O>o}<c-o>O<space><space>
 inoremap <buffer> <expr> / FTEF_Typst_CommentSlash()
 inoremap <buffer> <expr> - FTEF_Typst_Dash()
@@ -28,3 +28,7 @@ nnoremap  qw :call TypstNormalQW()<CR>
 inoremap  qe <ESC>:call TypstNormalQE()<CR>
 nnoremap  qe :call TypstNormalQE()<CR>
 inoreab <buffer> <silent> <expr> r SmartReturn()
+inoremap <buffer> <left> <left>
+inoremap <buffer> <right> <right>
+
+setlocal completefunc=TypstCompletion

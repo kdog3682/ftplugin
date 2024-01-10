@@ -1,3 +1,6 @@
+
+""" localBookmarkId: 1697717268 """ import "foo.typ": abc
+""" localBookmarkId: 1697717268 """ import "foo.typ"
 highlight Pmenu ctermbg=gray guibg=gray
 highlight Folded ctermfg=white ctermbg=black guifg=white guibg=black
 highlight MyCustomBlueColor ctermfg=blue guifg=blue"
@@ -19,8 +22,6 @@ let g:python = 0
 source /home/kdog3682/.vim/ftplugin/functions.vim
 source /home/kdog3682/.vim/ftplugin/variables.vim
 
-source /home/kdog3682/.vim/ftplugin/testing.vim
-source /home/kdog3682/.vim/ftplugin/settings.vim
 source /home/kdog3682/.vim/ftplugin/variables.09-15-2023.vim
 source /home/kdog3682/.vim/ftplugin/functions.09-15-2023.vim
 source /home/kdog3682/.vim/ftplugin/variables.10-12-2023.vim
@@ -741,7 +742,7 @@ function! Node1(...)
     elseif &filetype == 'typst' || &filetype == 'sql'
         call s:typst(file)
     elseif lang == 'py'
-        call Shell('python3', file)
+        call s:python(file)
     endif
 endfunction
 
@@ -3815,7 +3816,7 @@ function! OpenGlobalBookmark(file)
 
 endfunction
 function! s:file_specific_go__app()
-    if Tail() == "toc.txt"
+    if GetExtension() == 'toc'
         let file = trim(getline("."))
         let dir_index = s:fli('^ *dir:', '.', -1, 100, 0)
         let dir = s:match(getline(dir_index), "^ *dir: *(.+)")
@@ -3911,7 +3912,8 @@ function! GoFile()
             endif
         elseif item.type == "json"
             let value = eval(m)
-            call s:open(value.file, value.timestamp)
+            let key = has_key(value, 'timestamp') ? value.timestamp : value.function
+            call s:open(value.file, key)
         elseif item.type == "gvar"
             try
                 let val = eval(m)
@@ -4156,12 +4158,16 @@ endfunction
 function! EchoTemplate(key)
     let aliases = {
     	\'el': 'echoLogTemplate',
+    	\'ll': 'echoLineTemplate',
     	\'ei': 'echoInputTemplate',
     	\'ew': 'echoWordTemplate',
     	\'er': 'echoReturnTemplate',
     \}
 
-    let template = s:jspy(get(aliases, a:key, a:key))
+    let template = s:jspy(a:key)
+    if !s:exists(template)
+        let template = s:jspy(get(aliases, a:key))
+    endif
     let m = s:getidenstr(getline('.'), 1)
     let s = s:templater2(template, m)
     call s:appendbelow(s)
@@ -8167,11 +8173,16 @@ function! s:node(...)
     endif
 endfunction
 function! s:python(...)
-    let cmd = join(s:flat('!clear; python3', a:000), ' ')
-    if g:debug =~ 'javascript'
+    let action = 'python3'
+    if g:flags.use_mypy_flag
+        let action = 'mypy'
+    endif
+    let cmd = join(s:flat('!clear;', action, a:000), ' ')
+    if g:flags.use_system_flag
         let m = systemlist(cmd)
         call JavascriptErrorHandler(m)
     else
+        ec cmd
         execute cmd
     endif
 endfunction
@@ -8812,6 +8823,10 @@ function! Lkjsjfsldk()
       echo "Current value: " . i
     endfor
 
+endfunction
+function! Sdjfsdjf()
+    let items = ['aaa']
+    return s:find(items, {s -> s == 'aaa'})
 endfunction
 function! s:find(items, ...)
     let items = a:items
@@ -13003,8 +13018,23 @@ function! NormalCommandController()
     let cmd = s:choose(commands)
     call function(cmd)()
 endfunction
-
+function! GlobalStringReplace(a, b)
+    let a = a:a
+    let b = a:b
+    let r = s:sub(a, '\(\)', '\\(\\)')
+    call s:global_replace('%', r, b, 'g')
+endfunction
 function! LineEditController()
+    let s = getline('.')
+    for item in g:line_edit_invivo_items
+        let m = s:match(s, item.regex)
+        if s:exists(m)
+            call s:deleteline()
+            " call setline('.', '')
+            call call(function(item.fn), s:coercearray(m))
+            return 
+        endif
+    endfor
     let cmd = s:choose(g:lineEditCommands)
     if s:llvf(cmd)
         try
@@ -14963,6 +14993,7 @@ function! GitPushDirectories()
     call s:copy_file("/home/kdog3682/.vimrc", outpath)
 
     let keys = [ "24", "23", "py", "ftp", ]
+    let keys = ['ftp']
     for key in keys
         call GitPushDirectory(key)
     endfor
@@ -15269,7 +15300,9 @@ inoremap <expr> qq QQ()
 let g:runnerParamCache["node.traverse"] = "node"
 function! s:smartnpath(file)
     let file = a:file
-    if s:t(file, '^/')
+    if file == "."
+        return expand("%")
+    elseif s:t(file, '^/')
         return file
 
     elseif s:t(file, '^node_modules')
@@ -18702,12 +18735,14 @@ function! s:fuzzy(items, ...)
     let key = a:0 >= 1 ? a:1 : ''
     let c = 0
     let input = ''
-    let temp = []
+    let temp = items[0:10]
     let message = s:exists(key) ? ' for key: ' . key : ''
     ec 'start of fuzzy find' . message
     ec 'begin typing a char'
     ec 'there are ' . len(items) . ' items'
     ec ''
+    ec 'first 10 items are:'
+    ec temp
     if s:exists(key)
         
     endif
@@ -18719,8 +18754,9 @@ function! s:fuzzy(items, ...)
             return 
         endtry
         if ch == "\<BS>"
-            let input = input[0:-2]
-            ec input
+            let input = ''
+            let temp = items[0:10]
+            ec temp
             continue
         elseif s:is_number(ch)
             return temp[ch - 1]
@@ -20063,9 +20099,22 @@ endfunction
 let g:filedict["gi24"] = "/home/kdog3682/2024/.gitignore"
 let g:filedict["gl"] = "/home/kdog3682/2024/git-logs.txt"
 
+""" bookmarkId: 1704752530 """
+let g:keyboard['newline'] = "\n"
 function FSEF_examples_py__cr(...)
     let s = a:0 >= 1 ? a:1 : ''
-    call s:create_section_from_snippet("$hr\nsubreddit: vim\ntitle: istaw\nbody:\n\n$c")
+    let ref = {
+        \'n': {'key': 'note', 'spaces': "\n\n"},
+        \'b': {'key': 'bash', 'spaces': "\n\n"},
+        \'hn': {'key': 'bash', 'spaces': "\n\n"},
+    \}
+    let c = get(ref, s, "")
+    let template = 'datetime: $datetime' . g:keyboard.newline
+    if s:exists(c)
+        let template .= c['key'] . ':' . get(c, 'spaces', ' ') . '$c'
+    endif
+    call s:create_section_from_snippet(template)
+    " call s:create_section_from_snippet("$hr\nsubreddit: vim\ntitle: istaw\nbody:\n\n$c")
 endfunction
 let g:fileRef["examples.py"]["execRef"] = {}
 let g:fileRef["examples.py"]["execRef"]["cr"] = "FSEF_examples_py__cr"
@@ -20491,11 +20540,11 @@ function! s:app_see_maparg()
     return result
 endfunction
 function! s:app_go_map_arg(s)
-    " test: "P"
+    " test: "gp"
     let expr = s:sub(a:s, ',', '<leader>')
     let result = maparg(expr, '', 0, 1)
-    " ec result
-    " return
+    ec result
+    return
     if empty(result)
         return 
     endif
@@ -21179,7 +21228,8 @@ let g:qq_ref = {
     \'cwf': "CurrentFile()",
     \'sc': "QQScreenCompletion()",
     \'38': "s:get_prev_buffer_name()",
-    \'39': "s:get_current_buffer_name()",
+    \'39': "s:doublequote(s:get_current_buffer_name())",
+    \'37': "s:get_current_buffer_name()",
     \'3': "s:get_prev_buffer_name()",
     \'j': "OpenBuffer3('/home/kdog3682/2023/node_modules/@lezer/javascript/src/javascript.grammar')",
     \'5': "GetComponents()",
@@ -21272,7 +21322,7 @@ let g:apae_map_templates = {
     \'nbe': "nnoremap <silent> <buffer> <expr> %s %s()<CR>",
     \'nnoremap': "nnoremap <silent> <buffer>%s :call %s()<CR>",
     \'nmap': "nnoremap %s :call %s()<CR>",
-    \'nfile': "nnoremap %s :call OpenBuffer4('%s')<CR>",
+    \'normal_open_file': "nnoremap %s :call OpenBuffer4('%s')<CR>",
     \'nmap.buffer': "nnoremap <buffer> %s :call %s()<CR>",
     \'nmap.buffer.fn.arg': "nnoremap <buffer> %s :call %s('%s')<CR>",
     \'nmap.fn.arg': "nnoremap %s :call %s('%s')<CR>",
@@ -21598,7 +21648,6 @@ function! s:file_prompt()
 endfunction
 let g:python_base_functions = ["get_global_value","chalk","blue","_blue_colon","blue_colon","confirm","map","is_defined","is_array","test","is_string","is_integer","is_number","match","get_extension","has","has_extension","write_json","append","write","npath","tail","identity","normalize_file","trim","join","is_primitive","to_string","append_json","is_array_dictionary","is_object_array","read_json","everyf","pretty_print","head","dir_from_file","red","throw","timestamp","clear","is_file","is_function","templater","prompt","to_array","exists","filter","split","run_tests","to_argument","testf","is_object","is_nested_array","is_today","datestamp","announce","flat","get_sentences","is_url","get_constructor_name","file_prompt","debug","copy_last_downloaded_file_into_active_dir","is_dir","get_dir","path","most_recent_file","is_jsonable","append_self","empty","get_error_name","choose","is_private","view","openpdf","clip","stringify"]
 let g:wpsnippets2["python"]["imp"] = "from utils import *"
-let g:gfgfdict['gf'] = ['/home/kdog3682/.vimrc', 'GoFile', 0]
 let g:wpsnippets2["python"]["doc"] = "\"\"\"\n    $c\n\"\"\""
 
 " let g:filedict['t
@@ -21612,8 +21661,9 @@ function! s:typst(file)
         call s:blue(e)
     else
         call s:blue('successful render!')
-        return 
-        call OpenBrowser(out)
+        if g:flags.open_typst_pdf
+            call OpenBrowser(out)
+        endif
     endif
 endfunction
 
@@ -22154,9 +22204,447 @@ let g:linkedBufferGroups["fs-watch.js"] = "fs-watch.html"
 let g:linkedBufferGroups["fs-watch.html"] = "fs-watch.js"
 
 function! s:register_normal_openbuffer_file()
-    let t = s:get_map_template("nfile")
-    let t = printf(t, s:prompt("key"), s:get_current_buffer_name())
+    let t = s:get_map_template("normal_open_file")
+    let t = printf(t, s:prompt("alias key for this file? [you should start the key with the letter e]"), s:get_current_buffer_name())
     call s:append_and_execute(t)
 endfunction
 call add(g:normalCommands, "s:register_normal_openbuffer_file")
 nnoremap ea :call OpenBuffer4('/home/kdog3682/2024/abc.gdoc')<CR>
+
+
+function! EnableSimpleLanguageHighlighting()
+    call s:highlight_syntax("simple_comment", "^ *//.*", "blue")
+endfunction
+let g:execRef2["esh"] = "EnableSimpleLanguageHighlighting"
+
+autocmd! FileType python highlight Comment ctermfg=Green guifg=Green
+
+nnoremap eey :call OpenBuffer4('/home/kdog3682/PYTHON/examples.py')<CR>
+let g:linkedBufferGroups["SectionExecutor.py"] = "SectionExecutorApps.py"
+let g:linkedBufferGroups["SectionExecutorApps.py"] = "SectionExecutor.py"
+
+nnoremap eebm :call OpenBuffer4('/home/kdog3682/2024/bookmarks.txt')<CR>
+
+
+nnoremap gp :call GoPreviewDirectory()<CR>
+function! GoPreviewDirectory()
+  " creates a tree like directory structure to see the folder contents
+  ec 'in progress'
+endfunction
+
+function! ToggleGlobalFlag()
+    let dictKeys = keys(g:flags)
+    let key = s:fuzzy(dictKeys)
+    let val = s:opposite(g:flags[key])
+    let g:flags[key] = val
+    ec printf('new value for %s: %s', key, val)
+endfunction
+call add(g:normalCommands, "ToggleGlobalFlag")
+
+
+function! EvalAndAppendFile(s)
+    call s:appendfile(".", s:system_cmd(s:templater2(a:s)))
+endfunction
+
+function! EvalAndEcho(s)
+    "test: 'a'
+    " let s = a:s
+    " ec systemlist(s)
+    let a = getcwd()
+    let b = system('2024')
+    let c = getcwd()
+    return [a, b, c]
+
+endfunction
+
+" 01-09-2024 
+let g:pythonsitepackagesdir = '/home/kdog3682/.local/lib/python3.9/site-packages/'
+let g:execRef2["tgf"] = "ToggleGlobalFlag"
+
+let g:line_edit_invivo_items = [
+    \{"regex": '^replace +(\S+) (.+)', "fn": "GlobalStringReplace", "desc": "escapes the regex and replaces the occurence through the entire file. if it a word, we do boundary on it", 'key': 'rep'},
+    \{"regex": '^ea +(.+)', "fn": "EvalAndAppendFile", "desc": "eval the line ... append results to bottom of page", 'key': 'ea'},
+    \{"regex": '^e +(.+)', "fn": "EvalAndEcho", "desc": "eval the line ... append results to bottom of page", 'key': 'e'},
+\]
+
+function! JumpToFunctionByKey(key, objects, ...)
+    let key = a:key
+    let objects = a:objects
+    let fallbackFiles = a:0 > 0 ? a:1 : []
+
+    if has_key(g:gfgfdict, key)
+        let [file, fnName, getMethod] = g:gfgfdict[key]
+        call s:open(file)
+        call SearchFunctionInCurrentFile(fnName)
+        return 
+    endif
+
+    " Search in the provided objects
+    let functionName = s:FindFunctionName(a:key, a:objects)
+    if s:exists(functionName)
+        if SearchFunctionInCurrentFile(functionName)
+            return
+        endif
+        for file in fallbackFiles
+            execute 'edit' file
+            if SearchFunctionInCurrentFile(functionName)
+                return
+            endif
+        endfor
+    else
+        call s:red('no function with key %s in provided list of objects or arrays', a:key)
+    endif
+
+endfunction
+
+function! s:FindFunctionName(key, objects)
+    for object in a:objects
+        if s:is_object(object)
+            if has_key(object, a:key)
+                let base = object[a:key]
+                if IsObject(base)
+                    return base['fn']
+                elseif IsString(base)
+                    if s:llvf(base)
+                        return base
+                    else
+                        let base = s:get_function_from_str(base)
+                        if s:exists(base)
+                            return base
+                        endif
+                        return 
+                    endif
+                    return base
+                endif
+            endif
+        elseif s:is_array(object)
+            for item in object
+                if has_key(item, 'key') && item['key'] == a:key
+                    return item['fn']
+                endif
+            endfor
+        endif
+    endfor
+    return ''
+endfunction
+
+function! SearchFunctionInCurrentFile(functionName)
+    let searchPattern = '\<function!\?\s\+' . a:functionName . '\>'
+    if search(searchPattern) > 0
+        return 1
+    endif
+    return 0
+endfunction
+
+let g:abc = {
+    \"regex": {"fn": "GlobalStringReplace", "desc": "escapes the regex and replaces the occurence through the entire file. if it a word, we do boundary on it", 'key': 'rep'}
+\}
+function! s:get_function_from_str(s)
+	return s:findall(s, '\w+\ze\(')[-1]
+endfunction
+let g:gfgfdict['gf'] = ['/home/kdog3682/.vimrc', 'GoFile', 0]
+
+
+" 01-09-2024 top
+
+let g:CompleteOnKeyStrokeActive = 0
+
+function! ToggleCompleteOnKeyStroke()
+    if g:CompleteOnKeyStrokeActive
+        let g:CompleteOnKeyStrokeActive = 0
+        unmap zz
+    else
+        let g:CompleteOnKeyStrokeActive = 1
+        inoremap zz <C-O>:call CompleteOnKeyStroke()<CR>
+    endif
+endfunction
+
+
+
+
+
+function! s:build_language_specific_completion_items()
+    if exists('b:bindings')
+        return b:bindings
+    endif
+    return []
+    let ref = a:ref
+    let cstate = s:get_context_state(ref.contextual.cstate)
+    let store = []
+    if s:exists(cstate)
+        for item in ref.contextual.items
+            let match = s:match_context_state(item, cstate)
+            if match
+                call extend(store, match.items)
+                break
+            endif
+        endfor
+    endif
+
+    call extend(store, b:bindings)
+    call extend(store, ref.language_words)
+    return store
+endfunction
+
+
+function! TypstCompletion(findstart, base)
+    if a:findstart
+        " Find the start position of the word to complete
+        let line = getline('.')
+        let start = col('.') - 1
+        while start > 0 && line[start - 1] =~ '\a'
+            let start -= 1
+        endwhile
+        let s:typst_completion_start = start
+        
+        return start
+    else
+        try
+            let items = GetTypstCompletionItems(a:base)
+            " call input('items: ' . s:string(items))
+            return items
+        catch
+            let error = v:exception
+            return [error]
+        endtry
+    endif
+endfunction
+
+function! TypstTriggerCompletion()
+    if &filetype != "typst"
+        return 
+    endif
+    " Trigger autocompletion if the last typed character matches a specific pattern
+    let last_char = strpart(getline('.'), col('.') - 2, 1)
+    if last_char =~ '\v\a|\.'
+        " Trigger the custom completion function
+        call feedkeys("\<C-x>\<C-u>", 'n')
+    endif
+endfunction
+
+nnoremap eest :call OpenBuffer4('/home/kdog3682/2024/snippets.typ')<CR>
+
+
+function! GetFileType()
+    ec &filetype
+endfunction
+let g:execRef2["gft"] = "GetFileType"
+
+function! TypstUpdateBindings()
+    let r = 'let ([\w-]+)\('
+    let bindings = s:unique(s:findall(s:get_page_text(), r))
+    let b:bindings = bindings
+endfunction
+autocmd! InsertCharPre *.typ call TypstTriggerCompletion()
+autocmd! BufWritePost  *.typ call TypstUpdateBindings()
+nnoremap eet2 :call OpenBuffer4('/home/kdog3682/2024/temp.gdoc')<CR>
+inoreab ib inoremap <buffer>
+nnoremap ll :call EchoTemplate('ll')<CR>
+nnoremap lp :call EchoTemplate('lp')<CR>
+let g:jspyref3['python']['ll'] = 'print("$1", $1)'
+let g:jspyref3['python']['lp'] = 'pprint($1)'
+
+let g:jspyref3['javascript']['lp'] = 'pprint($1)'
+let g:flags = {}
+
+let g:flags['open_typst_pdf'] = 0
+let g:flags['use_mypy_flag'] = 0
+let g:flags['use_system_flag'] = 0
+function! s:opposite(x)
+    let x = a:x
+    return Opposite(x)
+endfunction
+
+function! Pycharm()
+    let ref = g:jspyref3[&filetype]['pycharm']
+    let fns = 
+    if !exists('b:pycharm_dependency_bindings')
+        let lines = getline(1, 10)
+        let m = s:matchfilter(lines, ref.import_re)
+        let dependency_bindings = {}
+        for item in m
+            let file = ''
+            if IsArray(item)
+                let file = item[0]
+            else
+                let file = item
+            endif
+            let file = TypstResolve(file)
+            let key = s:remove_extension(s:tail(file))
+            let dependency_bindings[key] = s:get_typst_items(file)
+        endfor
+        let b:pycharm_dependency_bindings = dependency_bindings
+    endif
+endfunction
+let g:jspyref3["python"]["pycharm_import_re"] = ""
+let g:jspyref3["javascript"]["pycharm_import_re"] = ""
+let g:jspyref3["typst"]["pycharm"] = {'import_re': '#?import "(.{-})\\.typ"%( *: *(\\S.+))?'}
+let g:jspyref3["vim"]["pycharm"] = {
+    \ 'import_re': '#?import "(.{-})\.typ"%( *: *(\S.+))?',
+\}
+let g:jspyref3['javascript']['ll'] = 'console.log("$1", $1)'
+
+function! BrowseTocFiles()
+    " let g:toc_key = 'typst-packages'
+    " let file = printf('/home/kdog3682/2024/%s.toc')
+    let file = '/home/kdog3682/2024/typst-packages.toc'
+    call OpenBuffer3(file)
+endfunction
+let g:execRef2["toc"] = "BrowseTocFiles"
+nnoremap eec2 :call OpenBuffer4('/home/kdog3682/2023/clip2.js')<CR>
+nnoremap een2 :call OpenBuffer4('/home/kdog3682/2023/next2.js')<CR>
+
+"/home/kdog3682/GITHUB/typst-packages/packages/preview/cetz/0.1.2/src/lib/plot.typ",
+
+function! Sdhfjk()
+    call OpenBuffer3('/home/kdog3682/2024/snippets.typ')
+    startinsert!
+endfunction
+
+let s:child_completion_items = [
+                \ {'word': 'bobber', 'abbr': 'bob', 'menu': 'This is an example', 'infoo': 'Detailed information about example', 'kind': 'function'},
+                \ {'word': 'fobber', 'abbr': 'fob', 'menu': 'This is a sample', 'infoo': 'Detailed information about sample', 'kind': 'variable'},
+                \ ]
+
+let s:child_completion_items2 = [
+                \ {'word': 'bobber22222', 'abbr': 'bob', 'menu': 'This is an example', 'infoo': 'Detailed information about example', 'kind': 'function'},
+                \ {'word': 'fobbe22222r', 'abbr': 'fob', 'menu': 'This is a sample', 'infoo': 'Detailed information about sample', 'kind': 'variable'},
+                \ ]
+
+let s:completion_items = [
+                \ {'word': 'aaexample', 'abbr': 'exmpl', 'menu': 'This is an example', 'infoo': 'Detailed information about example', 'kind': 'function'},
+                \ {'word': 'sample', 'abbr': 'smpl', 'menu': 'This is a sample', 'infoo': 'Detailed information about sample', 'kind': 'variable'},
+                \ {'word': 'sample2', 'abbr': 'smpl2', 'menu': 'This is a sample', 'infoo': 'Detailed information about sample', 'kind': 'variable'},
+                \ {'word': 'sample3', 'abbr': 'smpl3', 'menu': 'This is a sample', 'infoo': 'Detailed information about sample', 'kind': 'variable'},
+                \ {'word': 'foo', 'abbr': 'tst', 'menu': 'This is a test', 'infoo': 'Detailed information about test', 'kind': 'method'},
+                \ {'word': 'bar', 'abbr': 'ts', 'menu': 'This is a test', 'infoo': 'Detailed information about test', 'kind': 'method'},
+                \ ]
+
+function! s:map_filter(items, fnkey)
+    let items = a:items
+    let fnkey = a:fnkey
+    let store = []
+    let s:_f = function(fnkey)
+    for item in items
+        let m = s:_f(item)
+        if s:exists(m)
+            call add(store, m)
+        endif
+    endfor
+    return store
+    
+endfunction
+function! GetTypstCompletionItems(base)
+    "test: pl
+    let r = '^' . a:base
+
+    let l:Wrap = {s,type -> ({'word': s, 'kind': type})}
+    let package = s:json('/home/kdog3682/2024/clip2.js', 'typst_child_package')
+
+
+    let before = s:typst_completion_start - 1
+    let s = getline('.')
+    let c = s[before]
+    if c == '.'
+        let substring = strpart(s, 0, before)
+        let field = s:match(substring, '\w+$')
+        if s:exists(field)
+            let child_package = field == package.key ? package : s:find(package.children, {x -> x.key == field})
+            if s:exists(child_package)
+                let store = []
+                for child in child_package.contents
+                    if empty(a:base) || s:t(child.name, r)
+                        call add(store, l:Wrap(child.name, 'method'))
+                    endif
+                endfor
+                return store
+            else
+                call input('field: ' . s:string(field))
+            endif
+        endif
+        return []
+    endif
+
+    if empty(a:base)
+        return []
+    endif
+
+    let base = []
+
+    for child in package.contents
+        if s:t(child.name, r)
+            call add(base, l:Wrap(child.name, 'func'))
+        endif
+    endfor
+    for child in package.children
+        if s:t(child.key, r)
+            call add(base, l:Wrap(child.key, 'child'))
+        endif
+    endfor
+
+    let keywords = [ "styles", "query", "locate", ]
+
+    for item in keywords
+        if s:t(item, r)
+            call add(base, l:Wrap(item, 'keyword'))
+        endif
+    endfor
+    return base
+endfunction
+
+let g:execRef2["dqt"] = "DefineQTFunction"
+let g:vimCurrentTestFunction = "Sdhfjk"
+
+function! FindPrecedingFields(str, loc)
+    " Extract the substring up to the given index
+    let substring = strpart(a:str, 0, a:loc)
+
+    " Initialize an empty list to store fields
+    let fields = []
+    let field = ''
+    let i = len(substring) - 1
+
+    " Traverse the substring backwards
+    while i >= 0
+        " Check if the current character is a dot or a space
+        if substring[i] == '.' || substring[i] == ' '
+            " Add the field to the list if it's not empty and break on space
+            if len(field) > 0
+                call add(fields, field)
+                let field = ''
+                if substring[i] == ' '
+                    break
+                endif
+            endif
+        else
+            " Prepend the character to the current field
+            let field = substring[i] . field
+        endif
+        let i -= 1
+    endwhile
+
+    if len(field) > 0
+        call add(fields, field)
+    endif
+
+    " Return the list of fields in reverse order since we collected them backwards
+    return reverse(fields)
+endfunction
+
+
+function! s:json(file, ...)
+    let file = a:file
+    let cache_key = a:0 >= 1 ? a:1 : ''
+    if s:exists(cache_key)
+        if has_key(g:cache, cache_key)
+            " call input(string('returning cached value'))
+            return g:cache[cache_key]
+        else
+            let v = json_decode(s:joinlines(readfile(file)))
+            let g:cache[cache_key] = v
+            return v
+        endif
+    endif
+    return json_decode(s:joinlines(readfile(file)))
+endfunction
+        " let fields = FindPrecedingFields(s, before)

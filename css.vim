@@ -31,12 +31,12 @@ nnoremap <buffer> \ :call CssOmniIncrement(-1)<CR>
 
 nnoremap <buffer> <TAB>     :call CssSecondaryIncrementWrapper(1)<CR>
 nnoremap <buffer> <s-TAB>   :call CssSecondaryIncrementWrapper(-1)<CR>
-inoremap <silent> <buffer> <expr> <Tab> QQQ()
+inoremap <buffer> <silent> <buffer> <expr> <Tab> QQQ()
 inoreab <buffer>bc /*<space><space>*/<left><left><left><C-R>=Eatchar('\s')<CR>
 inoreab <buffer>v var(--);<left><left><C-R>=Eatchar('\s')<CR>
 
 nnoremap <buffer> ds :call CommentAndSave()<CR>:w<CR>
-nnoremap c :call GetSetFn('s:toggle_comment')<CR>
+nnoremap <buffer> c :call GetSetFn('s:toggle_comment')<CR>
+nnoremap <buffer> <silent> <expr> <leader>r CssLeaderRExpr()
 " nnoremap <silent> <leader>r :call CssLeaderR()<CR>
-nnoremap <silent> <expr> <leader>r CssLeaderRExpr()
 
