@@ -41,3 +41,6 @@ inoremap <buffer> <expr> 3 SolExpr('# ', 3)
 
 
 nnoremap <buffer> qw :call MarkdownNormalQW()<CR>
+
+inoremap <buffer> qi <esc>I
+inoremap <buffer> qo <esc>A

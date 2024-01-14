@@ -41,3 +41,5 @@ inoreab <buffer>istaw Is<space>there<space>a<space>way<C-R>=Eatchar('\s')<CR>
 " call UnmapPython()
 inoreab  <buffer> td ``<left><c-r>=Eatchar('\s')<cr><C-R>=Eatchar('\s')<CR>
 " inoremap <buffer> <expr> 3 FTEF_Typst_NumberOrSymbol('3', '#')
+inoreab <buffer>defs DEFINITIONS()<LEFT><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>pe +=

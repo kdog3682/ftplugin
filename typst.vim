@@ -19,7 +19,6 @@ inoremap <buffer> <expr> " FTEF_Typst_SmartQuote()
 nnoremap <buffer> <c-b> FTEF_Typst_WordWrap('*', '*')
 nnoremap <buffer> <localleader>b :call FTEF_Typst_WordWrap('*', '*')<CR>
 nnoremap <buffer> 3 :call FTEF_Typst_WordWrap('#', '')<CR>
-inoremap <silent> <buffer> <expr> <Tab> QQQ()
 
 nnoremap <buffer> 4 /^\v#?let 
 
@@ -32,3 +31,5 @@ inoremap <buffer> <left> <left>
 inoremap <buffer> <right> <right>
 
 setlocal completefunc=TypstCompletion
+inoremap <silent> <buffer> <expr> <Tab> QQQ()
+inoremap <silent> <buffer> <expr> <Tab> QQQTypstCompletion()

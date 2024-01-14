@@ -2,10 +2,9 @@
 """ localBookmarkId: 1697717268 """ import "foo.typ"
 highlight Pmenu ctermbg=gray guibg=gray
 highlight Folded ctermfg=white ctermbg=black guifg=white guibg=black
-highlight MyCustomBlueColor ctermfg=blue guifg=blue"
-
-highlight MyCustomRedColor ctermfg=red guifg=red"
-highlight MyCustomGreenColor ctermfg=green guifg=green"
+" highlight MyCustomBlueColor ctermfg=blue guifg=blue"
+" highlight MyCustomRedColor ctermfg=red guifg=red"
+" highlight MyCustomGreenColor ctermfg=green guifg=green"
 """ localBookmarkId: 1697717268 """
 
 let g:fileRE = '[~.]*/[-+a-z0-9_ ./@]{-}\.%(\w*template|csv|rs|typ|stylus|bash_aliases|bash_history|gitignore|dialogue|log|vimrc|vim|json|js|txt|py|pdf|md|css|html|grammar)\ze%(["'']| *$)|[a-z][-a-z+0-9_./@]+%(\w*template|log|dialogue|note|vimrc|vim|json|js|txt|py|pdf|md|css|html|grammar|stylus)\ze%( *$|["''])'
@@ -18992,7 +18991,6 @@ let g:execRef2["jca"] = "LogConsoleAppendVariable"
 
 
 autocmd! bufwritepost ~/.vimrc source %
-" autocmd! bufwritepost *.vim source %
 autocmd! BufNewFile,BufRead *.dialogue set filetype=dialogue
 autocmd! BufNewFile,BufRead *.typ set filetype=typst
 autocmd! BufNewFile,BufRead *.cssTemplate set filetype=cssTemplate
@@ -23044,12 +23042,12 @@ let g:linkedBufferGroups["lezer.template.js"] = "lezer-functions.js"
 " Plug 'junegunn/fzf.vim'
 " Plug 'preservim/nerdtree'
 " Plug 'junegunn/vim-slash'
-call plug#begin('~/.vim/plugged')
-Plug 'lifepillar/vim-mucomplete'
-call plug#end()
+" call plug#begin('~/.vim/plugged')
+" Plug 'lifepillar/vim-mucomplete'
+" call plug#end()
 syntax off
 set completefunc=CompletionTest
-filetype plugin on
+" filetype plugin on
 
 function! JuneGunnFZF(s)
     " let search_dir = '/home/kdog3682/2024/'

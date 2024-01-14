@@ -101,8 +101,8 @@ inoreab <buffer>[[ {}<left><C-R>=Eatchar('\s')<CR>
 
 
 " inoremap <buffer> <silent> <Tab> <C-R>=CleverTab()<CR>
-setlocal completefunc=JavascriptComplete
-autocmd! CompleteDone  *.js call JSOnCompleteDone()
+" setlocal completefunc=JavascriptComplete
+" autocmd! CompleteDone  *.js call JSOnCompleteDone()
 " inoremap <silent> <buffer> <expr> <Tab> QQQ()
 inoremap <silent> <buffer> <expr> <Tab> QQQ()
 " inoremap <buffer> <expr> <space> SpaceCompletion()
@@ -138,3 +138,10 @@ inoremap ` <esc> :call Node1()
 inoreab <buffer>br --------------------------------<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>w- [\w-]+<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>w- [\w-]+<C-R>=Eatchar('\s')<CR>
+inoreab <buffer>77 &&<C-R>=Eatchar('\s')<CR>
+inoreab <buffer>,, <><left><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>77 eat
+inoreab <buffer>77 &&
+inoreab <buffer>pe +=
+inoreab <buffer>_= -=
+inoreab <buffer>pp +
