@@ -15,3 +15,7 @@ inoremap <buffer> <expr> 5 MDPumExpr(5)
 inoremap <buffer> <expr> 6 MDPumExpr(6)
 inoremap <buffer> <expr> 7 MDPumExpr(7)
 inoremap <buffer> <expr> 8 MDPumExpr(8)
+
+inoremap <buffer> 4 $
+inoreab <buffer>hic Hi<space>ChatGPT,<CR><C-R>=Eatchar('\s')<CR>
+nnoremap <space> :call SetVimSpeaker()<CR>

@@ -1,7 +1,8 @@
-setlocal tabstop=2
+setlocal tabstop=4
 setlocal nosmartindent
 
 
+inoremap <buffer> qp (<c-o>A)<LEFT>
 inoremap <buffer> wf <ESC>:call PythonFunctionBlock()<CR>
 nnoremap <buffer> wf :call PythonNormalFunctionBlock()<CR>
 inoremap q9 (<C-O>o)<c-o>O<space><space>
@@ -13,6 +14,7 @@ inoremap <buffer> <expr> - FTEF_Typst_Dash()
 inoremap <buffer> <expr> 3 FTEF_Typst_NumberOrSymbol('3', '#')
 inoremap <buffer> <expr> p FTEF_Typst_MathMode('p')
 inoremap <buffer> <expr> 4 FTEF_Typst_NumberOrSymbol('4', '$$<left>')
+inoremap <buffer> <expr> 2 FTEF_Typst_NumberOrSymbol('2', '@')
 inoremap <buffer> <expr> 9 SmartNine('(')
 inoremap <buffer> <expr> = FTEF_Typst_SmartEqual()
 inoremap <buffer> <expr> " FTEF_Typst_SmartQuote()
@@ -32,4 +34,13 @@ inoremap <buffer> <right> <right>
 
 setlocal completefunc=TypstCompletion
 inoremap <silent> <buffer> <expr> <Tab> QQQ()
-inoremap <silent> <buffer> <expr> <Tab> QQQTypstCompletion()
+" inoremap <silent> <buffer> <expr> <Tab> QQQTypstCompletion()
+inoremap <buffer> <silent> <expr> <cr> TypstSmartEnter()
+
+
+augroup typst_autocommands
+    autocmd!
+    autocmd BufEnter * if &ft == 'typst' && !exists("b:first_enter") | let b:first_enter = 1 | call GetTypstFunctionWords() | endif
+    autocmd BufWritePost * if &ft == 'typst' | call GetTypstFunctionWords() | endif
+augroup END
+

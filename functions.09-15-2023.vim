@@ -6114,10 +6114,7 @@ endfunction
 
 " 03-10-2023
 function! TimestampedBookmark(...)
-    let mark = a:0 >= 1 ? a:1 : LineMark()
-    if !Exists(mark)
-        let mark = LineMark()
-    endif
+    let mark = a:0 >= 1 && Exists(a:1) ? a:1 : Prompt("choose a mark")
     let s = strftime('%s') . ' ' . mark
     let s = RegistrarTemplater(Jspy('bookmark_template'), s)
     call append('$', s)
@@ -10150,7 +10147,7 @@ endfunction
 
 function! WriteFile(file, lines, ...)
     let file = a:file
-    let lines = a:lines
+    let lines = ToLines(a:lines)
     if !Exists(lines)
         return
     endif

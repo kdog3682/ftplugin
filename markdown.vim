@@ -44,3 +44,4 @@ nnoremap <buffer> qw :call MarkdownNormalQW()<CR>
 
 inoremap <buffer> qi <esc>I
 inoremap <buffer> qo <esc>A
+inoremap <buffer> 4 $

@@ -18410,6 +18410,7 @@ endfunction
 
 function! Python(...)
     let cmd = "!clear;python3 " . join(Flat(a:000), " ")
+    ec cmd
     execute cmd
 endfunction
 

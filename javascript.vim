@@ -17,7 +17,6 @@ inoreab  <buffer> oe Object.entries()<left><c-r>=Eatchar('\s')<cr><C-R>=Eatchar(
 inoreab  <buffer> ok Object.keys()<left><c-r>=Eatchar('\s')<cr><C-R>=Eatchar('\s')<CR>
 inoreab  <buffer> ov Object.values()<left><c-r>=Eatchar('\s')<cr><C-R>=Eatchar('\s')<CR>
 inoreab  <buffer> pe +=<C-R>=Eatchar('\s')<CR>
-inoreab  <buffer> r return<C-R>=Eatchar('\s')<CR>
 inoreab  <buffer> reg RegExp(``)<left><left><c-r>=Eatchar('\s')<cr><C-R>=Eatchar('\s')<CR>
 inoreab  <buffer> ret return
 inoreab  <buffer> rnp randomPick()<left><c-r>=Eatchar('\s')<cr><C-R>=Eatchar('\s')<CR>
@@ -117,7 +116,6 @@ inoreab <buffer>na node.assign()<LEFT><C-R>=Eatchar('\s')<CR>
 inoreab <buffer>lb console.browser()<LEFT><C-R>=Eatchar('\s')<CR>
 inoreab <buffer>tau TAU<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>re RegExp()<LEFT><C-R>=Eatchar('\s')<CR>
-inoreab <buffer>r return
 
 inoreab <buffer> tdb `<c-o>o`,<c-o>O<space><space><space><space><C-R>=Eatchar('\s')<CR>
 
@@ -131,7 +129,6 @@ inoreab <buffer>cb crayonbox.red()<LEFT><C-R>=Eatchar('\s')<CR>
 inoreab <buffer>rr r<C-R>=Eatchar('\s')<CR>
 inoreab <buffer> <expr> dt GetTime()
 
-inoremap ` <esc> :call Node1()
 
 " inoremap 3 #
 " inoremap # 3
@@ -139,9 +136,17 @@ inoreab <buffer>br --------------------------------<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>w- [\w-]+<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>w- [\w-]+<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>77 &&<C-R>=Eatchar('\s')<CR>
-inoreab <buffer>,, <><left><C-R>=Eatchar('\s')<CR>
 inoreab <buffer>77 eat
 inoreab <buffer>77 &&
 inoreab <buffer>pe +=
 inoreab <buffer>_= -=
 inoreab <buffer>pp +
+inoreab <buffer>rto {recursive:<space>true}<C-R>=Eatchar('\s')<CR>
+inoremap <buffer> ` <esc> :w <cr> :call Node1()<CR>
+inoreab <buffer>-- -------------------------<C-R>=Eatchar('\s')<CR>
+inoreab <buffer>__ -____------------------------<C-R>=Eatchar('\s')<CR>
+inoreab <buffer>__ --------------------------------<C-R>=Eatchar('\s')<CR>
+
+
+inoremap <buffer> <expr> 2 FTEF_Typst_NumberOrSymbol('@', '2')
+inoremap <buffer> <expr> 3 FTEF_Typst_NumberOrSymbol('#', '3')

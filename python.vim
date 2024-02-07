@@ -24,7 +24,6 @@ inoreab <buffer>con continue<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>null None()<LEFT><C-R>=Eatchar('\s')<CR>
 inoreab <buffer>r return
 inoreab <buffer>lx lambda<space>x:
-inoreab <buffer>p pprint()<LEFT><C-R>=Eatchar('\s')<CR>
 inoreab <buffer>ass assert
 inoreab <buffer>isa is_array()<LEFT><C-R>=Eatchar('\s')<CR>
 inoreab <buffer>iso is_object()<LEFT><C-R>=Eatchar('\s')<CR>
@@ -43,3 +42,4 @@ inoreab  <buffer> td ``<left><c-r>=Eatchar('\s')<cr><C-R>=Eatchar('\s')<CR>
 " inoremap <buffer> <expr> 3 FTEF_Typst_NumberOrSymbol('3', '#')
 inoreab <buffer>defs DEFINITIONS()<LEFT><C-R>=Eatchar('\s')<CR>
 inoreab <buffer>pe +=
+inoreab <buffer>se self<C-R>=Eatchar('\s')<CR>
