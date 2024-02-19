@@ -4,11 +4,12 @@ setlocal nosmartindent
 
 inoremap <buffer> qp (<c-o>A)<LEFT>
 inoremap <buffer> wf <ESC>:call PythonFunctionBlock()<CR>
+inoremap <buffer> <expr> wf TypstCreateFunctionBlock()
 nnoremap <buffer> wf :call PythonNormalFunctionBlock()<CR>
-inoremap q9 (<C-O>o)<c-o>O<space><space>
-inoremap q] [<C-O>o]<c-o>O<space><space>
-inoremap q[ <space>{<C-O>o}<c-o>O<space><space>
-inoremap q3 #{<C-O>o}<c-o>O<space><space>
+inoremap q9 (<C-O>o)<c-o>O<space><space><space><space>
+inoremap q] [<C-O>o]<c-o>O<space><space><space><space>
+inoremap q[ <space>{<C-O>o}<c-o>O<space><space><space><space>
+inoremap q3 #{<C-O>o}<c-o>O<space><space><space><space>
 inoremap <buffer> <expr> / FTEF_Typst_CommentSlash()
 inoremap <buffer> <expr> - FTEF_Typst_Dash()
 inoremap <buffer> <expr> 3 FTEF_Typst_NumberOrSymbol('3', '#')
@@ -29,6 +30,7 @@ nnoremap  qw :call TypstNormalQW()<CR>
 inoremap  qe <ESC>:call TypstNormalQE()<CR>
 nnoremap  qe :call TypstNormalQE()<CR>
 inoreab <buffer> <silent> <expr> r SmartReturn()
+inoreab <buffer> <silent> lx (x) =>
 inoremap <buffer> <left> <left>
 inoremap <buffer> <right> <right>
 
@@ -37,6 +39,9 @@ inoremap <silent> <buffer> <expr> <Tab> QQQ()
 " inoremap <silent> <buffer> <expr> <Tab> QQQTypstCompletion()
 inoremap <buffer> <silent> <expr> <cr> TypstSmartEnter()
 
+inoremap <buffer> <silent> <expr> qc TypstCreateFunctionWrapping()
+nnoremap <buffer> <silent> qc :call TypstNormalCreateFunctionWrapping()<CR>
+nnoremap <buffer> <silent> <space> :call TypstNormalToggle()<CR>
 
 augroup typst_autocommands
     autocmd!
@@ -44,3 +49,10 @@ augroup typst_autocommands
     autocmd BufWritePost * if &ft == 'typst' | call GetTypstFunctionWords() | endif
 augroup END
 
+
+""" 02-13-2024
+""" qc: TypstCreateFunctionWrapping
+""" 
+""" 
+""" 
+""" 

@@ -143,10 +143,13 @@ inoreab <buffer>_= -=
 inoreab <buffer>pp +
 inoreab <buffer>rto {recursive:<space>true}<C-R>=Eatchar('\s')<CR>
 inoremap <buffer> ` <esc> :w <cr> :call Node1()<CR>
-inoreab <buffer>-- -------------------------<C-R>=Eatchar('\s')<CR>
+inoreab <buffer> <expr> -- repeat("-", 50)<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>__ -____------------------------<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>__ --------------------------------<C-R>=Eatchar('\s')<CR>
-
-
-inoremap <buffer> <expr> 2 FTEF_Typst_NumberOrSymbol('@', '2')
-inoremap <buffer> <expr> 3 FTEF_Typst_NumberOrSymbol('#', '3')
+inoreab <buffer>st state<C-R>=Eatchar('\s')<CR>
+inoreab <buffer>sc scanner<C-R>=Eatchar('\s')<CR>
+nnoremap <buffer> 7 :call Node7()<CR>
+inoreab <buffer>th throw<C-R>=Eatchar('\s')<CR>
+inoreab <buffer>th this<C-R>=Eatchar('\s')<CR>
+inoreab <buffer>thr throw 
+inoreab <buffer> <expr> __ repeat("-", 50) . "\<cr>\<C-R>=Eatchar('\\s')\<CR>"

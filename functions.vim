@@ -6287,13 +6287,6 @@ function! ZoopbarTestVar(s)
     return a . ', ' . b
 endfunction
 
-function! RegexGetter(key)
-    let dict = {
-        \'': '^ *$',   
-    \}
-    return get(dict, a:key, a:key)
-endfunction
-
 function! SearchDown(key, ...)
     let mustHaveLine = a:0 >= 1 ? a:1 : 0
     let start = a:0 >= 2 ? a:2 : 0
@@ -15799,27 +15792,6 @@ function! TildaOrBreak()
     endif
 endfunction
 
-function! ToStringArray(...)
-    let a = a:0 >= 1 ? a:1 : 0
-    let b = a:0 >= 2 ? a:2 : 0
-    let name = 0
-    let items = 0
-
-    if Exists(b)
-        let name = a
-        let items = b
-    elseif IsArray(a)
-        let name = 0
-        let items = a
-    elseif IsString(a)
-        let [name, items] = SplitOnce(split(a, ' '))
-    endif
-
-    let quoted = map(items, {i, line -> IsNumber(line) ? line : "'" . line . "'"})
-    let namePart = Exists(name) ? GetPrefix() . name . ' = ' : ''
-    let payload = namePart . '[' . join(quoted, ', ') . ']'
-    return payload 
-endfunction
 
 function! LineToArray(...)
     let a = a:0 >= 1 ? a:1 : 0

@@ -5550,9 +5550,22 @@ function! JsImportPath(s)
     return './' . Tail(AddExtension(f, 'js'))
 endfunction
 function! SnippetActionJsImport(s) abort
+    "test: 
     let items = split(a:s, ' ')
     let length = len(items)
-    if length == 1
+    if length == 0
+        " let file = FindBuffer({ext: 'js'})
+        let dir = '/home/kdog3682/2024-javascript/js-toolkit'
+        let files = Globber(dir)
+        if Head() == dir
+            let files = filter(files, 'v:val != CurrentFile()')
+        endif
+        let file = Choose(files)
+        let exports = GetExports(file)
+        let importStr = printf('import { %s } from "%s"', join(exports, ', '), file)
+        return importStr
+
+    elseif length == 1
         let a = items[0]
         let f =  a . '.js'
         if IsFile(f)
@@ -5564,7 +5577,8 @@ function! SnippetActionJsImport(s) abort
     elseif length == 2
         let a = items[0]
         let b = JsImportPath(items[1])
-        let template = "import {\n    $1\n} from \"$2\""
+        let template = "import { $1 } from \"$2\""
+        " let template = "import {\n    $1\n} from \"$2\""
         return RegistrarTemplater(template, [a, b])
     else
         throw 'in progress'
@@ -6593,23 +6607,24 @@ endfunction
 function! GSTSA(s)
   let r = '[''",.]'
   let items = IsArray(a:s) ? a:s : split(Sub(a:s, r, ''), '\s\+')
-  let s:gstaprefix = Jspy('const')
+  let s:gstaprefix = JP('prefix')
   function! GSTSAMap(i, s)
     let s = a:s
     let i = a:i
+    let array_start_delimiter = &filetype == 'typst' ? '(': '['
     if i == 0
-        return s:gstaprefix . s . ' = ['
+        return s:gstaprefix . s . ' = ' . array_start_delimiter
     else
         return '    ' . Quote(s) . ','
     endif
   endfunction
+    let array_end_delimiter = &filetype == 'typst' ? ')': ']'
   let store = map(items, function('GSTSAMap'))
-  call add(store, ']')
+  call add(store, array_end_delimiter)
   return store
 endfunction
 function! ToStringArray()
     call GetSetFn('GSTSA')
-
 endfunction
 
 "school-calender chrome-extension://ieepebpjnkhaiioojkepfniodjmjjihl/data/pdf.js/web/viewer.html?file=https%3A%2F%2Fwww.schools.nyc.gov%2Fdocs%2Fdefault-source%2Fdefault-document-library%2Fparent-facing-calendar-2022-23
