@@ -4951,6 +4951,9 @@ function! GetCodeIndexes(...) abort
     let name = ''
     let startIndex = '.'
     let a = ''
+    if &filetype == "typst"
+        return GetTypstIndexes()
+    endif
     if IsNumber(name) && 'a' == 'b'
         throw 'hhhhhhhhhhhh'
     elseif name == 'current-to-end'
@@ -5553,7 +5556,10 @@ function! SnippetActionJsImport(s) abort
     "test: 
     let items = split(a:s, ' ')
     let length = len(items)
-    if length == 0
+    if length == 1000
+        let data = ReadJSON('js2024_import_items.json')
+    elseif length == 0
+        " throw "x"
         " let file = FindBuffer({ext: 'js'})
         let dir = '/home/kdog3682/2024-javascript/js-toolkit'
         let files = Globber(dir)
@@ -5566,14 +5572,13 @@ function! SnippetActionJsImport(s) abort
         return importStr
 
     elseif length == 1
-        let a = items[0]
-        let f =  a . '.js'
-        if IsFile(f)
-            let template = "import {$1} from \"$2\""
-            return RegistrarTemplater(template, [a, JsImportPath(a)])
+        let a = trim(items[0])
+        let template = "import {$1} from \"$2\""
+        if Test(a, 's$')
+            let template  = "import * as $1 from \"$2\""
         endif
-        let template = "import * as $1 from \"$2\""
-        return RegistrarTemplater(template, [a, JsImportPath(a)])
+        let f =  AddExtension(a, 'js')
+        return RegistrarTemplater(template, [a, "./" . f])
     elseif length == 2
         let a = items[0]
         let b = JsImportPath(items[1])
@@ -9383,7 +9388,7 @@ function! Iunmap(s)
         try
             exec item
         catch
-            ec ['error', v:exception]
+            ec ['ERROR', v:exception]
         endtry
     endfor
     ec items
@@ -9590,39 +9595,6 @@ function! DirGetter(s)
 endfunction
 function! LastCommand()
     ec 'this "LastCommand" gets accidentally pressed a lot as map K'
-endfunction
-function! GitTempCheckout(...) abort
-    let hasArgs = a:0 >= 1 ? 1 : 0
-    let file = a:0 >= 1 ? a:1 : Tail()
-    let currentDir = 0
-    let ref = {
-        \'vim': g:ftplugindir,
-        \'py': g:pydir,
-        \'md': g:resdir,
-    \}
-
-    let e = GetExtension(file)
-    if has_key(ref, e)
-        let currentDir = getcwd()
-        call Chdir(ref[e])
-    endif
-
-    let m = 'git log -n 1 --pretty=format:%H -- ' . file
-    let commitId = a:0 >= 2 ? a:2 : system(m)
-    call AssertGit(commitId)
-
-    ec 'Checking Out: commitId: ' . commitId
-    let s = systemlist('git show ' . commitId . ':' . file)
-
-    if Exists(currentDir)
-        call Chdir(currentDir)
-    endif
-
-    if !hasArgs
-        call Changelog('git-checkout', file, commitId)
-    endif
-    call WriteFile('git-checkout.temp.js', s, 1)
-    call OpenBuffer3('git-checkout.temp.js')
 endfunction
 
 function! GetOrSetGlobalState(key, valueKey)
@@ -11204,3 +11176,7 @@ function! Flatten2D(items)
 endfunction
 
 
+function! Sd0f()
+        " let data = ReadJSON('js2024_import_items.json')
+        " return data
+endfunction

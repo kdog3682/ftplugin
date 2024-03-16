@@ -6,7 +6,6 @@ nnoremap <buffer> 2 :call CssNormalKey('2')<CR>
 nnoremap <buffer> 3 :call CssNormalKey('3')<CR>
 nnoremap <buffer> 4 :call CssNormalKey('4')<CR>
 nnoremap <buffer> 5 :call CssNormalKey('5')<CR>
-nnoremap <buffer> 6 :call CssNormalKey('6')<CR>
 nnoremap <buffer> 7 :call CssNormalKey('7')<CR>
 " nnoremap <buffer> 8 :call CssNormalKey('8')<CR>
 nnoremap <buffer> 9 :call CssNormalKey('9')<CR>
@@ -37,6 +36,8 @@ inoreab <buffer>v var(--);<left><left><C-R>=Eatchar('\s')<CR>
 
 nnoremap <buffer> ds :call CommentAndSave()<CR>:w<CR>
 nnoremap <buffer> c :call GetSetFn('s:toggle_comment')<CR>
-nnoremap <buffer> <silent> <expr> <leader>r CssLeaderRExpr()
-" nnoremap <silent> <leader>r :call CssLeaderR()<CR>
 
+nnoremap <buffer><s-right> :call CssShiftArrowRight()<CR>
+nnoremap <buffer><s-left> :call CssShiftArrowLeft()<CR>
+nnoremap <buffer><leader>w :call CssNote("")<left><Left>
+inoremap <buffer> <expr> / FTEF_Css_CommentSlash()

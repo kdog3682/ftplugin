@@ -757,7 +757,7 @@ endfunction
 
 function! DashCase(s)
     let s = a:s
-    return join(map(split(s, '\ze[A-Z]'), 'tolower(v:val)'), '-')
+    return join(map(split(s, '_\|\ze[A-Z]'), 'tolower(v:val)'), '-')
 endfunction
 
 function! GatherLargeQuotes()
@@ -1478,16 +1478,6 @@ function! AddRequireItem()
     endif
 endfunction
 
-function! GetOrSetGVariable(s, ...)
-    let s = a:s
-    if !exists('g:' . s)
-        ec 'choose g-value for ' . s
-        let value = a:0 >= 1 ? a:1 : input('')
-        execute "let g:" . s . ' = ' . SingleQuote(value)
-    endif
-
-    return eval('g:' . s)
-endfunction
 
 function! SearchFromLocation(startindex, regex, depth, mode, ...)
     let direction = a:0 >= 1 ? -1 : 1
@@ -7342,7 +7332,7 @@ endfunction
 
 function! Pascal(s)
     let s = a:s
-    return join(map(split(s, '\W'), 'Capitalize(v:val)'), '')
+    return join(map(split(s, '\W\|_'), 'Capitalize(v:val)'), '')
 endfunction
 
 function! Camelize(s)
@@ -11758,7 +11748,7 @@ function! IsEven(x)
 endfunction
 
 function! IsFile(file)
-   return filereadable(a:file)
+   return filereadable(Replace(a:file, '^\~/', "/home/kdog3682/"))
 endfunction
 
 function! IsFunction(x)

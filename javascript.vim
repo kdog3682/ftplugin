@@ -36,7 +36,7 @@ inoreab  <buffer> ts toString()<left><c-r>=Eatchar('\s')<cr><C-R>=Eatchar('\s')<
 
 inoremap <buffer> <expr> ' SmartQuote()
 inoremap <buffer> <expr> 9 SmartNine('(')
-inoremap <buffer> <expr> = SmartEqual()
+inoremap <buffer> <expr> = SmartEqual3()
 inoremap <buffer> <expr> [ SmartNine('[')
 inoremap <buffer> qp (<c-o>A)<LEFT>
 " inoremap <buffer> qw <right>
@@ -49,14 +49,12 @@ inoreab <buffer> ls (s)<space>=>
 inoreab <buffer> <silent> <expr> r SmartReturn()
 
 inoreab <buffer>ndy throw<space>"not<space>done<space>yet"<C-R>=Eatchar('\s')<CR>
-inoreab <silent> <buffer>-- ---------------------------------------<C-R>=Eatchar('\s')<CR>
 
 
 inoreab <buffer>ae addExtension()<LEFT><C-R>=Eatchar('\s')<CR>
 inoreab <buffer> <expr> echo JavascriptEcho()
 inoreab <buffer>lxi (x,i)<space>=>
 " inoremap <silent> <buffer> <expr> qe QEvaluateManager()
-nnoremap <silent> <buffer> <expr> <leader>d SearchDateExpr()
 
 " cnoremap <silent> <buffer> <expr> gm CnoremapExpressionHandler('gm', '/', "\<ESC>\<ESC>?\\v^---\<CR>/\\v^func\<CR>zz")
 inoreab <buffer>tlc toLowerCase()<LEFT><C-R>=Eatchar('\s')<CR>
@@ -103,7 +101,6 @@ inoreab <buffer>[[ {}<left><C-R>=Eatchar('\s')<CR>
 " setlocal completefunc=JavascriptComplete
 " autocmd! CompleteDone  *.js call JSOnCompleteDone()
 " inoremap <silent> <buffer> <expr> <Tab> QQQ()
-inoremap <silent> <buffer> <expr> <Tab> QQQ()
 " inoremap <buffer> <expr> <space> SpaceCompletion()
 inoreab <buffer>rt return<space>true<C-R>=Eatchar('\s')<CR>
 
@@ -124,9 +121,6 @@ inoremap <buffer> w] [<c-o>o],<c-o>O<space><space><space><space><C-R>=Eatchar('\
 inoreab <buffer>reg regex<C-R>=Eatchar('\s')<CR>
 
 nnoremap <buffer> tl :call NormalThrowLog()<cr> 
-inoreab <buffer>map smart_map()<LEFT><C-R>=Eatchar('\s')<CR>
-inoreab <buffer>cb crayonbox.red()<LEFT><C-R>=Eatchar('\s')<CR>
-inoreab <buffer>rr r<C-R>=Eatchar('\s')<CR>
 inoreab <buffer> <expr> dt GetTime()
 
 
@@ -139,17 +133,19 @@ inoreab <buffer>77 &&<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>77 eat
 inoreab <buffer>77 &&
 inoreab <buffer>pe +=
+inoreab <buffer>spe s +=
 inoreab <buffer>_= -=
 inoreab <buffer>pp +
 inoreab <buffer>rto {recursive:<space>true}<C-R>=Eatchar('\s')<CR>
 inoremap <buffer> ` <esc> :w <cr> :call Node1()<CR>
-inoreab <buffer> <expr> -- repeat("-", 50)<C-R>=Eatchar('\s')<CR>
-inoreab <buffer>__ -____------------------------<C-R>=Eatchar('\s')<CR>
-inoreab <buffer>__ --------------------------------<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>st state<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>sc scanner<C-R>=Eatchar('\s')<CR>
 nnoremap <buffer> 7 :call Node7()<CR>
 inoreab <buffer>th throw<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>th this<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>thr throw 
-inoreab <buffer> <expr> __ repeat("-", 50) . "\<cr>\<C-R>=Eatchar('\\s')\<CR>"
+inoreab <buffer> e2 == 
+inoreab <buffer> <expr> __ repeat("-", 60) . "\<cr>\<C-R>=Eatchar('\\s')\<CR>"
+inoreab <buffer> <expr> q7 \<c-o>A &&<space>
+
+" inoreab <buffer> <expr> -- repeat("-", 60) . "\<cr>\<C-R>=Eatchar('\\s')\<CR>"

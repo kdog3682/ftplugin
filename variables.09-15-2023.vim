@@ -85,8 +85,8 @@ let g:langaliasdict = {
     \'vim': 'vim',
 \}
 
-let mapleader=","
-let maplocalleader = '{'
+" let mapleader=","
+" let maplocalleader = '{'
 let g:ftplugindir = '/home/kdog3682/.vim/ftplugin/'
 let g:filedict["logs"] = "/home/kdog3682/logs.txt" "empty
 let g:ldrdict["eat"] = "EatIab"
@@ -1462,7 +1462,7 @@ nnoremap <f8> :w<CR>:call RunServerFile('runWindowStringNoSleep')<CR>
 nnoremap <f9> :call SetPropKey()<CR>
 nnoremap <f9> :w<CR>:call RunServerFile('runLocalHost')<CR>
 nnoremap <f9> :w<CR>:call RunServerFile('runWindowString')<CR>
-nnoremap <leader>ct :call CopyCurrentTemplateToHtmlBuilder()<CR>
+" nnoremap <leader>ct :call CopyCurrentTemplateToHtmlBuilder()<CR>
 nnoremap <leader>e :call WriteNotes4('')<LEFT><LEFT>
 nnoremap <leader>f :call FilePicker3()<CR>
 nnoremap <leader>g :call BasePY("google ")<LEFT><LEFT>
@@ -1492,7 +1492,6 @@ nnoremap R :call SnippetRegistrar()<CR>
 nnoremap R <c-r>
 nnoremap U :call NBackslash('u')<CR>
 nnoremap X :call GoLastTouchedFile()<CR>
-nnoremap \ :call OpenBuffer3(NBackslash(''))<LEFT><LEFT><LEFT>
 nnoremap a0 :call A0()<CR>
 nnoremap a7 :call A8('next.js')<CR>
 nnoremap a8 :call A8('utils.js')<CR>

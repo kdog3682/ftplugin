@@ -600,7 +600,6 @@ inoremap <buffer>kq ""<LEFT>
 inoremap <expr> qge Qge()
 inoremap <expr> qgp Qgp()
 inoremap <expr> qgs Qgs()
-inoremap <silent> <buffer> <Tab> <C-R>=CleverTab()<CR>
 inoremap <silent> <buffer> <expr> fw FwSnippeteer()
 inoremap <silent> w, <esc>:call PySnippet4()<cr>
 inoremap <silent> wp <esc>:call Snippeteer()<cr>
@@ -645,7 +644,7 @@ nnoremap <silent><buffer> 7 ?\v(endfunction\|function\|buffer\|silent\|nnore)@!<
 nnoremap <tab> :call OpenBuffer3(NBackslash(''))<LEFT><LEFT><LEFT>
 nnoremap = :b#<CR>
 nnoremap X :call UpdateAndExecuteLine(1)<CR>
-nnoremap ` :call CommandTilda()<CR>
+" nnoremap ` :call CommandTilda()<CR>
 " nnoremap ec :call Echolocation()<CR>
 nnoremap ee :call OpenBuffer3("/home/kdog3682/2023/examples.js")<CR>
 " nnoremap ehb :call OpenBuffer3("/home/kdog3682/2023/pl-htmlBuilder.js")<CR>

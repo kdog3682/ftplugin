@@ -1475,7 +1475,7 @@ nnoremap <leader>r diwi
 nnoremap <leader>u :! python3 update.py
 nnoremap <leader>w :call VueFix()<cr>
 nnoremap <localleader>a :call AddImportStatement()<cr>
-nnoremap <localleader>cs :call CreateScript()<cr>
+" nnoremap <localleader>cs :call CreateScript()<cr>
 nnoremap <localleader>gt :call GoTo()<cr>
 nnoremap <localleader>lp :call MarkLastPosition()<cr>
 nnoremap <localleader>mv :call MoveItemsToNewLocation('')<left><left>
@@ -2534,8 +2534,6 @@ let g:fnabrevdict = {
     \ 'o': 'object',
     \ 's': 'string',
 \}
-let mapleader=","
-let maplocalleader = '{'
 let g:myvimrc = '/home/kdog3682/.vimrc'
 let g:searchquery = '\/\/ \?\w'
 let g:jspykey = ''

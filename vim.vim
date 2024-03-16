@@ -8,6 +8,8 @@ inoreab <buffer>esc <lt>esc><C-R>=Eatchar('\s')<CR>
 inoreab <buffer>imap inoremap <lt>buffer>
 inoreab <buffer>nmap nnoremap <lt>buffer> <lt>expr>
 
+inoremap <buffer>_ -
+inoremap <buffer>- _
 " for text files: single-quote becomes double-quote na
 inoremap <buffer> ' ""<LEFT>
 

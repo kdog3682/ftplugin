@@ -19,6 +19,7 @@ let g:cabmap["br"] = [["border-right-color","#8b8b8b /* black-500 */"],["border-
 let g:cabmap["bl"] = [["border-left-color","#8b8b8b /* black-500 */"],["border-left-width","1px"]]
 let g:cabmap["bb"] = [["border-bottom-color","#8b8b8b /* black-500 */"],["border-bottom-width","1px"]]
 let g:cabmap["font"] = [["font-family","'crimson'"],["font-weight","normal"],["font-size","16pt"]]
+let g:cabmap["sans"] = [["font-family","'sans serif'"],["font-weight","normal"],["font-size","16pt"]]
 
 let g:cssTailwindColorKeys = ["white","black","grey","slate","gray","zinc","neutral","stone","red","orange","amber","yellow","lime","green","emerald","teal","cyan","sky","blue","indigo","violet","purple","fuchsia","pink","rose"]
 let g:cssTailwindColorAliases = {"w":"white","b":"blue","s":"slate","z":"zinc","n":"neutral","r":"red","o":"orange","a":"amber","y":"yellow","l":"lime","g":"green","e":"emerald","t":"teal","c":"cyan","i":"indigo","v":"violet","f":"fuchsia","p":"pink"}
@@ -50,12 +51,54 @@ let g:indexedCabmap["width"] = widths + ["fit-content","max-content","min-conten
 let g:indexedCabmap["height"] = heights + ["fit-content","max-content","min-content"]
 
 let g:cabmap["gridcol"] = [["display","grid"],["grid-template-columns","repeat(3, 1fr)"],["gap","20px"]]
-let g:cabmap["fg"] = [["flex-grow","1"]]
 let g:cabmap["overflow-text"] = [["overflow","hidden"],["text-overflow","ellipsis"]]
 let g:cabmap["border"] = [["border-style","solid"],["border-width","2pt"],["border-color","#e8e8e8 /* black-900 */"]]
-let g:cabmap["fg"] = []
+let g:cabmap["bblack"] = [["border-style","solid"],["border-width","1pt"],["border-color","#e8e8e8 /* black-900 */"]]
 let g:cabmap["fg"] = [["flex-grow","1"]]
 
 
 
+let g:cssKeymiMap= {
+            \'overflow': 'overflow-x',
+            \'overflow-x': 'overflow-y',
+            \'overflow-y': 'overflow',
+            \}
 
+
+let g:css_local_phrases = [
+    \'/** bs default **/ box-shadow: 0 2px 4px rgba(0,0,0,0.18), 0 3px 10px rgba(0,0,0,0.12);',
+    \'/** bs deep **/ box-shadow: 0 8px 17px rgba(0,0,0,0.2);',
+    \'/** bs light **/ box-shadow: 0 1px 5px rgba(0,0,0,0.12);',
+    \'/** bs inset **/ box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);',
+    \'/** bs bottom **/ box-shadow: 0 4px 6px rgba(0,0,0,0.1);',
+    \'/** bs top **/ box-shadow: 0 -4px 6px rgba(0,0,0,0.1);',
+    \'/** bs right **/ box-shadow: 4px 0 6px rgba(0,0,0,0.1);',
+    \'/** bs left **/ box-shadow: -4px 0 6px rgba(0,0,0,0.1);',
+    \'/** bs soft **/ box-shadow: 0 4px 12px rgba(0,0,0,0.15);',
+    \'/** bs sharp **/ box-shadow: 0 12px 16px rgba(0,0,0,0.25);',
+    \'align-items: stretch;',
+    \'align-items: center;',
+    \'align-items: flex-start;',
+    \'align-items: flex-end;',
+    \'align-items: baseline;',
+    \'align-self: stretch;',
+    \'align-self: center;',
+    \'align-self: flex-start;',
+    \'align-self: flex-end;',
+    \'align-self: baseline;',
+    \'align-content: space-between;',
+    \'align-content: space-around;',
+    \'align-content: stretch;',
+    \'align-content: center;',
+    \'align-content: flex-start;',
+    \'align-content: flex-end;',
+    \'overflow: visible;',
+    \'overflow: scroll;',
+    \'overflow: hidden;',
+    \'place-self: center;',
+    \'place-items: center;',
+    \'grid-template-columns: repeat(3, 1fr);',
+    \'nth-of-type(1)',
+    \'nth-child(1)',
+    \'/** abs-center **/ position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);',
+\]
