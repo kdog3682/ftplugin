@@ -1,0 +1,237 @@
+[
+  {
+    "filetype": "vim",
+      "file": "/home/kdog3682/.vim/ftplugin/vimrc.january2024.vim",
+    "func": "ExecuteFunctionCaller2"
+  },
+  {
+    "filetype": "javascript",
+    "file": "/home/kdog3682/2023/vueSetup.js",
+    "func": "getComponent"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "GoFile"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "DittoCopy"
+  },
+  {
+    "filetype": "javascript",
+    "file": "/home/kdog3682/2023/utils.js",
+    "func": "toStringArgumentPretty"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "PySnippet"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "QQ"
+  },
+  {
+    "filetype": "python",
+    "file": "/home/kdog3682/PYTHON/next.py",
+    "func": "toCallableFromConfig"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vim/ftplugin/vimrc.january2024.vim",
+    "func": "OpenBuffer4"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "JavascriptComplete"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "TestingSearchInsideOfExprViaQT"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "JPCreateFunctionBlockAsExpression"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "GotoVimFunction"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "InteractiveReplace"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "EvaluateFromShell"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "GetVimStateArg"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "GetFunctionInfo"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "s"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "WriteNotes5"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "JPCreateFunctionBlockNormal"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vim/ftplugin/vimrc.january2024.vim",
+    "func": "Node1"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "Node1"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "QQQ"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "CreateCompletionRE"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "CssSnippetFromEnd"
+  },
+  {
+    "filetype": "javascript",
+    "file": "/home/kdog3682/2023/getConfig.js",
+    "func": "getColonConfig"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "QSlashWordFind"
+  },
+  {
+    "filetype": "javascript",
+    "file": "/home/kdog3682/2023/node-utils.js",
+    "func": "packageManager3"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "Snippeteer"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "FileGetter2"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "FileGetter2"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "GoFileGoFunction"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "AnythingHandler2"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "PostFileTable"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "VimFileStateObject"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vim/ftplugin/vimrc.january2024.vim",
+    "func": "VAction3"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "VimComplete"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "SmartEqual"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "VisualShunt"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "SmartNine"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "SmartQuote"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "AddPydictItem"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "DefineEat"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "MarkdownTab"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "VAction"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "GotoVimFunction"
+  },
+  {
+    "filetype": "vim",
+    "file": "/home/kdog3682/.vimrc",
+    "func": "QSlashWordFind"
+  }
+]

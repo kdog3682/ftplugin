@@ -1,4 +1,4 @@
-let g:deno_expression= 'deno run --allow-read --allow-run --allow-net --allow-write'
+let g:deno_expression= 'deno run --allow-read --allow-run --allow-net --allow-write --allow-env --allow-all '
 let g:hr_line_length = 60
 let g:prompt_message = 'asking a value: '
 """ localBookmarkId: 1697717268 """ import "foo.typ": abc
@@ -581,11 +581,12 @@ function! InitiateLogConsole()
     let s:log_console_results = results
     ec 'use shift arrow right or left to toggle the stuff'
 endfunction
-function! Node1(...)
+function! Node1(options={})
+    let options = a:options
     let file = CurrentFile()
     let ft = &filetype
-    let ext = Match(Tail(file), '\.\zs\S+')
-    let tail="aa"
+    let ext = GetLongExtension(file)
+    let tail= Tail(file)
 
     if ft == 'rust'
         return RunRust()
@@ -593,33 +594,42 @@ function! Node1(...)
         return ExecuteFunctionCaller2()
     elseif ft == 'typst' || ft == 'sql'
         return s:typst(file)
-    elseif ext == 'deno.ts'
-        return RunDeno(file)
-    elseif ext == 'deno.js'
-        return RunDeno(file)
-    elseif ft == 'typescript'
+    elseif ext == 'deno.ts' || ext == 'typescript' || ext == 'deno.js'
         return RunDeno(file)
     endif
 
-    if exists('g:override_node_file') && !empty(g:override_node_file)
-        let file = g:override_node_file
-        ec file
-        let ext = Match(Tail(file), '\.\zs\S+')
+    if !has_key(options, "simple") && exists('g:override_node_file') && !empty(g:override_node_file)
+        let ext = GetLongExtension(g:override_node_file)
+        if ext != 'vim'
+            let file = g:override_node_file
+            let tail = Tail(file)
+        endif
     endif
 
-    if ext == 'create.vue.js'
-        let jsFile = '/home/kdog3682/2024-javascript/vuekit/generate.js'
-        let lnum = getbufinfo(file)[0].lnum
-        return SystemExec(jsFile, {'file': file, 'lnum': lnum})
-    elseif ext == 'vue.js'
-        let jsFile = '/home/kdog3682/2024-javascript/vuekit/generate.js'
-        let lnum = getbufinfo(file)[0].lnum
-        return SystemExec(jsFile, {'file': file, 'lnum': lnum}, "debug")
-    elseif tail == 'examples.template.js'
-        let jsFile = '/home/kdog3682/2023/runExampleFile.js'
-        let lnum = getbufinfo(file)[0].lnum
-        return SystemExec(jsFile, {'file': file, 'lnum': lnum})
+    let g:denoExtRef = {
+        \'template.js': '/home/kdog3682/2024-javascript/evalenv/runExampleFile.js',
+        \'vue.js': '/home/kdog3682/2024-javascript/vuekit/generate.js',
+        \'create.vue.js': '/home/kdog3682/2024-javascript/vuekit/generate.js',
+    \}
+
+    if has_key(g:denoExtRef, ext)
+        let caller = g:denoExtRef[ext]
+        return DenoFileRunner(caller, {'file': file}) 
     endif
+        
+    let ref = DictGetter2(g:fileRef, tail, 'node1')
+    if s:exists(ref)
+        return FileRefRunner(ref)
+    endif
+
+    " if ext == 'create.vue.js' || ext=="vue.js"
+        " let caller = '/home/kdog3682/2024-javascript/vuekit/generate.js'
+        " return DenoFileRunner(caller, {'file': file})
+    " elseif tail == 'examples.template.js'
+        " let jsFile = '/home/kdog3682/2024-javascript/evalenv/runExampleFile.js'
+        " let lnum = getbufinfo(file)[0].lnum
+        " return SystemExec(jsFile, {'file': file, 'lnum': lnum})
+    " endif
 
     if GTracker('v3') && file != '/home/kdog3682/2023/typst-math-assignment-parser-v3.js'
         return s:typst('/home/kdog3682/2024-typst/src/clip.typ')
@@ -629,34 +639,28 @@ function! Node1(...)
         return CompileTypstFromJavascript()
     endif
 
-    if s:config.use_override_node_file
-        let f = GetOverrideFile()
-        let ref = s:jspy6(f, 'override_node_handler')
+    " if s:config.use_override_node_file
+        " let f = GetOverrideFile()
+        " let ref = s:jspy6(f, 'override_node_handler')
         " call input('ref: ' . s:string(ref))
-        if s:exists(ref)
-            return SystemExec(ref, f)
-        endif
-        return SystemExec(f)
-    endif
+        " if s:exists(ref)
+            " return SystemExec(ref, f)
+        " endif
+        " return SystemExec(f)
+    " endif
 
     // starting to <buffer> <expr> deprecated...
-    if s:config.use_override_ref && exists('s:node_file_state')
-        return FileRefRunner()
-    endif
+    " if s:config.use_override_ref && exists('s:node_file_state')
+        " return FileRefRunner()
+    " endif
 
     if s:exists(s:config.last_file)
         return NodeTerminalOrShell(s:config.last_file)
     endif
 
-    let tail = Tail()
-    let ref = DictGetter2(g:fileRef, tail, 'node1')
-    if s:exists(ref)
-        return FileRefRunner(ref)
-    endif
-
-    if tail == 'runExampleFile.js'
-        return RunExampleFile() "also at node2"
-    endif
+    " if tail == 'runExampleFile.js'
+        " return RunExampleFile() "also at node2"
+    " endif
 
     if has_key(g:node1dict2, tail)
         let ref = g:node1dict2[tail]
@@ -987,10 +991,10 @@ function! AddImport2(bindingName, destination)
     let bindingName = a:bindingName
     let destination = a:destination
 
-    let r = '} *from *[''"].?/%(home.{-})?' . destination
+    let r = '} *from *[''"].{-}' . destination . '"'
 
     try
-        let index = s:fli(r, 0, 1, 10, 0)
+        let index = s:fli(r, 0, 1, 20, 0)
         let line = getline(index)
         let s:name = bindingName
         if s:t(line, '\{')
@@ -2705,7 +2709,6 @@ function GetFunctionFromLine2(...)
     if s:t(s, 'extends')
         return s:match(s, 'extends \zs\w+')
     endif
-    " call input('word: ' . s:string(word))
     if s:exists(word) && len(word) > 5
         return word 
     endif
@@ -3621,7 +3624,6 @@ endfunction
 
 function! s:open_function(name)
     let r = g:functionPrefixRE . a:name . '>'
-    " call input('r: ' . s:string(r))
     return s:execute_regex(r, 0, 0, 1)
 endfunction
 function! OpenFunction(name, ...)
@@ -3632,8 +3634,17 @@ function! OpenFunction(name, ...)
     let gm = a:0 >= 1 && !empty(a:1) ? 1 : 0
     let prefix = Exists(gm) ? g:bindingPrefixInnerRE : g:functionPrefixRE
     let r = prefix . name . '>'
-        let res = ExecuteRegex(r, 0, 0)
-        normal! zt
+        try
+            let res = ExecuteRegex(r, 0, 0)
+            normal! zt
+        catch
+            let error = v:exception
+            if error== -1
+                return 
+            endif
+            call FindFunctionViaImports(name)
+            
+        endtry
 endfunction
 
 function! GetGlobalBookmark(s)
@@ -3689,6 +3700,7 @@ function! GoFile()
         \{'r': '^/\*.{-} from [''"](.+)[''"]', 'type': 'file', "name": "js_import"},
         \{'r': '^/\*.{-}(\S+\.js)', 'type': 'file', "name": "js_import"},
         \{'r': '^%(\d+ +)?(/.+)$', 'type': 'file'},
+        \{'r': 'ReadVimJSON\(.(.{-}).\)', 'type': 'vim_json_file'},
         \{'r': lastSetRE, 'type': 'fileFirst'},
         \{'r': '^\{.+} *$', 'type': 'json'},
         \{'r': 'https:[^"''<>,]{5,}', 'type': 'url'},
@@ -3722,6 +3734,9 @@ function! GoFile()
             let dir = 
             call fzf#run(fzf#wrap({"dir":dir, 'source': source, 'sink': 'e'}))
 
+        elseif item.type == "vim_json_file"
+            let file = PathJoin(g:ftplugindir, 'assets/' . m . '.vim.json')
+            return OPEN(file)
         elseif item.type == "typst_file"
             return s:open(TypstResolve(m))
         elseif item.type == "javascript_file"
@@ -3994,7 +4009,7 @@ endfunction
 function! EchoTemplate(key)
     let aliases = {
     	\'el': 'echoLogTemplate',
-    	\'ll': 'echoLineTemplate',
+    	\'lp': 'echoPauseTemplate',
     	\'ei': 'echoInputTemplate',
     	\'ew': 'echoWordTemplate',
     	\'er': 'echoReturnTemplate',
@@ -6395,6 +6410,13 @@ function! OpenBuffer4(file)
     let file = s:sub(file, '^\./', '', '')
 
     let file = Replace(s:smartnpath(file), '/$', '')
+
+    if s:t(file, 'vim.json$')
+        let file = PathJoin(g:ftplugindir, 'assets/' . Tail(file))
+        call EnsureDirExists(file)
+        return OPEN(file)
+    endif
+
     if !IsFile(file) && IsFile(s:npath('2023', file))
     " call input('file: ' . s:string([file]))
         if Prompt('do you want to change to 2023 dir?')
@@ -7812,7 +7834,7 @@ function! Npath(dir, file)
     return AssertionManager(s, 'IsFile')
 endfunction
 function! ReadJSON(file)
-    let file = Npath('2024', a:file)
+    let file = !IsFile(a:file) ? Npath('2024', a:file) : a:file
     return json_decode(s:joinlines(readfile(file)))
 endfunction
 
@@ -9156,7 +9178,7 @@ function! s:sub(s, r, replacement, ...)
 endfunction
 
 let g:jspyref3['javascript']['echoInputTemplate'] = 'console.log("%s", $1)'
-let g:jspyref3['vim']['echoInputTemplate'] = "call input('$1: ' . s:string($1))"
+let g:jspyref3['vim']['echoInputTemplate'] = "call InputPrompt('$1', $1)"
 let g:jspyref3['python']['echoInputTemplate'] = "prompt('$1', $1)"
 
 
@@ -10386,7 +10408,6 @@ function! s:setblock(x, ...)
     if nomove
         return 
     endif
-
     call s:movement(index, items)
 
 endfunction
@@ -11854,9 +11875,10 @@ function! s:get_file_type(...)
     let ref = {
     	\'js': 'javascript',
     	\'py': 'python',
+    	\'vue': 'vue',
     	\'vim': 'vim',
-    	\'txf': 'txflow',
     	\'vimrc': 'vim',
+    	\'txf': 'txflow',
     	\'css': 'css',
     	\'html': 'html',
     	\'md': 'markdown',
@@ -11865,6 +11887,9 @@ function! s:get_file_type(...)
     \}
     if a:0 >= 1
         let e = s:ge(a:1)
+        if e== '' && Test(a:1, '.vimrc')
+            return 'vim'
+        endif
         if e== 'raw' && Test(a:1, 'vue.raw')
             return 'vue'
         endif
@@ -13405,9 +13430,10 @@ function! A8Word(sourceDest) abort
     let bindingName = s:gcw()
 
     let a8file = s:get_file_ref('a8file')
-    call OpenBuffer4(a8file)
+    call InputPrompt('a8file', a8file)
+    call OpenBuffer(a8file)
     call AddImport2(bindingName, sourceDest)
-    call OpenBuffer4(startingFile)
+    call OpenBuffer(startingFile)
 endfunction
 function! s:wrap_lines(lines)
     let lines = a:lines
@@ -13421,31 +13447,30 @@ function! A8(sourceDest) abort
         let sourceDest = 'next2.js'
         let bindingName = GetBindingName()
         let lines = s:getlines('code', 'd')
-        call OpenBuffer4(sourceDest)
+        call OpenBuffer(sourceDest)
         call AddExport(bindingName)
         call append('$', s:wrap_lines(lines))
-        call OpenBuffer4(startingFile)
+        call OpenBuffer(startingFile)
         return 
     endif
     let sourceDest = a:sourceDest
-    let sourceDest = s:tail(sourceDest)
+    " call InputPrompt('sourceDest', sourceDest)
+    " let sourceDest = s:tail(sourceDest)
     let bindingName = GetBindingName()
 
     let a8file = s:get_file_ref('a8file')
-    if s:ge(a8file) == 'py'
-        return s:shunt('code', a8file)
-    endif
+
     let lines = s:getlines('code', 'd')
-    call OpenBuffer4(sourceDest)
+    call OpenBuffer(sourceDest)
     call AddExport(bindingName)
     call insert(lines, '', 0)
     call append('$', lines)
     if s:exists(a8file)
-        call OpenBuffer3(a8file)
+        call OpenBuffer(a8file)
         call AddImport2(bindingName, sourceDest)
-        call OpenBuffer4(startingFile)
+        call OpenBuffer(startingFile)
     else
-        call OpenBuffer4(startingFile)
+        call OpenBuffer(startingFile)
         call AddImport2(bindingName, sourceDest)
     endif
 endfunction
@@ -15272,12 +15297,11 @@ inoremap <expr> qq QQ()
 let g:runnerParamCache["node.traverse"] = "node"
 function! s:smartnpath(file)
     let file = a:file
-    " ec file
+    " call InputPrompt('file', file)
     if file == "."
         return expand("%")
     elseif s:t(file, '^[/\~]')
         return file
-
     elseif s:t(file, '^node_modules')
         return getcwd() . '/' . file
     elseif s:t(file, '^\.')
@@ -16378,7 +16402,7 @@ function! UtilJSImportString(...)
 
     let file = s:tail(file)
     let imports = join(items, ', ')
-    let com = '/* prettier-ignore */ '
+    let com = '/* deno-fmt-ignore */ '
     let ref = {
         \'/home/kdog3682/2024-javascript': '/home/kdog3682/2023/',
         \'/home/kdog3682/2023': './',
@@ -17094,6 +17118,7 @@ function! ToggleConfig() abort
     call BluePrint('%s: "%s"', a, value)
 endfunction
 function! NodeTerminalOrShell(file, ...)
+    return SystemExec(a:file, a:000)
     let file = a:file
     let shell = s:config.shell
 
@@ -17322,7 +17347,6 @@ function! FileRefRunner(...)
     let lineNumber = GetBufferLineNumber(ref.argFile)
     let s:node_file_state.lineNumber = lineNumber
     let s:node_file_state.file = ref.argFile
-    " call input(string(s:node_file_state))
     return NodeTerminalOrShell(s:node_file_state.run, s:node_file_state)
 endfunction
 
@@ -20442,9 +20466,8 @@ endfunction
 
 let g:filedict["ex"] = "/home/kdog3682/2023/examples.template.js"
 let g:fileRef["examples.template.js"] = {}
-let g:fileRef["examples.template.js"]["node1"] = {"run":"runExampleFile.js","argFile":"examples.template.js"}
-let g:fileRef["examples.template.js"]["linked6"] = "runExampleFile.js"
-let g:fileRef["examples.template.js"]["a8file"] = "runExampleFile.js"
+let g:fileRef["examples.template.js"]["node1"] = {"run":"/home/kdog3682/2024-javascript/evalenv/runExampleFile.js","argFile":"/home/kdog3682/2023/examples.template.js"}
+let g:fileRef["examples.template.js"]["linked6"] = "/home/kdog3682/2024-javascript/evalenv/runExampleFile.js"
 let g:fileRef["examples.template.js"]["cr_templates"] = {}
 let g:fileRef["examples.template.js"]["cr_templates"]['arg'] = "datetime: $datetime\ndesc: testing out some code\ncode:\n\n$c"
 let g:fileRef["examples.template.js"]["cr_templates"]['default'] = "datetime: $datetime\ninpath: $prevbuffer\noutpath: clip.js\n\ncode:\nfunction main(s) {\n    const r = $c\n    const matches = findall(r, s)\n}"
@@ -20497,10 +20520,38 @@ function! AddExport(...) abort
     catch
         let name = s:gcw()
     endtry
+    let h= Head()
+    if Test(h, '/(apps|finishers)/?$')
+        try
+            let index = s:fli('^export', 0, 1, 100, 0, 1)
+            if index== line('$')
+            call append(0, 'export default ' . name)
+            return 
+            endif
+            let s= getline(index)
+            if Test(s, '\{')
+                call cursor(index, 100)
+            elseif Test(s, name)
+                ec "already exists"
+            else
+                call cursor(index, 100)
+                return 
+            endif
+        catch
+            call append(0, 'export default ' . name)
+        endtry
+        return 
+    endif
     " call input(string(name))
     try
         let index = s:fli('^export \{', 0, 1, 10, 0, 1)
         let t = getline(index)
+            if index== line('$')
+        let lines = ['export {', '    ' . name . ',', '}']
+        let i = 0
+        call append(i, lines)
+            return
+        endif
         if s:t(t, '\}')
             call s:get_set_replace(index, '\{', '{ ' . name . ',')
         else
@@ -21327,7 +21378,8 @@ let g:qq_ref = {
     \'sc': "QQScreenCompletion()",
     \'38': "s:get_prev_buffer_name()",
     \'39': "s:doublequote(s:get_current_buffer_name())",
-    \'37': "s:get_current_buffer_name()",
+    \'444': "s:doublequote(s:get_current_buffer_name())",
+    \'4': "s:get_current_buffer_name()",
     \'3': "s:get_prev_buffer_name()",
     \'ja': "OpenBuffer3('/home/kdog3682/2023/node_modules/@lezer/javascript/src/javascript.grammar')",
     \'5': "GetComponents()",
@@ -21394,9 +21446,8 @@ function! s:rename_file(outpath)
     elseif s:t(outpath, '^i$')
         let outpath = s:sub(s:tail(file), '\d+', '\=submatch(0) + 1', '')
     endif
-    let outpath = AddExtension(s:tail(outpath), file)
+    let outpath = AddExtension(s:tail(outpath), GetExtension(file))
     let new_file = s:npath(s:head(file), outpath)
-    call input('new_file: ' . s:string(new_file))
     execute "saveas " . new_file
     call delete(file)
 endfunction
@@ -23145,6 +23196,7 @@ function! ExportToJson(k)
         let value = s:gval(k)
     endif
     let json_data = json_encode(value)
+    call Clip(json_data)
     let s = name . ' = ' . json_data
     call writefile([s], "/home/kdog3682/PYTHON/workspace.py", 'a')
 endfunction
@@ -23230,7 +23282,7 @@ function! JuneGunnFZF(s)
     execute ref[a:s]
 endfunction
 function! JuneGunnPlugInstall()
-    execute 'PlugInstall'
+    PlugInstall
 endfunction
 let g:fzf_files_command = 'find . -maxdepth 1 -type f'
 
@@ -23602,6 +23654,13 @@ function! RegisterSystemExecRef(a, b)
 endfunction
 function! FindVimFunctionInVimFiles(name)
     let name = a:name
+    let base = ReadVimJSON('fvf')
+    if has_key(base, name)
+        call s:open(base[name])
+        call s:open_function(name)
+        return 
+    endif
+
     let base = CurrentFile()
     let files = [
         \'/home/kdog3682/.vim/ftplugin/vimrc.january2024.vim',
@@ -23617,11 +23676,10 @@ function! FindVimFunctionInVimFiles(name)
             break
         endif
     endfor
-    call s:open(base)
     if s:exists(touched)
-    " {"type":"hfl","bookmarkId":"1708172479"}
-        call s:open(touched)
+        return AppendVimJSON('fvf', {name: touched})
     else
+        call s:open(base)
         ec 'no file found'
     endif
 endfunction
@@ -24375,9 +24433,10 @@ function! GetOverrideNodeFile()
     endif
 endfunction
 function! Node2()
-    let file = GetOverrideNodeFile()
+    return Node1({'simple': 1})
+    " let file = GetOverrideNodeFile()
     " call input('file: ' . s:string(file))
-    call Node1000(file)
+    " call Node1000(file)
 endfunction
 
 function! GetSetFn2(k, ...)
@@ -24483,6 +24542,7 @@ function! FindMapArg(s)
     let [expr, mode] = MGet2(expr, '^(\w):')
     " call input('[expr, mode]: ' . s:string([expr, mode]))
     let result = maparg(expr, mode, 0, 1)
+    " call InputPrompt('result', result)
     " ec result
     " return
     " return result
@@ -25039,7 +25099,10 @@ function! _JSImport(file)
     let file = a:file
     let word = GetCurrentWord()
     let s = ''
-    if IsDir(file) || Test(file, "helpers")
+    if Tail(file) =="main.js"
+        let m=  Match2(file, '/(\w+)/main.js')
+        let s = printf('import * as %s from "%s"', m, file)
+    elseif IsDir(file) || Test(file, "helpers")
         let s = printf('import * as %s from "%s/main.js"', GetLastWord(file), file)
     else
         let exports = GetExports(file)
@@ -25719,12 +25782,14 @@ endfunction
 
 
 function! UtilJSImportStringFiltered(...)
+    let imports = GetImports()
     let file = a:0 >= 1 && s:exists(a:1) ? FileGetter2(a:1) : '/home/kdog3682/2023/utils.js'
     let items = GetExports(file)
-    let existing = GetBindings()
+    let existing = GetBindings() + imports
+    " call input('existing: ' . s:string(existing))
     let items = FilterList(items, existing)
     let imports = join(items, ', ')
-    let com = '/* prettier-ignore */ '
+    let com = '/* deno-fmt-ignore */ '
     let import_path = file
     return s:templater(com . 'import {$1} from "$2"', [imports, import_path])
 endfunction
@@ -25761,7 +25826,7 @@ endfunction
 
 function! RunDeno(file)
     let file = a:file
-    execute g:deno_expression . ' ' . file
+    execute '!clear;' . g:deno_expression . ' ' . file
 endfunction
 function! BaseExec(shell, ...)
     "test: 'node', '/home/asdf', '#*& boo./ga//'
@@ -25774,12 +25839,18 @@ function! BaseExec(shell, ...)
     let args = map(copy(b), "ShellEscape(s:encode(v:val))")
     let cmd = '!clear; %s %s %s'
     let cmd = trim(printf(cmd, shell, a, join(args, ' ')))
-    if g:debug || g:debug_shell_cmd
+    if g:debug || g:config.debug_shell_cmd
         ec '::currently in debug mode::'
         ec cmd
         return 
     endif
 
+    let shell= 0
+    if shell
+        let results = systemlist(cmd)
+        let result = s:goto_shell_error(results)
+        return results
+    endif
     try
         execute cmd
         return 1
@@ -25798,4 +25869,206 @@ function! AddEntryToDirDict(...)
     let dir = a:0 >= 1 && Exists(a:1) ? a:1 : GetDir1111()
     let name = Prompt("choose a dirdictalias for " . dir)
     call DictSetter("g:dirdict", name, dir)
+endfunction
+
+
+function GetImports(file = 0) abort
+    let file = empty(a:file) ? CurrentFile() : a:file
+    let filetype = s:get_file_type(file)
+    let r1 = g:jspyref3[filetype]['import_re1']
+    let r2 = g:jspyref3[filetype]['import_re2']
+    let s = s:get_page_text(file)
+    let matches = s:findall(s, r1)
+    " call input('matches: ' . s:string(matches))
+    let results = s:unique(Flat(map(copy(matches), {i, x -> s:findall(x, r2)})))
+    " call input('results: ' . s:string(results))
+    return results
+endfunction
+
+
+let g:jspyref3["vim"]["import_re1"] = ""
+let g:jspyref3["python"]["import_re1"] = ""
+let g:jspyref3["javascript"]["import_re1"] = 'import \{(.{-})\}'
+let g:jspyref3["javascript"]["import_re2"] = '\w{3,}'
+let g:jspyref3["typst"]["import_re1"] = ""
+let g:jspyref3["html"]["import_re1"] = ""
+let g:jspyref3["css"]["import_re1"] = ""
+
+" boogaw
+
+" ExportDict
+
+function! GoGfgf(key = 0)
+    let key = a:key
+    function! Inner(func)
+        let func = a:func
+        let m= Find(s:data, {x -> x.func == func})
+        call OPEN(m.file)
+        call s:open_function(m.func)
+    endfunction
+    let s:data = ReadVimJSON('gfgflist')
+    if s:exists(key)
+        call filter(s:data, 'get(v:val, "alias", "") == key')
+        if len(s:data)== 1
+            let m= s:data[0]
+            call OPEN(m.file)
+            call s:open_function(m.func)
+            return 
+        endif
+    endif
+    let source = map(copy(s:data), 'v:val.func')
+    call fzf#run(fzf#wrap({'source': source, 'sink': function('Inner')}))
+endfunction
+
+function! AppendVimJSON(key, value)
+    "test: 'fvf', {"avvavvvlbbaaacd":1} 
+    "test: 'fvf', [{'a': 123}]
+    let key = a:key
+    let value = a:value
+    let file = printf('/home/kdog3682/.vim/ftplugin/assets/%s.vim.json', key)
+    let data= IsArray(value) ? [] : {}
+    try
+        let prev = ReadJson(file)
+        " ReadVimJson('fvf')
+        if type(prev) >= 4 || prev != v:none
+            let data = prev
+        endif
+    catch
+        ec v:exception
+        call input(json_encode({"data": data, "vlaue": value}))
+    endtry
+    call extend(data, value)
+    call WriteJson(file, data)
+    return data
+endfunction
+function! ReadVimJSON(key)
+    let key = a:key
+    let file = printf('/home/kdog3682/.vim/ftplugin/assets/%s.vim.json', key)
+    call AssertFile(file)
+    return ReadJson(file)
+endfunction
+
+
+
+function! VimExecRef2Runner()
+    function! Inner(func)
+        let func = a:func
+        call function(func)()
+    endfunction
+    let s:data = values(g:execRef2)
+    call fzf#run(fzf#wrap({'source': s:data, 'sink': function('Inner')}))
+endfunction
+function! DenoFormat()
+    let a= '--indent-width=4 --no-semicolons --line-width=75'
+    execute '!clear; deno fmt ' . a . ' ' . CurrentFile()
+endfunction
+
+function! GetFiletype(s)
+    let s = a:s
+    return s:get_file_type(s)
+endfunction
+
+
+
+function! s:print_quote(s, arg)
+    let s = a:s
+    let arg = a:arg
+    ec s . ': ' . s:doublequote(arg)
+endfunction
+
+function! DenoJavascriptAppRunner(...)
+    function! Callback(s)
+        let s = a:s
+        let dir = '/home/kdog3682/2024-javascript/generated/apps/'
+        let module_file = PathJoin(dir, s.file)
+        call DenoFileRunner(module_file, {'state': s})
+    endfunction
+
+    function! Display(s)
+        let s = a:s
+        return s.desc
+    endfunction
+    call FzfCallback('/home/kdog3682/2024-javascript/generated/apps/index.json')
+endfunction
+
+let  g:deno_file= '/home/kdog3682/2024-javascript/nodekit/denoFileRunner.js'
+function! DenoFileRunner(module_file = 0, state = {})
+    let module_file = a:module_file
+    let s:state = a:state
+
+    function! _DenoFileRunner(module_file)
+        let module_file = a:module_file
+        let state = GetVimState3(s:state)
+        call SystemExec(g:deno_file, module_file, state)
+    endfunction
+
+    if Exists(module_file)
+        return _DenoFileRunner(module_file)
+    endif
+    let source = 'find $(pwd) -regextype posix-extended -type f | grep -vE ''(fonts|\.git|node_modules|\.log$|temp|package)'''
+    call fzf#run(fzf#wrap({"dir": "/home/kdog3682/2024-javascript/", 'source': source, 'sink': function('_DenoFileRunner')}))
+endfunction
+
+function! GetVimState3(state = {})
+    let state = a:state
+    let file = get(state, 'file', CurrentFile())
+    let lineNumber = getbufinfo(file)[0].lnum
+    let filetype = GetFiletype(file)
+    let tail = Tail(file)
+
+    let data = {
+        \'file': file,
+        \'filename': tail,
+        \'name': RemoveExtension(tail),
+        \'lineNumber': lineNumber,
+        \'lnum': lineNumber,
+        \'filetype': filetype,
+        \'dir': Head(file),
+        \'state': get(state, 'state', {}),
+    \}
+    return data
+endfunction
+function! GetLongExtension(file)
+    let file = a:file
+	return Match(Tail(file), '\.\zs\S+')
+endfunction
+
+
+function! FZF_FindExecRefFunction()
+    let source = values(g:execRef2)
+    call FzfCallback(source, 'FindVimFunctionInVimFiles')
+endfunction
+
+function! FZF_Bookmark()
+    
+endfunction
+function! FindFunctionViaImports(name)
+    let name = a:name
+    if &filetype != 'javascript'
+        return 
+    endif
+    let r = printf('<%s>', name)
+    let current = line('.')
+    let index = s:fli(r, 0, 1, current - 1, 0)
+    let file = GetFileFromLine2(getline(index))
+    if s:exists(file)
+        call s:open_file_open_function(file, name)
+    endif
+
+endfunction
+function! s:open_file_open_function(file, name)
+    let file = a:file
+    let name = a:name
+	call OpenBuffer(file)
+    call s:open_function(name)
+endfunction
+
+function! WriteVimJSON(key, value)
+    "test: 'fvf', {"avvavvvlbbaaacd":1} 
+    "test: 'fvf', [{'a': 123}]
+    let key = a:key
+    let value = a:value
+    let file = printf('/home/kdog3682/.vim/ftplugin/assets/%s.vim.json', key)
+    call WriteJson(file, value)
+    r data
 endfunction

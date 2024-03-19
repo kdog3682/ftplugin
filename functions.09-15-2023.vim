@@ -5581,7 +5581,8 @@ function! SnippetActionJsImport(s) abort
         return RegistrarTemplater(template, [a, "./" . f])
     elseif length == 2
         let a = items[0]
-        let b = JsImportPath(items[1])
+        " let b = JsImportPath(items[1])
+        let b = FileGetter2(items[1])
         let template = "import { $1 } from \"$2\""
         " let template = "import {\n    $1\n} from \"$2\""
         return RegistrarTemplater(template, [a, b])
@@ -8932,11 +8933,15 @@ function! Asadasd()
     call AppendFile(g:ftfile, GetCurrentBuffers())
 endfunction
 function! PackageManager(key)
+    let s:overrideFile = CurrentFile()
     if IsPy() && a:key == 'nodePrettier'
         return Black()
+    elseif GetExtension(s:overrideFile)== 'js' && a:key == 'nodePrettier'
+        let a= '!clear; deno fmt --indent-width=4 --no-semicolons --line-width=65 '
+        execute (a . s:overrideFile)
+        return 
     endif
 
-    let s:overrideFile = CurrentFile()
     let key = a:key
     let ref = g:packageManagerRef
     let cref = ref[key]

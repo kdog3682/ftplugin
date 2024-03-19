@@ -149,3 +149,5 @@ inoreab <buffer> <expr> __ repeat("-", 60) . "\<cr>\<C-R>=Eatchar('\\s')\<CR>"
 inoreab <buffer> <expr> q7 \<c-o>A &&<space>
 
 " inoreab <buffer> <expr> -- repeat("-", 60) . "\<cr>\<C-R>=Eatchar('\\s')\<CR>"
+inoreab <buffer>pi /*<space>deno-fmt-ignore<space>*/<C-R>=Eatchar('\s')<CR>
+inoreab <buffer>pi /*<space>deno-fmt-ignore<space>*/

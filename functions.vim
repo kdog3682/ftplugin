@@ -2836,6 +2836,9 @@ endfunction
 
 function! ShellEscape(s)
     let s = a:s
+    " if IsFile(s)
+        " return s
+    " endif
     "let s = '\'
     let s = Sub(s, ' ', 'zzs')
     let s = Sub(s, '\(', 'zzlp')
@@ -3406,7 +3409,7 @@ endfunction
 
 function! GetParameters(s)
     let s = Match(a:s, '\(.{-}\)')
-    return FindallStrings(s, '\w+')
+    return FindallStrings(s, '[a-z]\w*')
 endfunction
 
 function! SnippetFromAbrev(s, spaces)
