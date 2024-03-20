@@ -605,6 +605,7 @@ function! Node1(options={})
             let tail = Tail(file)
         endif
     endif
+    " call InputPrompt('file', file)
 
     let g:denoExtRef = {
         \'template.js': '/home/kdog3682/2024-javascript/evalenv/runExampleFile.js',
@@ -620,6 +621,10 @@ function! Node1(options={})
     let ref = DictGetter2(g:fileRef, tail, 'node1')
     if s:exists(ref)
         return FileRefRunner(ref)
+    endif
+
+    if &filetype== 'javascript'
+        return SystemExec(file)
     endif
 
     " if ext == 'create.vue.js' || ext=="vue.js"
@@ -23536,13 +23541,19 @@ function! GitAddCurrentFile(...)
   \")
 endfunction
 
-function! GitPushCurrentFile()
+function! GitPushCurrentFile(message = '')
+    "test: adsfadsfas
+    let message = a:message
+    call Assert(message, 'message needs to exist')
+    " call Assert(
+    " ec message
+    " return
   call GitCommandWrapper("
         \\n cd $gitdir
         \\n git add $gitfile
-        \\n git commit -m 'working'
+        \\n git commit -m '$1'
         \\n git push
-  \")
+  \", message)
 endfunction
 function! GitCommandWrapper(s, ref = [], wait = 0)
     let s = a:s
@@ -23893,13 +23904,13 @@ endfunction
 function! GitPushCurrentDirectoryBasedOnMainFile(...)
   """ 02-07-2024
   """ pushes all the files in the directory based on the current file
-
+  let arg = a:0 >= 1 && Exists(a:1) ? ' - ' . a:1 : ''
   call GitCommandWrapper("
         \\n cd $gitdir
         \\n git add .
-        \\n git commit -m '$gitfilename is working!'
+        \\n git commit -m '$gitfilename $1'
         \\n git push
-  \")
+  \", arg)
   " call s:appendfile('git-logs.txt', result)
 endfunction
 function! HasA000(a000)
@@ -26070,5 +26081,5 @@ function! WriteVimJSON(key, value)
     let value = a:value
     let file = printf('/home/kdog3682/.vim/ftplugin/assets/%s.vim.json', key)
     call WriteJson(file, value)
-    r data
+    return
 endfunction
