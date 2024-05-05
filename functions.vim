@@ -2835,6 +2835,7 @@ function! HasString(s)
 endfunction
 
 function! ShellEscape(s)
+    " throw 'aaa'
     let s = a:s
     " if IsFile(s)
         " return s
@@ -4999,7 +5000,7 @@ function! Head(...)
         let head = join(split(a:1, '/')[0:-2], '/')
         return '/' . head
     else
-        let head = expand('%:h')
+        let head = expand('%:p:h')
         return head
     endif
 endfunction
@@ -10641,7 +10642,7 @@ function! GetLang(...)
     let file = a:0 == 1 ? a:1 : expand('%:t')
     let match =  Match(file, '(css|m?html|vue|js2|js|json|py|vim|vimrc|bash|bashrc|bash_aliases|sh|txt)$')
     let dict = {
-    \    'vue': 'js',
+    \    'vue': 'vue',
     \    'js2': 'js',
     \    'json': 'js',
     \    'mhtml': 'js',
@@ -10794,10 +10795,6 @@ function! GetPrecedingKeyWord(...)
     return param
 endfunction
 
-function! GetExtension(...)
-"getExtension()
-    let e = a:0 >= 1 ? Match(a:1, '\.\zs\w+$') : Match(expand('%:t'), '\.\zs\w+$')
-endfunction
 
 function! GetPrefix()
    if Test(GetExtension(), '^js')

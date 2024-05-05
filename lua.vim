@@ -1,4 +1,3 @@
-
 inoremap <silent> <buffer> <expr> = PythonSmartEqual()
 " inoremap <silent> <buffer> <expr> <cr> PythonSmartEnter()
 inoremap <silent> <buffer> <expr> <Tab> QQQ()
@@ -12,8 +11,6 @@ inoremap <buffer> <expr> 9 SmartNine('(')
 nnoremap <silent><buffer> 3 #
 inoremap <buffer> qp (<c-o>A)<LEFT>
 inoreab <buffer>ret return
-inoreab <buffer>true True()<LEFT><C-R>=Eatchar('\s')<CR>
-inoreab <buffer>false False()<LEFT><C-R>=Eatchar('\s')<CR>
 
 inoremap <buffer> ' ""<LEFT>
 inoremap <buffer> _ -

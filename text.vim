@@ -14,4 +14,10 @@ inoremap <buffer> <expr> 6 MDPumExpr(6)
 inoremap <buffer> <expr> 7 MDPumExpr(7)
 inoremap <buffer> <expr> 8 MDPumExpr(8)
 inoremap <buffer> <expr> 9 MDPumExpr(9)
-nnoremap <buffer> <space> :call SetVimSpeaker()<CR>
+" nnoremap <buffer> <space> :call SetVimSpeaker()<CR>
+
+" call SimpleHighlight('^\w+:', 'none')
+inoremap <buffer> 4 $
+inoremap <buffer> ` ~
+inoreab <buffer>cg chatgpt<C-R>=Eatchar('\s')<CR>
+inoreab <buffer>-- ________________________________<C-R>=Eatchar('\s')<CR>

@@ -7,3 +7,4 @@ setlocal nosmartindent
 inoremap <buffer> <expr> bc HtmlCommentExpr()
 vnoremap <buffer> , :<c-u>call VhtmlBlockDedent()<CR>
 vnoremap <buffer> . :<c-u>call VhtmlBlockIndent()<CR>
+inoreab <buffer>cl console.log()<LEFT><C-R>=Eatchar('\s')<CR>

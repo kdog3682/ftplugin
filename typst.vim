@@ -11,11 +11,10 @@ inoremap q] [<C-O>o]<c-o>O<space><space><space><space>
 inoremap q[ <space>{<C-O>o}<c-o>O<space><space><space><space>
 inoremap q3 #{<C-O>o}<c-o>O<space><space><space><space>
 inoremap <buffer> <expr> / FTEF_Typst_CommentSlash()
-inoremap <buffer> <expr> - FTEF_Typst_Dash()
+" inoremap <buffer> <expr> - FTEF_Typst_Dash()
 inoremap <buffer> <expr> 3 FTEF_Typst_NumberOrSymbol('3', '#')
-inoremap <buffer> <expr> p FTEF_Typst_MathMode('p')
-inoremap <buffer> <expr> 4 FTEF_Typst_NumberOrSymbol('4', '$$<left>')
-inoremap <buffer> <expr> 2 FTEF_Typst_NumberOrSymbol('2', '@')
+" inoremap <buffer> <expr> 4 FTEF_Typst_NumberOrSymbol('4', '$$<left>')
+" inoremap <buffer> <expr> 2 FTEF_Typst_NumberOrSymbol('2', '@')
 inoremap <buffer> <expr> 9 SmartNine('(')
 inoremap <buffer> <expr> = FTEF_Typst_SmartEqual()
 inoremap <buffer> <expr> " FTEF_Typst_SmartQuote()
@@ -40,6 +39,7 @@ inoremap <silent> <buffer> <expr> <Tab> QQQ()
 inoremap <buffer> <silent> <expr> <cr> TypstSmartEnter()
 
 inoremap <buffer> <silent> <expr> qc TypstCreateFunctionWrapping()
+inoremap <buffer> <silent> <expr> \ TypstOmniExpand()
 nnoremap <buffer> <silent> qc :call TypstNormalCreateFunctionWrapping()<CR>
 nnoremap <buffer> <silent> <space> :call TypstNormalToggle()<CR>
 
@@ -49,10 +49,3 @@ augroup typst_autocommands
     autocmd BufWritePost * if &ft == 'typst' | call GetTypstFunctionWords() | endif
 augroup END
 
-
-""" 02-13-2024
-""" qc: TypstCreateFunctionWrapping
-""" 
-""" 
-""" 
-""" 

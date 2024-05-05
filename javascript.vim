@@ -151,3 +151,11 @@ inoreab <buffer> <expr> q7 \<c-o>A &&<space>
 " inoreab <buffer> <expr> -- repeat("-", 60) . "\<cr>\<C-R>=Eatchar('\\s')\<CR>"
 inoreab <buffer>pi /*<space>deno-fmt-ignore<space>*/<C-R>=Eatchar('\s')<CR>
 inoreab <buffer>pi /*<space>deno-fmt-ignore<space>*/
+inoreab <buffer>sd5 smartDedent5()<LEFT><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>sd smartDedent5()<LEFT><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>mc mapChildren(n,<space>this,<space>env)<C-R>=Eatchar('\s')<CR>
+inoreab <buffer>nv neovim
+inoreab <buffer>nv neovim-lua
+inoreab <buffer>elog console.log("error",<space>)<LEFT><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>' ''<<left>><C-R>=Eatchar('\s')<CR>
+inoreab <buffer>rf return<space>false<C-R>=Eatchar('\s')<CR>

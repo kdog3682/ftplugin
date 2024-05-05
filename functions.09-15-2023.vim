@@ -5167,7 +5167,7 @@ function! ShellEscapeHander(s) abort
      \ "<": "lt",
      \ ">": "gt",
      \ "$": "dollar",
-     \ "\\": "backslash",
+     " \ '\': "backslash",
       \"#": "hash",
       \":": "colon",
       \'"': "dq",
@@ -8934,11 +8934,21 @@ function! Asadasd()
 endfunction
 function! PackageManager(key)
     let s:overrideFile = CurrentFile()
-    if IsPy() && a:key == 'nodePrettier'
+    let e = GetExtension(s:overrideFile)
+    if e== 'lua'
+        execute '!clear; /mnt/chromeos/MyFiles/Downloads/stylua ' . CurrentFile()
+        return
+    elseif e== 'css'
+        execute '!clear;node /home/kdog3682/2023/app-prettier.js nodePrettier ' . CurrentFile()
+        return 
+    elseif IsPy() && a:key == 'nodePrettier'
         return Black()
-    elseif GetExtension(s:overrideFile)== 'js' && a:key == 'nodePrettier'
+    elseif (e== 'js'||e=="ts") && a:key == 'nodePrettier'
         let a= '!clear; deno fmt --indent-width=4 --no-semicolons --line-width=65 '
         execute (a . s:overrideFile)
+        return 
+    elseif GetExtension(s:overrideFile)== 'typ' && a:key == 'nodePrettier'
+        execute '!clear; ' . g:typstfmt_expression . s:overrideFile
         return 
     endif
 
